@@ -15,10 +15,12 @@ import game.util.*;
 public class GamePanel extends JPanel implements Runnable {
 
 	/** Variables */
+	
 	public static int width;
 	public static int height;
 	
-	public static int oldFrameCount;	// Nombre d'ancienne image, utilisé pour avoir le FPS
+	// Nombre d'ancienne image, utilisé pour avoir le FPS
+	public static int oldFrameCount;	
 	
 	private Thread thread;
 	private Boolean running = false;
@@ -26,7 +28,6 @@ public class GamePanel extends JPanel implements Runnable {
 	private BufferedImage img;
 	private Graphics2D g;
 	
-	/* La souris et le clavier du jeu */
 	private MouseHandler mouse;
 	private KeyHandler key;
 	
@@ -46,8 +47,6 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	/** Methodes */
 	
-	/* Fonction run */
-	@SuppressWarnings("static-access")
 	@Override
 	public void run() {
 		
@@ -57,22 +56,22 @@ public class GamePanel extends JPanel implements Runnable {
 		/* On veut du 60GHz, TBU est le temps avant l'update */
 		final double GAME_HERTZ = 60.0;
         final double TBU = 1000000000 / GAME_HERTZ;
-
+        final double TARGET_FPS = 60.0;
+        final double TTBR = 1000000000 / TARGET_FPS; // Total time before render
         final int MUBR = 5; // Must Update before render
 
         double lastUpdateTime = System.nanoTime();
         double lastRenderTime;
-
-        final double TARGET_FPS = 60.0;
-        final double TTBR = 1000000000 / TARGET_FPS; // Total time before render
-		
+        
 		int frameCount = 0;
 		int lastSecondTime = (int) (lastUpdateTime / 1000000000);
+		
 		oldFrameCount = 0;
 		
 		
-		/* Boucle du jeu */
+		/** Boucle du jeu */
 		while(running) {
+			
 			double now = System.nanoTime();
 			int updateCount = 0;
 			
@@ -113,7 +112,6 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 	}
 	
-	
 	public void init() {
 		running = true;
 		
@@ -127,7 +125,6 @@ public class GamePanel extends JPanel implements Runnable {
 		gsm = new GameStateManager();
 	}
 	
-	/* On update le Gestionnaire de statut ce qui va update tout les menus (MenuState, PlayState...) */
 	public void update() {
 		gsm.update();
 	}

@@ -16,13 +16,6 @@ public abstract class Entity {
 	private final int DOWN = 2;		// Down est la troisieme ligne du SPRITE
 	private final int UP = 3;		// Up est la quatrieme ligne du SPRITE
 	
-	/* Animation */
-	protected Animation ani;
-	protected Sprite sprite;
-	protected Vector2f pos;
-	protected int currentAnimation;
-	protected int size;
-	
 	/* Touches */
 	protected boolean up;
 	protected boolean down;
@@ -37,6 +30,13 @@ public abstract class Entity {
 	protected float acc = 2.5f;
 	protected float deacc = 0.25f;
 	
+	/* Animation */
+	protected Animation ani;
+	protected Sprite sprite;
+	protected Vector2f pos;
+	protected int currentAnimation;
+	protected int size;
+	
 	/* Cubes pour les colisions */
 	protected AABB hitBounds;
 	protected AABB bounds;
@@ -45,6 +45,7 @@ public abstract class Entity {
 	/** Constructeur */
 	
 	public Entity(Sprite sprite, Vector2f origin, int size) {
+		
 		this.sprite = sprite;
 		this.pos = origin;
 		this.size = size;
@@ -83,19 +84,6 @@ public abstract class Entity {
 		}
 		
 	}
-	
-	
-	
-	public void update() {
-		animate();
-		setHitBoxDirection();
-		ani.update();
-	}
-	
-	public abstract void render(Graphics2D g);
-	
-
-
 
 	public void setAnimation(int i, BufferedImage[] frames, int delay) {
 		currentAnimation = i;
@@ -121,8 +109,14 @@ public abstract class Entity {
             hitBounds.setYOffset(0);
         }
 	}
+	
+	public abstract void render(Graphics2D g);
 
-
+	public void update() {
+		animate();
+		setHitBoxDirection();
+		ani.update();
+	}
 
 	/** Accesseurs */
 

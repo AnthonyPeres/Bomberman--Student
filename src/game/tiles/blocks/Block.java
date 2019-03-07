@@ -12,7 +12,7 @@ public abstract class Block {
 	
 	protected int w;
     protected int h;
-
+    
     protected BufferedImage img;
     protected Vector2f pos;
 
@@ -26,8 +26,13 @@ public abstract class Block {
     }
 
     public abstract boolean update(AABB p);
+    
 	
     public void render(Graphics2D g) {
         g.drawImage(img, (int) pos.x, (int) pos.y, w, h, null);
     }
+    
+    
+    public int getXW() {return (int) (this.pos.x + this.w);}
+    public int getYH() {return (int) (this.pos.y + this.h);}
 }

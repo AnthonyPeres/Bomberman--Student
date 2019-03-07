@@ -4,9 +4,7 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 
 import game.graphics.Sprite;
-import game.tiles.blocks.Block;
-import game.tiles.blocks.GroundBlock;
-import game.tiles.blocks.NormBlock;
+import game.tiles.blocks.*;
 import game.util.Vector2f;
 
 /**
@@ -47,11 +45,12 @@ public class TileMapBlock extends TileMap {
              
             if(temp != 0) {
             	if(temp == 10) {
-            		tempBlock = new GroundBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos, tileWidth, tileHeight);
+            		tempBlock = new GroundBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns)), pos, tileWidth, tileHeight);
             	} else {
             		tempBlock = new NormBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos, tileWidth, tileHeight);
             	}
-            	tmo_blocks.put(String.valueOf((int) (i % width)) + "," + String.valueOf((int) (i / height)), tempBlock);
+            	//System.out.println(i+ " : "+temp+" - pos ="+pos.x+" en x et "+pos.y+" en y");
+            	tmo_blocks.put(String.valueOf((int) (i % width)) + "," + String.valueOf((int) (i / width)), tempBlock);
             }
         }
     }

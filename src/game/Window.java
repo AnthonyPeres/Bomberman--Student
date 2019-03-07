@@ -6,6 +6,7 @@ import javax.swing.JFrame;
  * 	La fenetre du jeu 
  * 
  * */
+
 @SuppressWarnings("serial")
 public class Window extends JFrame {
 
@@ -18,4 +19,5 @@ public class Window extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}	
+	
 }

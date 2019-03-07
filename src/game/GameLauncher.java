@@ -1,9 +1,10 @@
 package game;
 
 /**
- * 	GameLauncher du projet, initialise la fenetre.
+ * 	Lanceur du projet, initialise la fenetre.
  * 
  * */
+
 public class GameLauncher {
 
 	public GameLauncher() {
