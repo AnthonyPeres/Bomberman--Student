@@ -110,7 +110,6 @@ public class TileManager {
                 
                 // data contient la matrice du document xml. au premier tour elle contient tout les sols (les 17), au second tout les murs
                 data[i] = eElement.getElementsByTagName("data").item(0).getTextContent();
-                System.out.println(data[i]);
                 /*	Si i < 1 : donc au premier tour de boucle. On va regarder dans le premier layer, celui ou l'on place 
                  *  les trous et les objets. On va creer ces objets
                  *  

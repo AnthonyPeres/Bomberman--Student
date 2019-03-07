@@ -1,5 +1,6 @@
 package game.tiles.blocks;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -13,6 +14,8 @@ public class GroundBlock extends Block {
     }
 
     public boolean update(AABB p) {
+    	
+    	/** ICI SI ON MET L'ARGUMENT A FALSE IL N'Y A PAS DE COLLISIONS */
         return false;
     }
     

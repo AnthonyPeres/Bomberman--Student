@@ -1,6 +1,7 @@
 package game.util;
 
 import game.entity.Entity;
+import game.tiles.TileMapBlock;
 
 /** Il s'agit d'un rectangle aligné avec les axes, c'est à dire que ses cotés sont parallèles aux axes des x et des y */
 public class AABB {
@@ -59,6 +60,9 @@ public class AABB {
 	public void setYOffset(float f) {yOffset = f;}
 	
 	
+	public float getXOffset() { return xOffset;}
+	public float getYOffset() { return yOffset;}
+	
 	public boolean collides(AABB bBox) {
 		
 		float ax = ((pos.getWorldVar().x + (xOffset)) + (w / 2));
@@ -94,7 +98,26 @@ public class AABB {
 	
 	
 	
-	
+	public boolean collisionTile(float ax, float ay) {
+		
+		// Coins
+		for(int c = 0; c < 4; c++) {
+			
+			int xt = (int) ((pos.x + ax) + (c % 2) * w + xOffset) / 50;
+			int yt = (int) ((pos.y + ay) + ((int)(c / 2)) * h + yOffset) / 50;
+			
+			
+			if(TileMapBlock.tmo_blocks.containsKey(String.valueOf(xt) + "," + String.valueOf(yt))) {
+				return TileMapBlock.tmo_blocks.get(String.valueOf(xt) + "," + String.valueOf(yt)).update(this);
+			
+				
+			}
+			
+		}
+		
+		return false;
+		
+	}
 	
 	
 	

@@ -33,9 +33,9 @@ public abstract class Entity {
 	/* Deplacement */
 	protected float dx;
 	protected float dy;
-	protected float maxSpeed = 3f;
-	protected float acc = 2f;
-	protected float deacc = 0.2f;
+	protected float maxSpeed = 3.5f;
+	protected float acc = 2.5f;
+	protected float deacc = 0.25f;
 	
 	/* Cubes pour les colisions */
 	protected AABB hitBounds;

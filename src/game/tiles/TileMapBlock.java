@@ -1,10 +1,12 @@
 package game.tiles;
 
 import java.awt.Graphics2D;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import game.graphics.Sprite;
-import game.tiles.blocks.*;
+import game.tiles.blocks.Block;
+import game.tiles.blocks.GroundBlock;
+import game.tiles.blocks.NormBlock;
 import game.util.Vector2f;
 
 /**
@@ -16,8 +18,7 @@ import game.util.Vector2f;
 public class TileMapBlock extends TileMap {
 
 	/** Variables */
-    private ArrayList<Block> blocks; // On a une liste de blocks
-
+	public static HashMap<String, Block> tmo_blocks;
 
     /** Constructeur */
     
@@ -31,29 +32,34 @@ public class TileMapBlock extends TileMap {
      * */
     public TileMapBlock(String data, Sprite sprite, int width, int height, int tileWidth, int tileHeight, int tileColumns) {
         
-    	blocks = new ArrayList<Block>();
-
-        String[] block = data.split(","); // bloc recupere toutes les suites de numero de la data, sans la virgule
+    	Block tempBlock;
+        
+        tmo_blocks = new HashMap<String, Block>();
+        
+        String[] block = data.split(",");
         
         for(int i = 0; i < (width * height); i++) {
-            int temp = Integer.parseInt(block[i].replaceAll("\\s+",""));
-            
-            Vector2f pos = new Vector2f((i % width) * 50, (i / width) * 50);
-            
+        	
+        	int temp = Integer.parseInt(block[i].replaceAll("\\s+",""));
+        	
+        	Vector2f pos = new Vector2f((i % width) * 50, (i / width) * 50);
+        	
+             
             if(temp != 0) {
-            	 
-            	 if(temp == 10) {
-            		 blocks.add(new GroundBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos , tileWidth, tileHeight));
-            	 } else {
-            		 blocks.add(new NormBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos , tileWidth, tileHeight));
-            	 }
-             }
+            	if(temp == 10) {
+            		tempBlock = new GroundBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos, tileWidth, tileHeight);
+            	} else {
+            		tempBlock = new NormBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos, tileWidth, tileHeight);
+            	}
+            	tmo_blocks.put(String.valueOf((int) (i % width)) + "," + String.valueOf((int) (i / height)), tempBlock);
+            }
         }
     }
+    
 
     public void render(Graphics2D g) {
-        for(int i = 0; i < blocks.size(); i++) {
-            blocks.get(i).render(g);
+        for(Block block: tmo_blocks.values()) {
+            block.render(g);
         }
     }
 }

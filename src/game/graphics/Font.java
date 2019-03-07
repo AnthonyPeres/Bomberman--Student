@@ -23,7 +23,6 @@ public class Font {
     	w = TILE_SIZE;
         h = TILE_SIZE;
         
-        System.out.println("Loading: " + file + "...");
         FONTSHEET = loadFont(file);
 
         wLetter = FONTSHEET.getWidth() / w;
@@ -46,7 +45,6 @@ public class Font {
     	this.w = w;
         this.h = h;
 
-        System.out.println("Loading: " + file + "...");
         FONTSHEET = loadFont(file);
         
         wLetter = FONTSHEET.getWidth() / w;
