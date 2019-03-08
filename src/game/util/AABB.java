@@ -2,8 +2,7 @@ package game.util;
 
 import game.entity.Entity;
 import game.tiles.TileMapBlock;
-import game.tiles.blocks.Block;
-import game.tiles.blocks.NormBlock;
+import game.tiles.blocks.*;
 
 /** Il s'agit d'un rectangle aligné avec les axes, c'est à dire que ses cotés sont parallèles aux axes des x et des y */
 public class AABB {
@@ -96,39 +95,6 @@ public class AABB {
 		}
 		
 		return false;
-	}
-	
-	
-	
-	/* Fonction de collision avec les blocs */
-	public boolean collisionTile(float ax, float ay) {
-		
-		int ptArriveX = (int) (pos.x + ax);
-		int ptArriveY = (int) (pos.y + ay);
-		
-		
-		/* Pour les collisions en x on appelle la fonction avec la vitesse en x (dx) 
-		 * Pour les collisions en y on appelle la fonction avec la vitesse en y (dy) */
-		
-		for(int c = 0; c < 4; c++) {
-			
-			
-			/* xt = ((la position actuelle en x du joueur + la vitesse en x) + ((i variant de 0 a 3) % 2) * la taille du joueur + le decalage en x) / 50*/
-			int xt = (int) (ptArriveX + (c % 2) * w + xOffset) / 50;
-			int yt = (int) (ptArriveY + ((int)(c / 2)) * h + yOffset) / 50;
-			
-			if(TileMapBlock.tmo_blocks.containsKey(String.valueOf(xt) + "," + String.valueOf(yt))) {
-				Block block = TileMapBlock.tmo_blocks.get(String.valueOf(xt) + ","+ String.valueOf(yt));
-				if(block instanceof NormBlock) {
-					return TileMapBlock.tmo_blocks.get(String.valueOf(xt) + "," + String.valueOf(yt)).update(this);
-				}
-			
-				
-			} 
-		}
-		
-		return false;
-		
 	}
 	
 	

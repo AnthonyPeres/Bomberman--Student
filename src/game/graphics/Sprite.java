@@ -14,7 +14,7 @@ public class Sprite {
 	
     private BufferedImage SPRITESHEET = null;
     private BufferedImage[][] spriteArray;
-    private final int TILE_SIZE = 24;		// Une image rentre dans un carré de 24 pixels 
+    private final int TILE_SIZE = 20;		
     public int w;
     public int h;
     private int wSprite;
@@ -28,7 +28,7 @@ public class Sprite {
     public Sprite(String file) {
     	SPRITESHEET = loadSprite(file);
     	
-    	/* w et h prennent la taille du carré (en l'occurence ici : 24)*/
+    	/* w et h prennent la taille du carré (en l'occurence ici : 20)*/
     	w = TILE_SIZE;
         h = TILE_SIZE;
         
@@ -36,7 +36,6 @@ public class Sprite {
          * pour avoir le nombre de carrés. w = 8 et h = 4 */
         wSprite = SPRITESHEET.getWidth() / w;
         hSprite = SPRITESHEET.getHeight() / h;
-        
         loadSpriteArray();
     }
 

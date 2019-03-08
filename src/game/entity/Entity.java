@@ -11,10 +11,11 @@ public abstract class Entity {
 	/** Variables */
 	
 	/* Direction */
-	private final int RIGHT = 0; 	// Right est la premiere ligne du SPRITE
-	private final int LEFT = 1;		// Left est la deuxieme ligne du SPRITE
-	private final int DOWN = 2;		// Down est la troisieme ligne du SPRITE
-	private final int UP = 3;		// Up est la quatrieme ligne du SPRITE
+	protected final int RIGHT = 0; 	// Right est la premiere ligne du SPRITE
+	protected final int LEFT = 1;		// Left est la deuxieme ligne du SPRITE
+	protected final int DOWN = 2;		// Down est la troisieme ligne du SPRITE
+	protected final int UP = 3;		// Up est la quatrieme ligne du SPRITE
+	protected final int FALLEN = 4;
 	
 	/* Touches */
 	protected boolean up;
@@ -22,6 +23,7 @@ public abstract class Entity {
 	protected boolean right;
 	protected boolean left;
 	protected boolean bomb;
+	protected boolean fallen;
 	
 	/* Deplacement */
 	protected float dx;
@@ -38,9 +40,10 @@ public abstract class Entity {
 	protected int size;
 	
 	/* Cubes pour les colisions */
-	protected AABB hitBounds;
 	protected AABB bounds;
+	protected AABB bombBounds;
 	
+	protected TileCollision tc;
 	
 	/** Constructeur */
 	
@@ -51,11 +54,12 @@ public abstract class Entity {
 		this.size = size;
 		
 		bounds = new AABB(origin, size, size);
-		hitBounds = new AABB(origin, size, size);
-		hitBounds.setXOffset(size / 2);
+		bombBounds = new AABB(origin, size, size);
 		
 		ani = new Animation();
 		setAnimation(DOWN, sprite.getSpriteArray(DOWN), 10);
+		
+		tc = new TileCollision(this);
 	}
 	
 	
@@ -79,10 +83,13 @@ public abstract class Entity {
 			if(currentAnimation != RIGHT || ani.getDelay() == -1) {
 				setAnimation(RIGHT, sprite.getSpriteArray(RIGHT), 5);
 			}
+		} else if(fallen){
+			if(currentAnimation != FALLEN || ani.getDelay() == -1) {
+				setAnimation(FALLEN, sprite.getSpriteArray(FALLEN), 4);
+			}
 		} else {
 			setAnimation(currentAnimation, sprite.getSpriteArray(currentAnimation), -1);
 		}
-		
 	}
 
 	public void setAnimation(int i, BufferedImage[] frames, int delay) {
@@ -91,30 +98,12 @@ public abstract class Entity {
 		ani.setDelay(delay);
 	}
 	
-	private void setHitBoxDirection() {
-		if(up) {
-            hitBounds.setYOffset(-size / 2);
-            hitBounds.setXOffset(0);
-        }
-        else if(down) {
-            hitBounds.setYOffset(size / 2);
-            hitBounds.setXOffset(0);
-        }
-        else if(left) {
-            hitBounds.setXOffset(-size / 2);
-            hitBounds.setYOffset(0);
-        }
-        else if(right) {
-            hitBounds.setXOffset(size / 2);
-            hitBounds.setYOffset(0);
-        }
-	}
+	
 	
 	public abstract void render(Graphics2D g);
 
 	public void update() {
 		animate();
-		setHitBoxDirection();
 		ani.update();
 	}
 
@@ -133,5 +122,6 @@ public abstract class Entity {
 	public void setMaxSpeed(float f) {maxSpeed = f;}
 	public void setAcc(float f) {acc = f;}
 	public void setDeacc(float f) {deacc = f;}
+	public void setFallen(boolean b) {fallen = b;}
 
 }
