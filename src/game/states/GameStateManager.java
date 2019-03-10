@@ -22,14 +22,14 @@ public class GameStateManager {
 	public static final int PAUSE = 2; 
 	public static final int GAMEOVER = 3; 
 	
-	public static Vector2f map;
+	private static Vector2f map;
 	
 	
 	/** Constructeur */
 	
 	public GameStateManager() {
 		
-		map = new Vector2f(GamePanel.width, GamePanel.height);
+		map = (new Vector2f(GamePanel.width, GamePanel.height));
 		
 		Vector2f.setWorldVar(map.x, map.y);
 		
@@ -76,4 +76,5 @@ public class GameStateManager {
 			states.get(i).render(g);
 		}
 	}
+
 }

@@ -104,7 +104,7 @@ public class GamePanel extends JPanel implements Runnable {
 			while(now - lastRenderTime < TTBR && now - lastUpdateTime < TBU) {
 				Thread.yield();
 				
-				try { thread.sleep(100); } catch(Exception e) {
+				try { Thread.sleep(100); } catch(Exception e) {
 					System.out.println("ERROR : yielding thread");
 				}
 				now = System.nanoTime();

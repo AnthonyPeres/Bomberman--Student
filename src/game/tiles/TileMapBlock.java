@@ -46,8 +46,10 @@ public class TileMapBlock extends TileMap {
             if(temp != 0) {
             	if(temp == 10) {
             		tempBlock = new GroundBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns)), pos, tileWidth, tileHeight);
+            	} else if(temp == 1) {
+            		tempBlock = new BreakableBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos, tileWidth, tileHeight);
             	} else {
-            		tempBlock = new NormBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos, tileWidth, tileHeight);
+            		tempBlock = new ObstacleBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos, tileWidth, tileHeight);
             	}
             	//System.out.println(i+ " : "+temp+" - pos ="+pos.x+" en x et "+pos.y+" en y");
             	tmo_blocks.put(String.valueOf((int) (i % width)) + "," + String.valueOf((int) (i / width)), tempBlock);

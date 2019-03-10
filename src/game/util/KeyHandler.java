@@ -7,18 +7,30 @@ import java.util.List;
 
 import game.GamePanel;
 
-public class KeyHandler implements KeyListener {
+/**
+ * 
+ * 	Class définissant le clavier, une classe key est crée 
+ * 
+ * */
 
-	public static List<Key> keys = new ArrayList<Key>();
+public class KeyHandler implements KeyListener {	
+	
+	/** Class "key" */
 	
 	public class Key {
-		public int presses, absorbs;
 		
+		/** Variables */
+		
+		public int presses, absorbs;
 		public boolean down, clicked;
+		
+		/** Constructeur */
 		
 		public Key() {
 			keys.add(this);
 		}
+		
+		/** Méthodes */
 		
 		public void toogle(boolean pressed) {
 			if(pressed != down) {
@@ -39,7 +51,9 @@ public class KeyHandler implements KeyListener {
 		}
 	}
 	
-	/* Liste des touches */
+	/** Variables */
+	
+	public static List<Key> keys = new ArrayList<Key>();
 	public Key up = new Key();
 	public Key down = new Key();
 	public Key left = new Key();
@@ -50,11 +64,14 @@ public class KeyHandler implements KeyListener {
 	public Key escape = new Key();
 	
 	
-	/* On ajoute la class en keylistener du game */
+	/** Constructeur */
+	
 	public KeyHandler(GamePanel game) {
 		game.addKeyListener(this);
 	}
 	
+	
+	/** Méthodes */
 	
 	public void releaseAll() {
 		for(int i = 0; i < keys.size(); i++) {
@@ -96,5 +113,4 @@ public class KeyHandler implements KeyListener {
 		// TODO Auto-generated method stub
 		toggle(e, false);
 	}
-
 }

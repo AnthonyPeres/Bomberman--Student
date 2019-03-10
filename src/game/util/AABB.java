@@ -1,24 +1,33 @@
 package game.util;
 
 import game.entity.Entity;
-import game.tiles.TileMapBlock;
-import game.tiles.blocks.*;
 
-/** Il s'agit d'un rectangle aligné avec les axes, c'est à dire que ses cotés sont parallèles aux axes des x et des y */
+/** 
+ * 
+ * 	Class qui creer un rectangle afin de gerer les collisions, les depots de bombe...
+ *  
+ */
 public class AABB {
 
-	private Vector2f pos;
-	
-	private float xOffset = 0;
-	private float yOffset = 0;
+	/** Variables */
 	
 	private float w;
 	private float h;
 	private float r;
+	private float xOffset = 0;
+	private float yOffset = 0;
+	
 	private int size;
+	
+	private Vector2f pos;
+	
 	private Entity e;
 	
+	
+	/** Constructeurs */
+	
 	public AABB(Vector2f pos, int w, int h) {
+		
 		this.pos = pos;
 		this.w = w;
 		this.h = h;
@@ -33,36 +42,8 @@ public class AABB {
 		size = r;
 	}
 	
-	public Vector2f getPos() {return pos;}
 	
-	public float getRadius() {return r;}
-	public float getWidth() {return w;}
-	public float getHeight() {return h;}
-	
-	
-	public void setBox(Vector2f pos, int w, int h) {
-		this.pos = pos;
-		this.w = w;
-		this.h = h;
-		size = Math.max(w, h);
-	}
-	
-	public void setCircle(Vector2f pos, int r) {
-		this.pos = pos;
-		this.r = r;
-		
-		size = r;
-	}
-	
-	public void setWidth(float f) {w=f;}
-	public void setHeight(float f) {h=f;}
-	
-	public void setXOffset(float f) {xOffset = f;}
-	public void setYOffset(float f) {yOffset = f;}
-	
-	
-	public float getXOffset() { return xOffset;}
-	public float getYOffset() { return yOffset;}
+	/** Méthodes */
 	
 	public boolean collides(AABB bBox) {
 		
@@ -97,9 +78,40 @@ public class AABB {
 		return false;
 	}
 	
+	public void setBox(Vector2f pos, int w, int h) {
+		this.pos = pos;
+		this.w = w;
+		this.h = h;
+		size = Math.max(w, h);
+	}
+	
+	public void setCircle(Vector2f pos, int r) {
+		this.pos = pos;
+		this.r = r;
+		
+		size = r;
+	}
 	
 	
+	/** Accesseurs */
+
+	public Vector2f getPos() {return pos;}
+	public float getXOffset() {return xOffset;}
+	public float getYOffset() {return yOffset;}
+	public float getWidth() {return w;}
+	public float getHeight() {return h;}
+	public float getRadius() {return r;}
+	public int getSize() {return size;}
+	public Entity getE() {return e;}
+
+	/** Mutateurs */
 	
-	
-	
+	public void setPos(Vector2f pos) {this.pos = pos;}
+	public void setXOffset(float xOffset) {this.xOffset = xOffset;}
+	public void setYOffset(float yOffset) {this.yOffset = yOffset;}
+	public void setWidth(float w) {this.w = w;}
+	public void setHeight(float h) {this.h = h;}
+	public void setRadius(float r) {this.r = r;}
+	public void setSize(int size) {this.size = size;}
+	public void setE(Entity e) {this.e = e;}	
 }

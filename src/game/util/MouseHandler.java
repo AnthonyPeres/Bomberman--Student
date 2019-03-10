@@ -8,25 +8,19 @@ import game.GamePanel;
 
 public class MouseHandler implements MouseListener, MouseMotionListener {
 
+	/** Variables */
+	
 	private static int mouseX = -1;
 	private static int mouseY = -1;
 	private static int mouseB = -1;
+	
+	/** Constructeur */
 	
 	public MouseHandler(GamePanel game) {
 		game.addMouseListener(this);
 	}
 	
-	public int getX() {
-		return mouseX;
-	}
-	
-	public int getY() {
-		return mouseY;
-	}
-	
-	public int getButton() {
-		return mouseB;
-	}
+	/** Méthodes */
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -72,4 +66,11 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		mouseY = e.getY();
 	}
 
+	
+	/** Mutateurs */
+	
+	public int getX() {return mouseX;}
+	public int getY() {return mouseY;}
+	public int getButton() {return mouseB;}
+	
 }

@@ -27,6 +27,7 @@ public class TileManager {
 
     
     /** Constructeur */
+    
     /* Le path est le lien du document a charger */
     
     public TileManager() {
@@ -53,7 +54,6 @@ public class TileManager {
     	
     	int tileWidth;	// largeur d'une tuile (50)
         int tileHeight;	// hauteur d'une tuile (50)
-        int tileCount;	// nombre de tuiles (24)
         int tileColumns;	// nombre de colonnes (6) (de l'image chargée) 
         
         int layers = 0; // layers contient le nombre de layers du document xml (ici 2)
@@ -85,7 +85,6 @@ public class TileManager {
             imagePath = eElement.getAttribute("name");		// On recupere l'image utilisée dans le doc 
             tileWidth = Integer.parseInt(eElement.getAttribute("tilewidth"));	// On recupere la largeur d'une tuile dans le doc (ici 50)
             tileHeight = Integer.parseInt(eElement.getAttribute("tileheight"));	// On recupere la hauteur d'une tuile dans le doc (ici 50)
-            tileCount = Integer.parseInt(eElement.getAttribute("tilecount"));	// On recupere le nombre de tuiles dans ce tileset (ici 24)
             tileColumns =  Integer.parseInt(eElement.getAttribute("columns"));	// On recupere le nombre de colonnes (ici 6)
             
             // On charge l'image utilisée dans le document xml ("tile/img.png"), avec 50 et 50 en largeur et hauteur des tuiles 
