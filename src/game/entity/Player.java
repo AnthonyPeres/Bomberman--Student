@@ -85,8 +85,8 @@ public class Player extends Entity {
         }
     }
     
-    public void update() {
-		super.update();
+    public void update(double time) {
+		super.update(time);
 		
 		if(!fallen) {
 			move();
@@ -115,6 +115,8 @@ public class Player extends Entity {
 	        if(key.left.down) { left = true; } else { left = false; }
 	        if(key.right.down) { right = true; } else { right = false; }
 	        if(key.bomb.down) { bomb = true; } else { bomb = false; }
+	        if(up && down) {up = false; down = false;}
+	        if(right && left) {right = false; left = false;}
         } else {
         	up = false;
         	down = false;

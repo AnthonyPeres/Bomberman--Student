@@ -38,7 +38,7 @@ public abstract class Entity {
 	protected float dy;
 	protected float maxSpeed = 3.5f;
 	protected float acc = 2.5f;
-	protected float deacc = 0.15f;
+	protected float deacc = 1f;
 	
 	/* Animation */
 	protected Animation animation;
@@ -109,7 +109,7 @@ public abstract class Entity {
 	 * L'update relative à toutes les entités, chaque entités dispose d'une autre 
 	 * fonction update dans laquelle on ajoute les autres fonctionnalités
 	 */
-	public void update() {
+	public void update(double time) {
 		animate();
 		animation.update();
 	}

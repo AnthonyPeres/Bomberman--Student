@@ -15,17 +15,25 @@ public class BasicBomb extends Bomb {
 		super(sprite, pos, size, 0, entity);
 		// TODO Auto-generated constructor stub
 		
-		this.bounds.setWidth(50);
-		this.bounds.setHeight(50);
-		this.bounds.setXOffset(0);
-		this.bounds.setYOffset(0);
+		/* Si ne marche pas : faire deux tableaux avec :
+		 * casesToucheesX = {1,1,0,1,1};
+		 * casesToucheesY = {1,1,0,1,1};*/
+		
+		this.casesAdjacentes = new int[][]{
+			{0,0,1,0,0},
+			{0,0,1,0,0},
+			{1,1,0,1,1},
+			{0,0,1,0,0},
+			{0,0,1,0,0} 
+		};
 		
 		
-		r = 130;
+		
+		
 	}
 	
-	public void update() {
-		super.update();
+	public void update(double time) {
+		super.update(time);
 	}
 
 	
@@ -34,8 +42,19 @@ public class BasicBomb extends Bomb {
 	public void explose() {
 		// TODO Auto-generated method stub
 		
-		/* Utiliser collisionFire() pour detecter une collision avec une brique cassable */
+		/* Tout d'abord on va tester si il y a une collision incassable sur les cases adjacentes,
+		 * si il n'y en a pas on va tester si il y a une collision cassables sur toutes les cases
+		 * puis agir en conséquence */
 		
+		
+		for(int i = 0; i < this.casesAdjacentes.length; i++) {
+			for(int j = 0; j < this.casesAdjacentes.length; j++) {
+				
+				if(this.casesAdjacentes[i][j] == 1) {
+					System.out.println(i+", "+j);
+				}
+			}
+		}
 		
 		
 		this.e.bombList.remove(this);

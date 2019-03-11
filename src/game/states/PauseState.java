@@ -12,11 +12,6 @@ public class PauseState extends GameState {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void input(MouseHandler mouse, KeyHandler key) {
@@ -28,6 +23,12 @@ public class PauseState extends GameState {
 	public void render(Graphics2D g) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void update(double time) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

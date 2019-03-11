@@ -18,9 +18,9 @@ public abstract class GameState {
 	}
 	
 	/** Méthodes */
-	public abstract void update();
-	public abstract void input(MouseHandler mouse, KeyHandler key);
-	public abstract void render(Graphics2D g);
+	public abstract void update(double time);
+    public abstract void input(MouseHandler mouse, KeyHandler key);
+    public abstract void render(Graphics2D g);
 
 	/** Accesseurs */
 	public GameStateManager getGsm() {return gsm;}

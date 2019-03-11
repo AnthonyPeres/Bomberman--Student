@@ -19,7 +19,7 @@ public class Sprite {
     public int h;
     private int wSprite;
     private int hSprite;
-    private static Font currentFont;
+    public static Font currentFont;
     
     
     

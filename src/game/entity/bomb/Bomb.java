@@ -7,7 +7,7 @@ import game.entity.Entity;
 import game.graphics.Animation;
 import game.graphics.Sprite;
 import game.util.AABB;
-import game.util.TileCollision;
+import game.util.FireCollision;
 import game.util.Vector2f;
 
 public abstract class Bomb {
@@ -33,19 +33,16 @@ public abstract class Bomb {
 	
 	/* Cubes pour les colisions */
 	protected AABB bounds;
-	protected AABB bombBounds;
 	
+	/* Explosion */
+	protected FireCollision fireCollision;
 	protected boolean explose;
-	
 	protected int tempsAvantExplosion = 100;
+	protected int rayon;
+	protected int casesAdjacentes[][];
 	
-	protected int r;
-	
+	/* Entite posant la bombe */
 	protected Entity e;
-	
-	/* La gestion des collisions avec les blocs alentours */
-	protected TileCollision tileCollision;
-	
 	
 	/** Constructeur */
 	
@@ -56,17 +53,19 @@ public abstract class Bomb {
 		this.size = size;
 		this.type = type;
 		
-		this.e = e;
-		
-		this.explose = false;
-		
-		bounds = new AABB(origin, size, size);
-		bombBounds = new AABB(origin, size, size);
-		
 		ani = new Animation();
 		setAnimation(type, sprite.getSpriteArray(type), 10);
 		
+		bounds = new AABB(origin, size, size);
+		this.bounds.setWidth(50);
+		this.bounds.setHeight(50);
+		this.bounds.setXOffset(0);
+		this.bounds.setYOffset(0);
 		
+		fireCollision = new FireCollision(this);
+		this.explose = false;
+		
+		this.e = e;
 	}
 	
 	
@@ -74,9 +73,6 @@ public abstract class Bomb {
 	/** Méthodes */
 	
 	public abstract void explose();
-	
-	
-	
 	
 	public abstract void render(Graphics2D g);
 	
@@ -126,7 +122,7 @@ public abstract class Bomb {
 	
 	
 
-	public void update() {
+	public void update(double time) {
 		animate();
 		ani.update();
 		decouleTemps();
