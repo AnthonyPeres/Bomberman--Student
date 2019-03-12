@@ -37,9 +37,8 @@ public abstract class Bomb {
 	/* Explosion */
 	protected FireCollision fireCollision;
 	protected boolean explose;
-	protected int tempsAvantExplosion = 100;
+	protected int tempsAvantExplosion = 120;
 	protected int rayon;
-	protected int casesAdjacentes[][];
 	
 	/* Entite posant la bombe */
 	protected Entity e;
@@ -67,7 +66,6 @@ public abstract class Bomb {
 		
 		this.e = e;
 	}
-	
 	
 	
 	/** Méthodes */
@@ -112,15 +110,10 @@ public abstract class Bomb {
 		ani.setDelay(delay);
 	}
 	
-	
 	public void decouleTemps() {
         if (--tempsAvantExplosion == 0)
         	 explose();
 	}
-	
-	
-	
-	
 
 	public void update(double time) {
 		animate();
