@@ -11,11 +11,9 @@ public class FireCollision {
 	
 	private Bomb b;
 	
-	
 	public FireCollision(Bomb bomb) {
 		this.b = bomb;
 	}
-	
 	
 	public boolean collisionCassable(float ax, float ay) {
 		

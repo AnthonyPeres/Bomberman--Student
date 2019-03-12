@@ -135,7 +135,6 @@ public abstract class Entity {
     	 * */
     	
     	if(bomb) {
-    		
     		int nbX = (int) (pos.x + boundsBomb.getWidth() + boundsBomb.getXOffset()) / 50;
     		int nbY = (int) (pos.y + boundsBomb.getHeight() + boundsBomb.getYOffset()) / 50;
     		
@@ -146,11 +145,8 @@ public abstract class Entity {
     			this.exPosX = nbX;
     			this.exPosY = nbY;
     			
-    			bombposee++;
-    			
-    			System.out.println("pose");
+    			bombposee++;	
     		}
-    			
     	}
     }
 	

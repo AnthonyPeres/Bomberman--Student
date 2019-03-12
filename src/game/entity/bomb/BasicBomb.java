@@ -7,6 +7,7 @@ import game.entity.Entity;
 import game.graphics.Sprite;
 import game.util.Vector2f;
 
+
 public class BasicBomb extends Bomb {
 
 	/** Constructeur */
@@ -14,7 +15,9 @@ public class BasicBomb extends Bomb {
 	public BasicBomb(Sprite sprite, Vector2f pos, int size, Entity entity) {
 		super(sprite, pos, size, 0, entity);
 		// TODO Auto-generated constructor stub
-		
+	
+		this.rayonX = 2;
+		this.rayonY = 2;
 	}
 	
 	/** Méthodes */
@@ -28,9 +31,7 @@ public class BasicBomb extends Bomb {
 	@Override
 	public void explose() {
 		// TODO Auto-generated method stub
-		
-		
-		/* Gestion du premier bloc a gauche */
+/* Gestion du premier bloc a gauche */
 		
 		if(!fireCollision.collisionIncassable(-1, 0)) {
 			if(fireCollision.collisionCassable(-1, 0)) {
@@ -113,11 +114,6 @@ public class BasicBomb extends Bomb {
 			}
 			
 		}
-		
-		
-		
-		
-		
 		
 		
 		

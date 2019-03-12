@@ -14,7 +14,7 @@ public abstract class Bomb {
 	
 	/** Variables */
 	
-	/* Direction */
+	/* Type */
 	protected final int BASIC = 0;
 	protected final int HORIZONTAL = 1;
 	protected final int VERTICAL = 2;
@@ -35,10 +35,13 @@ public abstract class Bomb {
 	protected AABB bounds;
 	
 	/* Explosion */
-	protected FireCollision fireCollision;
 	protected boolean explose;
 	protected int tempsAvantExplosion = 120;
-	protected int rayon;
+	protected int rayonX;
+	protected int rayonY;
+	
+	/* Fire collision */
+	protected FireCollision fireCollision;
 	
 	/* Entite posant la bombe */
 	protected Entity e;
@@ -61,8 +64,9 @@ public abstract class Bomb {
 		this.bounds.setXOffset(0);
 		this.bounds.setYOffset(0);
 		
-		fireCollision = new FireCollision(this);
 		this.explose = false;
+		
+		this.fireCollision = new FireCollision(this);
 		
 		this.e = e;
 	}
@@ -130,6 +134,8 @@ public abstract class Bomb {
 	public Vector2f getPos() {return pos;}
 	public boolean getExplose() {return explose;}
 	public int getTempsAvantExplosion() {return tempsAvantExplosion;}
+	public int getRayonX() { return this.rayonX; }
+	public int getRayonY() { return this.rayonY; }
 
 	/** Mutateurs */
 	
