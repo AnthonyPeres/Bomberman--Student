@@ -49,6 +49,7 @@ public class PlayState extends GameState {
 		player.render(g);
 		
 		for(int i = 0; i < player.bombList.size(); i++) { if(player.bombList.get(i).getExplose() == false) {player.bombList.get(i).render(g);}}
+		
 		for(int i = 0; i < ia.length; i++) {ia[i].render(g);}
 		
 	}

@@ -41,8 +41,8 @@ public class GameStateManager {
 		Vector2f.setWorldVar(map.x, map.y);
 		
 		font = new Font("font/font.png", 10,10);
-		Sprite.currentFont = font;
 		
+		Sprite.currentFont = font;
 		
 		states = new GameState[4];
 		
@@ -69,7 +69,6 @@ public class GameStateManager {
 		pop(state);
 		add(state);
 	}
-	
 	
 	public void pop(int state) { states[state] = null; }
 	
@@ -98,7 +97,6 @@ public class GameStateManager {
     }
 
     
-	
 	/* Appel la fonction render de chaque état */
 	public void render(Graphics2D g) {
 		for (int i = 0; i < states.length; i++) {
