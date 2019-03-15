@@ -7,7 +7,6 @@ import game.entity.Entity;
 import game.graphics.Animation;
 import game.graphics.Sprite;
 import game.util.AABB;
-import game.util.FireCollision;
 import game.util.Vector2f;
 
 public abstract class Bomb {
@@ -40,11 +39,10 @@ public abstract class Bomb {
 	protected int rayonX;
 	protected int rayonY;
 	
-	/* Fire collision */
-	protected FireCollision fireCollision;
-	
 	/* Entite posant la bombe */
-	protected Entity e;
+	protected Entity ent;
+	
+	protected Explosion expl;
 	
 	/** Constructeur */
 	
@@ -66,15 +64,24 @@ public abstract class Bomb {
 		
 		this.explose = false;
 		
-		this.fireCollision = new FireCollision(this);
-		
-		this.e = e;
+		this.ent = e;
 	}
 	
 	
 	/** Méthodes */
 	
-	public abstract void explose();
+	public void explose() {
+		
+		/* On creer une nouvelle explosion et on la fait propagée */
+		this.expl = new Explosion(this);
+		this.ent.explosions.add(expl);
+			
+		this.ent.bombList.remove(this);
+		this.ent.setBombposee(this.ent.getBombposee() - 1);
+			
+		
+		
+	}
 	
 	public abstract void render(Graphics2D g);
 	
@@ -123,7 +130,6 @@ public abstract class Bomb {
 		animate();
 		ani.update();
 		decouleTemps();
-		
 	}
 
 	/** Accesseurs */

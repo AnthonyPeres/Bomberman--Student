@@ -3,10 +3,13 @@ package game.states;
 import java.awt.Graphics2D;
 
 import game.GamePanel;
-import game.entity.*;
-import game.graphics.*;
+import game.entity.IA;
+import game.entity.Player;
+import game.graphics.Sprite;
 import game.tiles.TileManager;
-import game.util.*;
+import game.util.KeyHandler;
+import game.util.MouseHandler;
+import game.util.Vector2f;
 
 /**
  * 
@@ -34,6 +37,8 @@ public class PlayState extends GameState {
 		ia[0] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(Vector2f.getWorldX() - 100, 25), 50);
 		ia[1] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(50, Vector2f.getWorldY() - 120), 50);
 		ia[2] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f((Vector2f.getWorldX()-100),(Vector2f.getWorldY()-120)), 50);
+	
+		
 	}
 
 	
@@ -49,7 +54,7 @@ public class PlayState extends GameState {
 		player.render(g);
 		
 		for(int i = 0; i < player.bombList.size(); i++) { if(player.bombList.get(i).getExplose() == false) {player.bombList.get(i).render(g);}}
-		
+		for(int i = 0; i < player.explosions.size(); i++) { if(player.explosions.get(i).propagee == false) {player.explosions.get(i).render(g);}}
 		for(int i = 0; i < ia.length; i++) {ia[i].render(g);}
 		
 	}
@@ -71,6 +76,8 @@ public class PlayState extends GameState {
 		player.update(time);	
 		
 		for(int i = 0; i < player.bombList.size(); i++) {if(player.bombList.get(i).getExplose() == false) {player.bombList.get(i).update(time);}}
+		for(int i = 0; i < player.explosions.size(); i++) { if(player.explosions.get(i).propagee == false) {player.explosions.get(i).update(time);}}
 		for(int i = 0; i < ia.length; i++) {ia[i].update(time);}
+		
 	}
 }

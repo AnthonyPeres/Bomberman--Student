@@ -6,8 +6,12 @@ import java.util.ArrayList;
 
 import game.entity.bomb.BasicBomb;
 import game.entity.bomb.Bomb;
-import game.graphics.*;
-import game.util.*;
+import game.entity.bomb.Explosion;
+import game.graphics.Animation;
+import game.graphics.Sprite;
+import game.util.AABB;
+import game.util.TileCollision;
+import game.util.Vector2f;
 
 /**
  * 
@@ -62,6 +66,7 @@ public abstract class Entity {
 	protected int exPosY;
 	protected int exPosX;
 	public ArrayList<Bomb> bombList = new ArrayList<Bomb>();
+	public ArrayList<Explosion> explosions = new ArrayList<Explosion>();
 				
 			
 	/** Constructeur */
@@ -104,6 +109,7 @@ public abstract class Entity {
 	public abstract void animate();
 	public abstract void render(Graphics2D g);
 	protected abstract void move();
+	
 	
 	/*
 	 * L'update relative à toutes les entités, chaque entités dispose d'une autre 

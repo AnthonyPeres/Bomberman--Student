@@ -1,6 +1,6 @@
 package game.util;
 
-import game.entity.bomb.Bomb;
+import game.entity.bomb.Explosion;
 import game.tiles.TileMapBlock;
 import game.tiles.blocks.Block;
 import game.tiles.blocks.BreakableBlock;
@@ -9,17 +9,17 @@ import game.tiles.blocks.ObstacleBlock;
 public class FireCollision {
 
 	
-	private Bomb b;
+	private Explosion e;
 	
-	public FireCollision(Bomb bomb) {
-		this.b = bomb;
+	public FireCollision(Explosion e) {
+		this.e = e;
 	}
 	
 	public boolean collisionCassable(float ax, float ay) {
 		
 		/* xt et yt valent la case exacte */
-		int xt = (int) (((b.getBounds().getPos().x + (ax*50)) + b.getBounds().getXOffset()) / 50);
-		int yt = (int) (((b.getBounds().getPos().y + (ay*50)) + b.getBounds().getYOffset()) / 50);
+		int xt = (int) (((e.getBounds().getPos().x + (ax*50)) + e.getBounds().getXOffset()) / 50);
+		int yt = (int) (((e.getBounds().getPos().y + (ay*50)) + e.getBounds().getYOffset()) / 50);
 		
 		if(TileMapBlock.tmo_blocks.containsKey(String.valueOf(xt) + "," + String.valueOf(yt))) {		
 			Block block = TileMapBlock.tmo_blocks.get(String.valueOf(xt) + ","+ String.valueOf(yt));
@@ -30,8 +30,8 @@ public class FireCollision {
 	public boolean collisionIncassable(float ax, float ay) {
 		
 		/* xt et yt valent la case exacte */
-		int xt = (int) (((b.getBounds().getPos().x + (ax*50)) + b.getBounds().getXOffset()) / 50);
-		int yt = (int) (((b.getBounds().getPos().y + (ay*50)) + b.getBounds().getYOffset()) / 50);
+		int xt = (int) (((e.getBounds().getPos().x + (ax*50)) + e.getBounds().getXOffset()) / 50);
+		int yt = (int) (((e.getBounds().getPos().y + (ay*50)) + e.getBounds().getYOffset()) / 50);
 		
 		if(TileMapBlock.tmo_blocks.containsKey(String.valueOf(xt) + "," + String.valueOf(yt))) {		
 			Block block = TileMapBlock.tmo_blocks.get(String.valueOf(xt) + ","+ String.valueOf(yt));
