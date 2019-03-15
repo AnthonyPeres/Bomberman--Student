@@ -73,7 +73,7 @@ public abstract class Bomb {
 	public void explose() {
 		
 		/* On creer une nouvelle explosion et on la fait propagée */
-		this.expl = new Explosion(this);
+		this.expl = new Explosion(this.pos, rayonX, rayonY, this.ent);
 		this.ent.explosions.add(expl);
 			
 		this.ent.bombList.remove(this);

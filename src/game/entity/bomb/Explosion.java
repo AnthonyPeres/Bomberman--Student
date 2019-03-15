@@ -15,8 +15,6 @@ public class Explosion {
 
 	/** Les attributs */
 	
-	/* La bombe qui a provoquée l'explosion */
-	protected Bomb b;
 	
 	/* Les collisions des flammes avec les blocks */
 	protected FireCollision fireCollision;
@@ -33,13 +31,19 @@ public class Explosion {
 	
 	protected Entity e;
 	
+	protected int rayonX;
+	protected int rayonY;
+	
+	
+	
 	/** Le constructeur */
 	
-	public Explosion(Bomb b) {
+	public Explosion(Vector2f pos, int rayonX, int rayonY, Entity e) {
 		
-		this.b = b;
 		
-		bounds = new AABB(b.bounds.getPos(), 50, 50);
+		this.pos = pos;
+		
+		bounds = new AABB(this.pos, 50, 50);
 		this.bounds.setWidth(50);
 		this.bounds.setHeight(50);
 		this.bounds.setXOffset(0);
@@ -47,7 +51,10 @@ public class Explosion {
 		
 		this.fireCollision = new FireCollision(this);
 		
-		this.e = this.b.ent;
+		this.rayonX = rayonX;
+		this.rayonY = rayonY;
+		
+		this.e = e;
 		
 		animation = new Animation();
 	}
@@ -124,7 +131,7 @@ public class Explosion {
 		}
 		
 		/* On supprime de la liste des explosions */
-		this.propagee = true;
+		//this.propagee = true;
 		
 		
 	}
@@ -142,7 +149,8 @@ public class Explosion {
 	public void update(double time) {
 		animate();
 		animation.update();
-		propagation(b.rayonX, b.rayonY);
+		propagation(this.rayonX, this.rayonY);
+		System.out.println("update");
 	}
 	
 	public void animate() {
@@ -153,9 +161,9 @@ public class Explosion {
 		
 		/* On dessine les rectangles des rayons des flammes */
 		g.setColor(Color.red);
-		for(int i = 1; i == b.rayonX; i++) {g.drawRect((int) (pos.x - ( i *bounds.getWidth())), (int) pos.y, (int) bounds.getWidth(), (int) bounds.getHeight());}
-		for(int i = 1; i == b.rayonX; i++) {g.drawRect((int) (pos.x + ( i *bounds.getWidth())), (int) pos.y, (int) bounds.getWidth(), (int) bounds.getHeight());}
-		for(int i = 1; i == b.rayonY; i++) {g.drawRect((int) pos.x, (int) (pos.y - (i * bounds.getHeight())), (int) bounds.getWidth(), (int) bounds.getHeight());}
-		for(int i = 1; i == b.rayonY; i++) {g.drawRect((int) pos.x, (int) (pos.y + (i * bounds.getHeight())), (int) bounds.getWidth(), (int) bounds.getHeight());}
+		for(int i = 1; i <= this.rayonX; i++) {g.drawRect((int) (pos.x - ( i *bounds.getWidth())), (int) pos.y, (int) bounds.getWidth(), (int) bounds.getHeight());}
+		for(int i = 1; i <= this.rayonX; i++) {g.drawRect((int) (pos.x + ( i *bounds.getWidth())), (int) pos.y, (int) bounds.getWidth(), (int) bounds.getHeight());}
+		for(int i = 1; i <= this.rayonY; i++) {g.drawRect((int) pos.x, (int) (pos.y - (i * bounds.getHeight())), (int) bounds.getWidth(), (int) bounds.getHeight());}
+		for(int i = 1; i <= this.rayonY; i++) {g.drawRect((int) pos.x, (int) (pos.y + (i * bounds.getHeight())), (int) bounds.getWidth(), (int) bounds.getHeight());}
 	}
 }
