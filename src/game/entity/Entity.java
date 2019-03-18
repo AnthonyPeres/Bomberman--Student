@@ -36,6 +36,7 @@ public abstract class Entity {
 	protected boolean left;
 	protected boolean fallen;
 	protected boolean bomb;
+	protected boolean choixBombe;
 	
 	/* Deplacement */
 	protected float dx;
@@ -65,9 +66,13 @@ public abstract class Entity {
 	protected int bombposee = 0;
 	protected int exPosY;
 	protected int exPosX;
+	protected int bombeChoisie = 0;
+	
 	public ArrayList<Bomb> bombList = new ArrayList<Bomb>();
 	public ArrayList<Explosion> explosions = new ArrayList<Explosion>();
+	
 				
+	boolean toucheC = false;
 			
 	/** Constructeur */
 	
@@ -99,6 +104,7 @@ public abstract class Entity {
 		animation = new Animation();
 		setAnimation(DOWN, sprite.getSpriteArray(DOWN), 5);
 		
+		
 		/* Gestion des collisions */
 		tileCollision = new TileCollision(this);	
 	}
@@ -118,6 +124,7 @@ public abstract class Entity {
 	public void update(double time) {
 		animate();
 		animation.update();
+		
 	}
 	
 	
@@ -128,7 +135,6 @@ public abstract class Entity {
 	}
 	
 	protected void resetPosition() {
-    	System.out.println("reset position");
     	pos.x = positionInitialeX;
     	pos.y = positionInitialeY;
     	setAnimation(DOWN, sprite.getSpriteArray(DOWN), 5);
@@ -139,7 +145,7 @@ public abstract class Entity {
     	/*  (suite) Faire en sorte que je ne puisse pas poser une bombe sur une autre bombe 
     	 *  grace a une arraylist
     	 * */
-    	
+		
     	if(bomb) {
     		int nbX = (int) (pos.x + boundsBomb.getWidth() + boundsBomb.getXOffset()) / 50;
     		int nbY = (int) (pos.y + boundsBomb.getHeight() + boundsBomb.getYOffset()) / 50;

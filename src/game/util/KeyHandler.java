@@ -62,6 +62,7 @@ public class KeyHandler implements KeyListener {
 	public Key menu = new Key();
 	public Key enter = new Key();
 	public Key escape = new Key();
+	public Key choixBombe = new Key();
 	
 	
 	/** Constructeur */
@@ -73,44 +74,35 @@ public class KeyHandler implements KeyListener {
 	
 	/** Méthodes */
 	
-	public void releaseAll() {
-		for(int i = 0; i < keys.size(); i++) {
-			keys.get(i).down = false;
-		}
-	}
-	
-	public void tick() {
-		for(int i = 0; i < keys.size(); i++) {
-			keys.get(i).tick();
-		}
-	}
-	
-	public void toggle(KeyEvent e, boolean  pressed) {
-		if(e.getKeyCode() == KeyEvent.VK_UP) up.toogle(pressed);
-		if(e.getKeyCode() == KeyEvent.VK_DOWN) down.toogle(pressed);
-		if(e.getKeyCode() == KeyEvent.VK_LEFT) left.toogle(pressed);
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT) right.toogle(pressed);
-		if(e.getKeyCode() == KeyEvent.VK_SPACE) bomb.toogle(pressed);
-		if(e.getKeyCode() == KeyEvent.VK_M) menu.toogle(pressed);
-		if(e.getKeyCode() == KeyEvent.VK_ENTER) enter.toogle(pressed);
-		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) escape.toogle(pressed);
-	}
-	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		// Ne rien mettre ici
+		if(e.getKeyCode() == KeyEvent.VK_C) { System.out.println("ok");}
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		toggle(e, true);
+		if(e.getKeyCode() == KeyEvent.VK_UP) up.toogle(true);
+		if(e.getKeyCode() == KeyEvent.VK_DOWN) down.toogle(true);
+		if(e.getKeyCode() == KeyEvent.VK_LEFT) left.toogle(true);
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT) right.toogle(true);
+		if(e.getKeyCode() == KeyEvent.VK_SPACE) bomb.toogle(true);
+		if(e.getKeyCode() == KeyEvent.VK_M) menu.toogle(true);
+		if(e.getKeyCode() == KeyEvent.VK_ENTER) enter.toogle(true);
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) escape.toogle(true);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		toggle(e, false);
+		if(e.getKeyCode() == KeyEvent.VK_UP) up.toogle(false);
+		if(e.getKeyCode() == KeyEvent.VK_DOWN) down.toogle(false);
+		if(e.getKeyCode() == KeyEvent.VK_LEFT) left.toogle(false);
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT) right.toogle(false);
+		if(e.getKeyCode() == KeyEvent.VK_SPACE) bomb.toogle(false);
+		if(e.getKeyCode() == KeyEvent.VK_M) menu.toogle(false);
+		if(e.getKeyCode() == KeyEvent.VK_ENTER) enter.toogle(false);
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) escape.toogle(false);
 	}
 }

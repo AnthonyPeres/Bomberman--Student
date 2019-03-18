@@ -16,6 +16,8 @@ import game.util.Vector2f;
 
 public class Player extends Entity {
 	
+	
+	
 	/** Constructeur */
     public Player(Sprite sprite, Vector2f origin, int size) {
         super(sprite, origin, size);
@@ -85,15 +87,19 @@ public class Player extends Entity {
         }
     }
     
+    
+    
     public void update(double time) {
 		super.update(time);
 		
 		if(!fallen) {
 			move();
+			
 			putABomb();
 			
 			if(!tileCollision.collisionTile(dx, 0)) { pos.x += dx; }
 			if(!tileCollision.collisionTile(0, dy)) { pos.y += dy; }
+			
 		
 		} else {
 			if(animation.hasPlayedOnce()) {
@@ -107,7 +113,7 @@ public class Player extends Entity {
 
     public void input(MouseHandler mouse, KeyHandler key) {
 
-        if(mouse.getButton() == 1) { /* Clique */ }
+        if(mouse.getButton() == 1) { this.fallen = true; }
        
         if(!fallen) {
         	if(key.up.down) { up = true; } else { up = false; }
@@ -115,6 +121,7 @@ public class Player extends Entity {
 	        if(key.left.down) { left = true; } else { left = false; }
 	        if(key.right.down) { right = true; } else { right = false; }
 	        if(key.bomb.down) { bomb = true; } else { bomb = false; }
+	        if(key.choixBombe.down) { System.out.println("true"); } else {}
 	        if(up && down) {up = false; down = false;}
 	        if(right && left) {right = false; left = false;}
         } else {
@@ -123,6 +130,7 @@ public class Player extends Entity {
         	left = false;
         	right = false;
         	bomb = false;
+        	choixBombe = false;
         }
     }
 }
