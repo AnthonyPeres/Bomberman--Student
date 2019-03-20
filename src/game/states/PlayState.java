@@ -38,7 +38,7 @@ public class PlayState extends GameState {
 		ia[1] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(50, Vector2f.getWorldY() - 120), 50);
 		ia[2] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f((Vector2f.getWorldX()-100),(Vector2f.getWorldY()-120)), 50);
 	
-		
+		System.out.println("ok");
 	}
 
 	
@@ -57,15 +57,23 @@ public class PlayState extends GameState {
 		for(int i = 0; i < player.explosions.size(); i++) { if(player.explosions.get(i).propagee == false) {player.explosions.get(i).render(g);}}
 		for(int i = 0; i < ia.length; i++) {ia[i].render(g);}
 		
+		
+		
 	}
 	
 	
 	public void input(MouseHandler mouse, KeyHandler key) {
+		
+		
 		player.input(mouse, key); 
 		
-		if(key.escape.clicked) {
-			//System.exit(0);
-			System.out.println("ll");
+		if(key.escape) {
+			key.escape = false;
+			if(gsm.getState(GameStateManager.PAUSE)) {
+				gsm.pop(GameStateManager.PAUSE);
+			} else {
+				gsm.addAndpop(GameStateManager.PAUSE);
+			}
 		}
 	}
 
@@ -77,7 +85,6 @@ public class PlayState extends GameState {
 		
 		for(int i = 0; i < player.bombList.size(); i++) {if(player.bombList.get(i).getExplose() == false) {player.bombList.get(i).update(time);}}
 		for(int i = 0; i < player.explosions.size(); i++) { if(player.explosions.get(i).propagee == false) {player.explosions.get(i).update(time);}}
-		for(int i = 0; i < ia.length; i++) {ia[i].update(time);}
-		
+		for(int i = 0; i < ia.length; i++) {ia[i].update(time);}		
 	}
 }

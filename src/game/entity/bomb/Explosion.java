@@ -89,6 +89,7 @@ public class Explosion {
 				} else if(fireCollision.collisionCassable(j, 0)) {
 					// On casse et on propage 
 					System.out.println(("collision incassable en d - "+j));
+					
 				} else {
 					// On propage
 					System.out.println(("collision incassable en d - "+j));
@@ -131,7 +132,7 @@ public class Explosion {
 		}
 		
 		/* On supprime de la liste des explosions */
-		//this.propagee = true;
+		this.propagee = true;
 		
 		
 	}

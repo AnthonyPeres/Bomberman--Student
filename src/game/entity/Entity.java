@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import game.entity.bomb.BasicBomb;
 import game.entity.bomb.Bomb;
 import game.entity.bomb.Explosion;
+import game.entity.bomb.HorizontalBomb;
+import game.entity.bomb.MineBomb;
+import game.entity.bomb.PiqBomb;
+import game.entity.bomb.RcBomb;
+import game.entity.bomb.VerticalBomb;
 import game.graphics.Animation;
 import game.graphics.Sprite;
 import game.util.AABB;
@@ -140,6 +145,18 @@ public abstract class Entity {
     	setAnimation(DOWN, sprite.getSpriteArray(DOWN), 5);
     }
 	
+	
+	protected void changeBombe() {
+		if(this.bombeChoisie == 5) {
+			this.bombeChoisie = 0;
+		} else {
+			this.bombeChoisie++;
+		}
+		System.out.println(this.bombeChoisie);
+	}
+	
+	
+	
 	protected void putABomb() {
     	
     	/*  (suite) Faire en sorte que je ne puisse pas poser une bombe sur une autre bombe 
@@ -152,7 +169,21 @@ public abstract class Entity {
     		
     		if(bombposee < maxBomb && (nbX != exPosX || nbY != exPosY)) {
     			
-    			bombList.add(new BasicBomb(new Sprite("entity/spriteBombe.png",30,30), new Vector2f((nbX*50), (nbY*50)) ,50, this));
+    			switch(this.bombeChoisie) {
+    			
+    			case 0: bombList.add(new BasicBomb(new Vector2f((nbX*50), (nbY*50)) ,50, this));
+    				break;
+    			case 1: bombList.add(new HorizontalBomb(new Vector2f((nbX*50), (nbY*50)) ,50, this));
+					break;
+    			case 2: bombList.add(new VerticalBomb(new Vector2f((nbX*50), (nbY*50)) ,50, this));
+					break;
+    			case 3: bombList.add(new MineBomb(new Vector2f((nbX*50), (nbY*50)) ,50, this));
+					break;
+    			case 4: bombList.add(new RcBomb(new Vector2f((nbX*50), (nbY*50)) ,50, this));
+					break;
+    			case 5: bombList.add(new PiqBomb(new Vector2f((nbX*50), (nbY*50)) ,50, this));
+					break;
+    			}
     			
     			this.exPosX = nbX;
     			this.exPosY = nbY;

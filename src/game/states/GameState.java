@@ -10,7 +10,7 @@ import game.util.*;
 public abstract class GameState {
 
 	/** Variables */
-	private GameStateManager gsm;
+	protected GameStateManager gsm;
 	
 	/** Constructeur */
 	public GameState(GameStateManager gsm) {

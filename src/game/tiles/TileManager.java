@@ -110,17 +110,12 @@ public class TileManager {
                 // data contient la matrice du document xml. au premier tour elle contient tout les sols (les 17), au second tout les murs
                 data[i] = eElement.getElementsByTagName("data").item(0).getTextContent();
                 /*	Si i < 1 : donc au premier tour de boucle. On va regarder dans le premier layer, celui ou l'on place 
-                 *  les trous et les objets. On va creer ces objets
+                 *  les briques, le sol
                  *  
-                 *  Si i >= 1 : donc au second tour de boucle. On va regarder dans le second layer, celui ou l'on place les 
-                 *  murs et les briques. On va creer ces objets
+                 *  Si i >= 1 : donc au second tour de boucle. On va regarder dans le second layer, celui ou l'on place les objets
                  * 
                  * */
-                //if(i >= 1) {
-                //	tm.add(new TileMapObj(data[i], sprite, width, height, blockWidth, blockHeight, tileColumns));
-                //} else {
-                	tm.add(new TileMapBlock(data[i], sprite, width, height, blockWidth, blockHeight, tileColumns));
-                //}
+                tm.add(new TileMapBlock(data[i], sprite, width, height, blockWidth, blockHeight, tileColumns));
             }
         } catch(Exception e) {
             System.out.println("Erreur lecture Tilemap");

@@ -10,13 +10,19 @@ public class PauseState extends GameState {
 	public PauseState(GameStateManager gsm) {
 		super(gsm);
 		// TODO Auto-generated constructor stub
+		System.out.println("PAUSED");
+		
 	}
 
 
 	@Override
 	public void input(MouseHandler mouse, KeyHandler key) {
-		// TODO Auto-generated method stub
-
+		// TODO Auto-generated method stub 
+		/*if(key.escape) {
+			key.escape = false;
+			gsm.pop(GameStateManager.PAUSE);
+		}*/
+		
 	}
 
 	@Override
@@ -28,7 +34,7 @@ public class PauseState extends GameState {
 	@Override
 	public void update(double time) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("PAUSED");
 	}
 
 }

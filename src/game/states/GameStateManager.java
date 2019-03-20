@@ -27,7 +27,7 @@ public class GameStateManager {
 	
 	private static Vector2f map;
 	
-	public int onTop = 0;
+	public int onTopState = 0;
 	
 	public static Font font;
 	
@@ -46,7 +46,7 @@ public class GameStateManager {
 		
 		states = new GameState[4];
 		
-		states[PLAY] = new PlayState(this); // Ici on ajoute le statut de jeu (PlayState) dans le GSM
+		states[MENU] = new MenuState(this);
 	}
 	
 	
@@ -71,6 +71,11 @@ public class GameStateManager {
 	}
 	
 	public void pop(int state) { states[state] = null; }
+	
+	
+	public boolean getState(int state) {
+		return states[state] != null;
+	}
 	
 	
 	/** Les 3 prochaines fonctions sont abstraites dans la classe GameState 

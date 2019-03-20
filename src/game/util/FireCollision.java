@@ -23,7 +23,12 @@ public class FireCollision {
 		
 		if(TileMapBlock.tmo_blocks.containsKey(String.valueOf(xt) + "," + String.valueOf(yt))) {		
 			Block block = TileMapBlock.tmo_blocks.get(String.valueOf(xt) + ","+ String.valueOf(yt));
-			if(block instanceof BreakableBlock) { return true; } 
+			if(block instanceof BreakableBlock) { return true; 
+			
+				// Je pense que c'est ici que l'on doit s'occuper de la suppresion du block
+				
+			
+			} 
 		} return false;
 	}
 	

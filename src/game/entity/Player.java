@@ -116,12 +116,12 @@ public class Player extends Entity {
         if(mouse.getButton() == 1) { this.fallen = true; }
        
         if(!fallen) {
-        	if(key.up.down) { up = true; } else { up = false; }
-	        if(key.down.down) { down = true; } else { down = false; }
-	        if(key.left.down) { left = true; } else { left = false; }
-	        if(key.right.down) { right = true; } else { right = false; }
-	        if(key.bomb.down) { bomb = true; } else { bomb = false; }
-	        if(key.choixBombe.down) { System.out.println("true"); } else {}
+        	if(key.up) { up = true; } else { up = false; }
+	        if(key.down) { down = true; } else { down = false; }
+	        if(key.left) { left = true; } else { left = false; }
+	        if(key.right) { right = true; } else { right = false; }
+	        if(key.bomb) { bomb = true; } else { bomb = false; }
+	        if(key.choixBombe) { changeBombe();    key.choixBombe = false;} else {}
 	        if(up && down) {up = false; down = false;}
 	        if(right && left) {right = false; left = false;}
         } else {

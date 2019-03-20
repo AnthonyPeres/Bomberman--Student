@@ -46,9 +46,9 @@ public abstract class Bomb {
 	
 	/** Constructeur */
 	
-	public Bomb(Sprite sprite, Vector2f origin, int size, int type, Entity e) {
+	public Bomb(Vector2f origin, int size, int type, Entity e) {
 		
-		this.sprite = sprite;
+		this.sprite = new Sprite("entity/spriteBombe.png",30,30);
 		this.pos = origin;
 		this.size = size;
 		this.type = type;

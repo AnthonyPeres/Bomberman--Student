@@ -2,8 +2,6 @@ package game.util;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import game.GamePanel;
 
@@ -15,54 +13,19 @@ import game.GamePanel;
 
 public class KeyHandler implements KeyListener {	
 	
-	/** Class "key" */
+	public boolean up;
+	public boolean down;
+	public boolean left;
+	public boolean right;
+	public boolean bomb;
+	public boolean menu;
+	public boolean enter;
 	
-	public class Key {
-		
-		/** Variables */
-		
-		public int presses, absorbs;
-		public boolean down, clicked;
-		
-		/** Constructeur */
-		
-		public Key() {
-			keys.add(this);
-		}
-		
-		/** Méthodes */
-		
-		public void toogle(boolean pressed) {
-			if(pressed != down) {
-				down = pressed;
-			}
-			if(pressed) {
-				presses++;
-			}
-		}
-		
-		public void tick() {
-			if(absorbs < presses) {
-				absorbs++;
-				clicked = true;
-			} else {
-				clicked = false;
-			}
-		}
-	}
-	
-	/** Variables */
-	
-	public static List<Key> keys = new ArrayList<Key>();
-	public Key up = new Key();
-	public Key down = new Key();
-	public Key left = new Key();
-	public Key right = new Key();
-	public Key bomb = new Key();
-	public Key menu = new Key();
-	public Key enter = new Key();
-	public Key escape = new Key();
-	public Key choixBombe = new Key();
+	public boolean escape;
+	public boolean choixBombe;
+	public boolean choixHaut;
+	public boolean choixBas;
+	public boolean choix;
 	
 	
 	/** Constructeur */
@@ -77,32 +40,36 @@ public class KeyHandler implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getKeyCode() == KeyEvent.VK_C) { System.out.println("ok");}
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getKeyCode() == KeyEvent.VK_UP) up.toogle(true);
-		if(e.getKeyCode() == KeyEvent.VK_DOWN) down.toogle(true);
-		if(e.getKeyCode() == KeyEvent.VK_LEFT) left.toogle(true);
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT) right.toogle(true);
-		if(e.getKeyCode() == KeyEvent.VK_SPACE) bomb.toogle(true);
-		if(e.getKeyCode() == KeyEvent.VK_M) menu.toogle(true);
-		if(e.getKeyCode() == KeyEvent.VK_ENTER) enter.toogle(true);
-		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) escape.toogle(true);
+		if(e.getKeyCode() == KeyEvent.VK_UP) up = true; 
+		if(e.getKeyCode() == KeyEvent.VK_DOWN) down = true;
+		if(e.getKeyCode() == KeyEvent.VK_LEFT) left = true;
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT) right = true;
+		if(e.getKeyCode() == KeyEvent.VK_SPACE) bomb = true;
+		if(e.getKeyCode() == KeyEvent.VK_M) menu = true;
+		if(e.getKeyCode() == KeyEvent.VK_ENTER) enter = true;
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getKeyCode() == KeyEvent.VK_UP) up.toogle(false);
-		if(e.getKeyCode() == KeyEvent.VK_DOWN) down.toogle(false);
-		if(e.getKeyCode() == KeyEvent.VK_LEFT) left.toogle(false);
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT) right.toogle(false);
-		if(e.getKeyCode() == KeyEvent.VK_SPACE) bomb.toogle(false);
-		if(e.getKeyCode() == KeyEvent.VK_M) menu.toogle(false);
-		if(e.getKeyCode() == KeyEvent.VK_ENTER) enter.toogle(false);
-		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) escape.toogle(false);
+		if(e.getKeyCode() == KeyEvent.VK_UP) up = false;
+		if(e.getKeyCode() == KeyEvent.VK_DOWN) down = false;
+		if(e.getKeyCode() == KeyEvent.VK_LEFT) left = false;
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT) right = false;
+		if(e.getKeyCode() == KeyEvent.VK_SPACE) bomb = false;
+		if(e.getKeyCode() == KeyEvent.VK_M) menu = false;
+		if(e.getKeyCode() == KeyEvent.VK_ENTER) enter = false;
+		
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) escape = true;
+		if(e.getKeyCode() == KeyEvent.VK_DOWN) choixBas = true;
+		if(e.getKeyCode() == KeyEvent.VK_UP) choixHaut = true;
+		if(e.getKeyCode() == KeyEvent.VK_C) choixBombe = true;
+		if(e.getKeyCode() == KeyEvent.VK_ENTER) choix = true;
+			
 	}
 }

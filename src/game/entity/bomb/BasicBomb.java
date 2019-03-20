@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import game.entity.Entity;
-import game.graphics.Sprite;
 import game.util.Vector2f;
 
 
@@ -12,8 +11,8 @@ public class BasicBomb extends Bomb {
 
 	/** Constructeur */
 	
-	public BasicBomb(Sprite sprite, Vector2f pos, int size, Entity entity) {
-		super(sprite, pos, size, 0, entity);
+	public BasicBomb(Vector2f pos, int size, Entity entity) {
+		super(pos, size, 0, entity);
 		this.rayonX = 2;
 		this.rayonY = 2;
 	}
