@@ -8,11 +8,9 @@ import game.util.Vector2f;
 
 public class MineBomb extends Bomb {
 
-	public MineBomb(Vector2f origin, int size, Entity e) {
-		super(origin, size, 3, e);
+	public MineBomb(Vector2f pos, int size, Entity entity) {
+		super(pos, size, 3, 1, 1, entity);
 		// TODO Auto-generated constructor stub
-		this.rayonX = 1;
-		this.rayonY = 1;
 	}
 	
 	public void update(double time) {

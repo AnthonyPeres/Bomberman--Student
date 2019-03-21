@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import game.entity.bomb.BasicBomb;
 import game.entity.bomb.Bomb;
-import game.entity.bomb.Explosion;
 import game.entity.bomb.HorizontalBomb;
 import game.entity.bomb.MineBomb;
 import game.entity.bomb.PiqBomb;
@@ -74,10 +73,6 @@ public abstract class Entity {
 	protected int bombeChoisie = 0;
 	
 	public ArrayList<Bomb> bombList = new ArrayList<Bomb>();
-	public ArrayList<Explosion> explosions = new ArrayList<Explosion>();
-	
-				
-	boolean toucheC = false;
 			
 	/** Constructeur */
 	

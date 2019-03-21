@@ -8,11 +8,9 @@ import game.util.Vector2f;
 
 public class RcBomb extends Bomb {
 
-	public RcBomb(Vector2f origin, int size, Entity e) {
-		super(origin, size, 4, e);
+	public RcBomb(Vector2f pos, int size, Entity entity) {
+		super(pos, size, 4, 1, 1, entity);
 		// TODO Auto-generated constructor stub
-		this.rayonX = 1;
-		this.rayonY = 1;
 	}
 	
 	public void update(double time) {

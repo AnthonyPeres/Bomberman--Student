@@ -4,7 +4,10 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 
 import game.graphics.Sprite;
-import game.tiles.blocks.*;
+import game.tiles.blocks.Block;
+import game.tiles.blocks.BreakableBlock;
+import game.tiles.blocks.GroundBlock;
+import game.tiles.blocks.ObstacleBlock;
 import game.util.Vector2f;
 
 /**
@@ -18,6 +21,8 @@ public class TileMapBlock extends TileMap {
 	/** Variables */
 	public static HashMap<String, Block> tmo_blocks;
 
+	private static Sprite sprite;
+	
     /** Constructeur */
     
     /**
@@ -30,6 +35,8 @@ public class TileMapBlock extends TileMap {
      * */
     public TileMapBlock(String data, Sprite sprite, int width, int height, int tileWidth, int tileHeight, int tileColumns) {
         
+    	TileMapBlock.sprite = sprite;
+    	
     	Block tempBlock;
         
         tmo_blocks = new HashMap<String, Block>();
@@ -45,19 +52,20 @@ public class TileMapBlock extends TileMap {
              
             if(temp != 0) {
             	if(temp == 10) {
-            		tempBlock = new GroundBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns)), pos, tileWidth, tileHeight);
+            		tempBlock = new GroundBlock(pos, tileWidth, tileHeight);
             	} else if(temp == 1) {
             		tempBlock = new BreakableBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos, tileWidth, tileHeight);
             	} else {
             		tempBlock = new ObstacleBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos, tileWidth, tileHeight);
             	}
-            	//System.out.println(i+ " : "+temp+" - pos ="+pos.x+" en x et "+pos.y+" en y");
             	tmo_blocks.put(String.valueOf((int) (i % width)) + "," + String.valueOf((int) (i / width)), tempBlock);
             }
         }
     }
     
-   
+   public static Sprite getSprite() {
+	   return sprite;
+   }
     
 
     public void render(Graphics2D g) {

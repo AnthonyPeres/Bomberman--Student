@@ -8,8 +8,8 @@ import game.util.Vector2f;
 
 public class PiqBomb extends Bomb {
 
-	public PiqBomb(Vector2f origin, int size, Entity e) {
-		super(origin, size, 5, e);
+	public PiqBomb(Vector2f pos, int size, Entity entity) {
+		super(pos, size, 5, 2, 2, entity);
 		// TODO Auto-generated constructor stub
 		this.rayonX = 2;
 		this.rayonY = 2;

@@ -7,6 +7,7 @@ import game.entity.Entity;
 import game.graphics.Animation;
 import game.graphics.Sprite;
 import game.util.AABB;
+import game.util.FireCollision;
 import game.util.Vector2f;
 
 public abstract class Bomb {
@@ -34,27 +35,25 @@ public abstract class Bomb {
 	protected AABB bounds;
 	
 	/* Explosion */
-	protected boolean explose;
-	protected int tempsAvantExplosion = 120;
+	protected int tempsAvantExplosion = 120;					// A REGLER (pour l'instant : 2 secondes) 
 	protected int rayonX;
 	protected int rayonY;
 	
 	/* Entite posant la bombe */
 	protected Entity ent;
 	
-	protected Explosion expl;
+	protected FireCollision fireCollision;
 	
 	/** Constructeur */
 	
-	public Bomb(Vector2f origin, int size, int type, Entity e) {
+	public Bomb(Vector2f origin, int size, int type, int rayonX, int rayonY, Entity e) {
 		
 		this.sprite = new Sprite("entity/spriteBombe.png",30,30);
 		this.pos = origin;
 		this.size = size;
 		this.type = type;
-		
-		ani = new Animation();
-		setAnimation(type, sprite.getSpriteArray(type), 10);
+		this.rayonX = rayonX;
+		this.rayonY = rayonY;
 		
 		bounds = new AABB(origin, size, size);
 		this.bounds.setWidth(50);
@@ -62,28 +61,93 @@ public abstract class Bomb {
 		this.bounds.setXOffset(0);
 		this.bounds.setYOffset(0);
 		
-		this.explose = false;
+		ani = new Animation();
+		setAnimation(type, sprite.getSpriteArray(type), 10);
 		
 		this.ent = e;
+		this.fireCollision = new FireCollision(this);
 	}
 	
 	
 	/** Méthodes */
 	
-	public void explose() {
+	public void explose() {															// ON DOIT FAIRE L'EXPLOSION SELON LE TYPE DE LA BOMBE ( SI ELLE EST LARGE ECT ) 
 		
-		/* On creer une nouvelle explosion et on la fait propagée */
-		this.expl = new Explosion(this.pos, rayonX, rayonY, this.ent);
-		this.ent.explosions.add(expl);
+		new Fire(new Vector2f((int) this.pos.x, (int) this.pos.y), "centre", 0);
 			
+		if(rayonX != 0) {
+			/* On test toutes les collisions des flammes allant vers la gauche */
+			for(int i = 1; i <= rayonX; i++) {
+				
+				if(fireCollision.collisionIncassable(-i, 0)) {
+					// On arrete de bruler
+					i = rayonX;
+				} else {
+					// Si il n'y a pas de collision incassable on brule dans tout les cas 
+					new Fire(new Vector2f((int) this.pos.x - (i*50), (int) this.pos.y), "gauche", i);
+					
+					// Et on casse les briques cassables si il y en a 
+					if(fireCollision.collisionCassable(-i, 0)) {
+						System.out.println(("collision cassable en g - "+i));
+					}
+				}
+			}
+					
+			/* On test toutes les collisions des flammes allant vers la droite */
+			for(int j = 1; j <= rayonX; j++) {
+				if(fireCollision.collisionIncassable(j, 0)) {
+					// On arrete de bruler
+					j = rayonX;
+				} else {
+					// Si il n'y a pas de collision incassable on brule dans tout les cas 
+					new Fire(new Vector2f((int) this.pos.x + (j*50), (int) this.pos.y), "droite", j);
+					
+					// Et on casse les briques cassables si il y en a 
+					if(fireCollision.collisionCassable(j, 0)) {
+						System.out.println(("collision cassable en d - "+j));
+					}
+				}
+			}
+		}
+		
+		if(rayonY != 0) {
+			/* On test toutes les collisions des flammes allant vers le haut */
+			for(int k = 1; k <= rayonY; k++) {
+				if(fireCollision.collisionIncassable(0, -k)) {
+					// On arrete de bruler
+					k = rayonY;
+				} else {
+					// Si il n'y a pas de collision incassable on brule dans tout les cas 
+					new Fire(new Vector2f((int) this.pos.x, (int) this.pos.y - (k*50)), "haut", k);
+					
+					// Et on casse les briques cassables si il y en a 
+					if(fireCollision.collisionCassable(0, -k)) {
+						System.out.println(("collision incassable en h - "+k));
+					}
+				}
+			}
+				
+			/* On test toutes les collisions des flammes allant vers le bas */
+			for(int l = 1; l <= rayonY; l++) {
+				if(fireCollision.collisionIncassable(0, l)) {
+					// On arrete de bruler
+					l = rayonY;
+				} else {
+					// Si il n'y a pas de collision incassable on brule dans tout les cas 
+					new Fire(new Vector2f((int) this.pos.x, (int) this.pos.y + (l*50)), "bas", l);
+					
+					// Et on casse les briques cassables si il y en a 
+					if(fireCollision.collisionCassable(0, l)) {
+						System.out.println(("collision incassable en b - "+l));
+					}
+				}
+			}
+		} 
+		
+		/* On enleve la bombe de la liste des bombes du joueur */
 		this.ent.bombList.remove(this);
 		this.ent.setBombposee(this.ent.getBombposee() - 1);
-			
-		
-		
 	}
-	
-	public abstract void render(Graphics2D g);
 	
 	public void animate() {
 		if(type == BASIC) { 	// Touche haut appuyée 
@@ -122,10 +186,11 @@ public abstract class Bomb {
 	}
 	
 	public void decouleTemps() {
-        if (--tempsAvantExplosion == 0)
-        	 explose();
+        if (--tempsAvantExplosion == 0) { explose(); }
 	}
-
+	
+	public abstract void render(Graphics2D g);
+	
 	public void update(double time) {
 		animate();
 		ani.update();
@@ -138,7 +203,6 @@ public abstract class Bomb {
 	public Animation getAnimation() {return ani;}
 	public AABB getBounds() {return bounds;}
 	public Vector2f getPos() {return pos;}
-	public boolean getExplose() {return explose;}
 	public int getTempsAvantExplosion() {return tempsAvantExplosion;}
 	public int getRayonX() { return this.rayonX; }
 	public int getRayonY() { return this.rayonY; }

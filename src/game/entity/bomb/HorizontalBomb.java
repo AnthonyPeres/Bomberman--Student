@@ -8,11 +8,9 @@ import game.util.Vector2f;
 
 public class HorizontalBomb extends Bomb {
 
-	public HorizontalBomb(Vector2f origin, int size, Entity e) {
-		super(origin, size, 1, e);
+	public HorizontalBomb(Vector2f pos, int size, Entity entity) {
+		super(pos, size, 1, 3, 0, entity);
 		// TODO Auto-generated constructor stub
-		this.rayonX = 3;
-		this.rayonY = 0;
 	}
 	
 	public void update(double time) {
