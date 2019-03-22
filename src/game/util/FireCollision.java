@@ -30,7 +30,7 @@ public class FireCollision {
 				
 				
 				
-				((BreakableBlock) block).casse = true;
+				((BreakableBlock) block).disparait();
 				
 				return true; 
 			} 

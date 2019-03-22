@@ -21,7 +21,7 @@ public class TileMapBlock extends TileMap {
 	/** Variables */
 	public static HashMap<String, Block> tmo_blocks;
 
-	private static Sprite sprite;
+	public static Sprite sprite;
 	
     /** Constructeur */
     
@@ -52,7 +52,8 @@ public class TileMapBlock extends TileMap {
              
             if(temp != 0) {
             	if(temp == 10) {
-            		tempBlock = new GroundBlock(pos, tileWidth, tileHeight);
+            		tempBlock = new GroundBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos, tileWidth, tileHeight);
+            		System.out.println((temp - 1) % tileColumns+", "+(int) ((temp - 1) / tileColumns));
             	} else if(temp == 1) {
             		tempBlock = new BreakableBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos, tileWidth, tileHeight);
             	} else {
@@ -61,7 +62,7 @@ public class TileMapBlock extends TileMap {
             	tmo_blocks.put(String.valueOf((int) (i % width)) + "," + String.valueOf((int) (i / width)), tempBlock);
             }
         }
-    }
+   }
     
    public static Sprite getSprite() {
 	   return sprite;
@@ -70,7 +71,13 @@ public class TileMapBlock extends TileMap {
 
     public void render(Graphics2D g) {
         for(Block block: tmo_blocks.values()) {
-            block.render(g);
+        	if(block instanceof BreakableBlock) {
+        		if(!block.casse) {
+        			block.render(g);
+        		}
+        	} else {
+        		block.render(g);
+        	}
         }
     }
 }

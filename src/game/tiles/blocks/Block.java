@@ -17,6 +17,7 @@ public abstract class Block {
     protected BufferedImage img;
     protected Vector2f pos;
 
+    public boolean casse = false;
     /** Constructeur */
     
     public Block(BufferedImage img, Vector2f pos, int w, int h) {

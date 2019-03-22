@@ -54,7 +54,6 @@ public class Fire {
 		
 		PlayState.listFlammes.add(this);
 		
-		System.out.println(pos.x +" , "+pos.y+", "+ direction+", "+ ecart);
 	}
 
 	
