@@ -23,9 +23,9 @@ public class PlayState extends GameState {
 
 	/** Variables */
 	
-	private Player player;
+	private static Player player;
 	private TileManager tm;
-	private IA[] ia = new IA[3];
+	private static IA[] ia = new IA[3];
 	
 	public static ArrayList<Fire> listFlammes = new ArrayList<Fire>();
 	
@@ -34,8 +34,8 @@ public class PlayState extends GameState {
 	
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
-		tm = new TileManager("tile/mapDeveloppement.xml"); // On charge la map (.xml)
-		player = new Player(new Sprite("entity/spriteBomber.png", 16, 25), new Vector2f(400,400), 50);	// On charge le sprite du joueur 
+		tm = new TileManager("tile/mapBomber.xml"); // On charge la map (.xml)
+		player = new Player(new Sprite("entity/spriteBomber.png", 16, 25), new Vector2f(55,25), 50);	// On charge le sprite du joueur 
 		ia[0] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(Vector2f.getWorldX() - 100, 25), 50);
 		ia[1] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(50, Vector2f.getWorldY() - 120), 50);
 		ia[2] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f((Vector2f.getWorldX()-100),(Vector2f.getWorldY()-120)), 50);
@@ -48,6 +48,7 @@ public class PlayState extends GameState {
 	public void render(Graphics2D g) {	
 		tm.render(g);				
 		Sprite.drawArray(g, GamePanel.oldFrameCount + "FPS", new Vector2f(GamePanel.width - 110 ,15), 20, 20, 20);
+		Sprite.drawArray(g, "Bombe "+player.getBombeChoisie(), new Vector2f(50 ,15), 20, 20, 20);
 		player.render(g);
 		
 		for(int i = 0; i < player.bombList.size(); i++) { player.bombList.get(i).render(g);}
@@ -73,9 +74,20 @@ public class PlayState extends GameState {
 	public void update(double time) {
 		// TODO Auto-generated method stub
 		player.update(time);	
-		
+		for(int i = 0; i < ia.length; i++) {ia[i].update(time);}
 		for(int i = 0; i < player.bombList.size(); i++) {player.bombList.get(i).update(time);}
 		for(int i = 0; i < listFlammes.size(); i++) {listFlammes.get(i).update(time);}
 		for(int i = 0; i < ia.length; i++) {ia[i].update(time);}		
 	}
+
+
+	public static Player getPlayer() {
+		return player;
+	}
+
+
+	public static IA getIa(int i) {
+		return ia[i];
+	}
+
 }

@@ -11,6 +11,9 @@ import game.util.Vector2f;
 
 public class Fire {
 
+	/* Ligne du sprite */
+	protected String direction;
+	protected int ecart;
 	protected final int CENTRE = 0;
 	protected final int BAS = 1;
 	protected final int BAS2 = 2;
@@ -21,42 +24,41 @@ public class Fire {
 	protected final int HAUT = 7;
 	protected final int HAUT2 = 8;
 	
+	/* Animation */
 	public Animation animation;
 	protected Sprite sprite;
-	protected Vector2f pos;
 	protected int currentAnimation;
-	protected int size;
 	
+	/* Positionnement */
+	protected Vector2f pos;
+	protected int size;
 	protected AABB bounds;
 	
-	protected String direction;
-	protected int ecart;
 	
+	/** Constructeur */
 	
 	public Fire(Vector2f pos, String direction, int ecart) {
+		
+		this.direction = direction;
+		this.ecart = ecart;
+		
 		this.sprite = new Sprite("entity/spriteFlammes.png",16,16);
+		animation = new Animation();
+		setAnimation(0, sprite.getSpriteArray(0), 5);
+		
 		this.pos = pos;
 		this.size = 50;
-		
-		
 		bounds = new AABB(pos, size, size);
 		this.bounds.setWidth(50);
 		this.bounds.setHeight(50);
 		this.bounds.setXOffset(0);
 		this.bounds.setYOffset(0);
 		
-		this.direction = direction;
-		this.ecart = ecart;
-		
-		animation = new Animation();
-		setAnimation(0, sprite.getSpriteArray(0), 5);
-		
-		
 		PlayState.listFlammes.add(this);
 		
 	}
 
-	
+	/** Méthodes */
 	
 	private void animate() {
 		// TODO Auto-generated method stub
@@ -87,14 +89,12 @@ public class Fire {
 		}
 	}
 	
-
 	public void setAnimation(int i, BufferedImage[] frames, int delay) {
 		currentAnimation = i;
 		animation.setFrames(frames);
 		animation.setDelay(delay);
 	}
 	
-
 	public void update(double time) {
 		animate();
 		animation.update();
@@ -103,22 +103,16 @@ public class Fire {
 		}
 	}
 	
-	
-
-
 	public void render(Graphics2D g) {
-		/* On dessine les rectangles des rayons des flammes */
 		g.drawImage(animation.getImage(), (int) bounds.getPos().x,(int) bounds.getPos().y, size, size, null);
 	}
-	
-	
+
 	/** Accesseurs */
 	
 	public AABB getBounds() { return bounds; }
 	public int getSize() {return size;}
 	public Animation getAnimation() {return animation;}
 	public Vector2f getPos() {return pos;}
-
 	
 	/** Mutateurs */
 	public void setSprite(Sprite sprite) {this.sprite = sprite;}

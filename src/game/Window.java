@@ -2,11 +2,6 @@ package game;
 
 import javax.swing.JFrame;
 
-/**
- * 	La fenetre du jeu 
- * 
- * */
-
 @SuppressWarnings("serial")
 public class Window extends JFrame {
 

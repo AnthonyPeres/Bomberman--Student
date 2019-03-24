@@ -92,6 +92,13 @@ public class AABB {
 		size = r;
 	}
 	
+	public void setCube(int w, int h, int xoffset, int yoffset) {
+		this.w = w;
+		this.h = h;
+		this.xOffset = xoffset;
+		this.yOffset = yoffset;
+	}
+	
 	
 	/** Accesseurs */
 
