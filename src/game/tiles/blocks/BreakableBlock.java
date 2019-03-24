@@ -20,9 +20,9 @@ public class BreakableBlock extends Block {
 	@Override
 	public boolean update(AABB p) {
 		// TODO Auto-generated method stub
-		if(casse) {
+		/*if(casse) {
 			return false;
-		}
+		}*/
 		return true;
 	}
 	
