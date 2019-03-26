@@ -84,7 +84,13 @@ public class MenuState extends GameState {
 				
 				// Score
 				if(selection) {
-					
+					if(gsm.isStateActive(GameStateManager.SCORE)) {
+						gsm.pop(GameStateManager.SCORE);
+						gsm.remove(GameStateManager.MENU);
+					} else {
+						gsm.addAndpop(GameStateManager.SCORE, GameStateManager.MENU);
+						
+					}
 				}
 			break;
 				
@@ -94,7 +100,13 @@ public class MenuState extends GameState {
 				
 				// Aide 
 				if(selection) {
-					
+					if(gsm.isStateActive(GameStateManager.AIDE)) {
+						gsm.pop(GameStateManager.AIDE);
+						gsm.remove(GameStateManager.MENU);
+					} else {
+						gsm.addAndpop(GameStateManager.AIDE, GameStateManager.MENU);
+						
+					}
 				}
 			break;
 				

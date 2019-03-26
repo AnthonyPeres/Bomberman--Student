@@ -48,6 +48,7 @@ public class GameStateManager {
 		
 		states[MENU] = new MenuState(this);
 		//states[PLAY] = new PlayState(this);
+		//states[AIDE] = new AideState(this);
 	}
 	
 	
@@ -77,8 +78,8 @@ public class GameStateManager {
 		if (state == MENU){states[MENU] = (new MenuState(this));}			// On ajoute un menu
 		if (state == PAUSE){states[PAUSE] = (new PauseState(this));}			// On ajoute une pause
 		if (state == GAMEOVER){states[GAMEOVER] = (new GameOverState(this));}	// On ajoute une fin de jeu 
-		//if (state == SCORE){states[SCORE] = (new GameOverState(this));}	// On ajoute une fin de jeu 
-		//if (state == AIDE){states[AIDE] = (new GameOverState(this));}	// On ajoute une fin de jeu 
+		if (state == SCORE){states[SCORE] = (new ScoreState(this));}	// On ajoute une fin de jeu 
+		if (state == AIDE){states[AIDE] = (new AideState(this));}	// On ajoute une fin de jeu 
 	}
 	
 	
