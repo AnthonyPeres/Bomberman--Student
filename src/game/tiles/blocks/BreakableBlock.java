@@ -20,9 +20,9 @@ public class BreakableBlock extends Block {
 	@Override
 	public boolean update(AABB p) {
 		// TODO Auto-generated method stub
-		if(casse) {
+		/*if(casse) {
 			return false;
-		}
+		}*/
 		return true;
 	}
 	
@@ -34,8 +34,8 @@ public class BreakableBlock extends Block {
 
 	public void disparait() {
 		// TODO Auto-generated method stub
-		TileMapBlock.tmo_blocks.remove(String.valueOf((int) (this.pos.x / 50)) + "," + String.valueOf(this.pos.y / 50), this);
-		TileMapBlock.tmo_blocks.put(String.valueOf((int) (this.pos.x / 50)) + "," + String.valueOf(this.pos.y / 50), new GroundBlock(TileMapBlock.sprite.getSprite(3,1), this.pos, 50, 50));
+		TileMapBlock.tmo_blocks.remove(String.valueOf((int) (this.pos.x / 50)) + "," + String.valueOf((int) (this.pos.y / 50)), this);
+		TileMapBlock.tmo_blocks.put(String.valueOf((int) (this.pos.x / 50)) + "," + String.valueOf((int) (this.pos.y / 50)), new GroundBlock(TileMapBlock.sprite.getSprite(3,1), this.pos, 50, 50));
 		this.casse = true;
 	}
 }
