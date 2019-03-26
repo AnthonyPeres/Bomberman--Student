@@ -25,7 +25,6 @@ public class TileManager {
 	
     public static ArrayList<TileMap> tm;	// Liste de tuiles
 
-    
     /** Constructeur */
     
     /* Le path est le lien du document a charger */

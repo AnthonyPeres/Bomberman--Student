@@ -15,7 +15,7 @@ import game.entity.bomb.VerticalBomb;
 import game.graphics.Animation;
 import game.graphics.Sprite;
 import game.util.AABB;
-import game.util.TileCollision;
+import game.util.Collision;
 import game.util.Vector2f;
 
 /**
@@ -63,7 +63,7 @@ public class Entity {
 	
 	/* La gestion des collisions */
 	protected AABB boundsCollision;
-	protected TileCollision tileCollision;
+	protected Collision collision;
 	
 	/* Gestion des bombes */
 	public ArrayList<Bomb> bombList = new ArrayList<Bomb>();
@@ -91,7 +91,7 @@ public class Entity {
 		this.positionInitialeY = (int) this.pos.y;
 		
 		/* Collisions */
-		tileCollision = new TileCollision(this);	
+		collision = new Collision(this);	
 		boundsCollision = new AABB(origin, size, size);
 		this.boundsCollision.setCube(45, 29, 2, 40);
 		

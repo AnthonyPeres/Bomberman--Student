@@ -17,8 +17,8 @@ public class IA extends Entity {
 			move();
 			putABomb();
 			
-			if(!tileCollision.collisionTile(dx, 0)) { pos.x += dx; }
-			if(!tileCollision.collisionTile(0, dy)) { pos.y += dy; }
+			if(!collision.collisionBlock(dx, 0)) { pos.x += dx; }
+			if(!collision.collisionBlock(0, dy)) { pos.y += dy; }
 			
 		
 		} else {

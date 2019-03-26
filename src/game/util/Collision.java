@@ -1,5 +1,6 @@
 package game.util;
 
+import game.entity.Entity;
 import game.entity.bomb.Bomb;
 import game.states.PlayState;
 import game.tiles.TileMapBlock;
@@ -7,18 +8,46 @@ import game.tiles.blocks.Block;
 import game.tiles.blocks.BreakableBlock;
 import game.tiles.blocks.ObstacleBlock;
 
-public class FireCollision {
+public class Collision {
 
+	/** Attributs */
 	
 	private Bomb b;
+	private Entity e;
 	
-	public FireCollision(Bomb b) {
-		this.b = b;
+	
+	/** Constructeur */
+	
+	public Collision(Bomb b) { this.b = b; }
+	public Collision(Entity e) { this.e = e; }
+	
+	
+	/** Méthodes */
+	
+	/* Fonction de collision avec les blocs */
+	
+	public boolean collisionBlock(float ax, float ay) {
+		int ptArriveX = (int) (e.getBounds().getPos().x + ax);
+		int ptArriveY = (int) (e.getBounds().getPos().y + ay);
+	
+		for(int c = 0; c < 4; c++) {
+			
+			int xt = (int) (ptArriveX + (c % 2) * e.getBounds().getWidth() + e.getBounds().getXOffset()) / 50;
+			int yt = (int) (ptArriveY + ((int)(c / 2)) * e.getBounds().getHeight() + e.getBounds().getYOffset()) / 50;
+			
+			if(TileMapBlock.tmo_blocks.containsKey(String.valueOf(xt) + "," + String.valueOf(yt))) {
+				Block block = TileMapBlock.tmo_blocks.get(String.valueOf(xt) + ","+ String.valueOf(yt));
+				if(block instanceof ObstacleBlock || block instanceof BreakableBlock) {
+					return TileMapBlock.tmo_blocks.get(String.valueOf(xt) + "," + String.valueOf(yt)).update(e.getBounds());
+				}	
+			} 
+		} return false;
 	}
 	
-	public boolean collisionCassable(float ax, float ay) {
-		
-		/* xt et yt valent la case exacte */
+	
+	/* Collision du feu */
+	
+	public boolean FireCassable(float ax, float ay) {
 		int xt = (int) (((b.getBounds().getPos().x + (ax*50)) + b.getBounds().getXOffset()) / 50);
 		int yt = (int) (((b.getBounds().getPos().y + (ay*50)) + b.getBounds().getYOffset()) / 50);
 		
@@ -31,9 +60,7 @@ public class FireCollision {
 		} return false;
 	}
 	
-	public boolean collisionIncassable(float ax, float ay) {
-		
-		/* xt et yt valent la case exacte */
+	public boolean FireIncassable(float ax, float ay) {
 		int xt = (int) (((b.getBounds().getPos().x + (ax*50)) + b.getBounds().getXOffset()) / 50);
 		int yt = (int) (((b.getBounds().getPos().y + (ay*50)) + b.getBounds().getYOffset()) / 50);
 		
@@ -43,9 +70,7 @@ public class FireCollision {
 		} return false;
 	}
 	
-	public void collisionJoueur(float ax, float ay) {
-		
-		/* xt et yt valent la case exacte */
+	public void FireJoueur(float ax, float ay) {
 		int xt = (int) (((b.getBounds().getPos().x + (ax*50)) + b.getBounds().getXOffset()) / 50);
 		int yt = (int) (((b.getBounds().getPos().y + (ay*50)) + b.getBounds().getYOffset()) / 50);
 		

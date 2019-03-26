@@ -7,7 +7,7 @@ import game.entity.Entity;
 import game.graphics.Animation;
 import game.graphics.Sprite;
 import game.util.AABB;
-import game.util.FireCollision;
+import game.util.Collision;
 import game.util.Vector2f;
 
 public class Bomb {
@@ -34,7 +34,7 @@ public class Bomb {
 	
 	/* Cubes pour les colisions */
 	protected AABB bounds;
-	protected FireCollision fireCollision;
+	protected Collision collision;
 	
 	/* Explosion */
 	protected int tempsAvantExplosion = 120;
@@ -60,7 +60,7 @@ public class Bomb {
 		
 		bounds = new AABB(origin, size, size);
 		this.bounds.setCube(50, 50, 0, 0);
-		this.fireCollision = new FireCollision(this);
+		this.collision = new Collision(this);
 		
 		this.rayonX = rayonX;
 		this.rayonY = rayonY;
@@ -80,21 +80,21 @@ public class Bomb {
 		if(rayonX != 0) {
 			/* Gauche */
 			for(int i = 1; i <= rayonX; i++) {
-				if(fireCollision.collisionIncassable(-i, 0)) { i = rayonX;} 
+				if(collision.FireIncassable(-i, 0)) { i = rayonX;} 
 				else {
 					new Fire(new Vector2f((int) this.pos.x - (i*50), (int) this.pos.y), "gauche", i);
-					fireCollision.collisionJoueur(-i, 0);
-					fireCollision.collisionCassable(-i, 0);	
+					collision.FireJoueur(-i, 0);
+					collision.FireCassable(-i, 0);	
 				}
 			}
 					
 			/* Droite */
 			for(int j = 1; j <= rayonX; j++) {
-				if(fireCollision.collisionIncassable(j, 0)) { j = rayonX; } 
+				if(collision.FireIncassable(j, 0)) { j = rayonX; } 
 				else {
 					new Fire(new Vector2f((int) this.pos.x + (j*50), (int) this.pos.y), "droite", j);
-					fireCollision.collisionJoueur(j, 0);
-					fireCollision.collisionCassable(j, 0);
+					collision.FireJoueur(j, 0);
+					collision.FireCassable(j, 0);
 				}
 			}
 		}
@@ -102,21 +102,21 @@ public class Bomb {
 		if(rayonY != 0) {
 			/* Haut */
 			for(int k = 1; k <= rayonY; k++) {
-				if(fireCollision.collisionIncassable(0, -k)) {k = rayonY;} 
+				if(collision.FireIncassable(0, -k)) {k = rayonY;} 
 				else {
 					new Fire(new Vector2f((int) this.pos.x, (int) this.pos.y - (k*50)), "haut", k);
-					fireCollision.collisionJoueur(0, -k);
-					fireCollision.collisionCassable(0, -k);
+					collision.FireJoueur(0, -k);
+					collision.FireCassable(0, -k);
 				}
 			}
 				
 			/* Bas */
 			for(int l = 1; l <= rayonY; l++) {
-				if(fireCollision.collisionIncassable(0, l)) {l = rayonY;} 
+				if(collision.FireIncassable(0, l)) {l = rayonY;} 
 				else { 
 					new Fire(new Vector2f((int) this.pos.x, (int) this.pos.y + (l*50)), "bas", l);
-					fireCollision.collisionJoueur(0, l);
-					fireCollision.collisionCassable(0, l);
+					collision.FireJoueur(0, l);
+					collision.FireCassable(0, l);
 				}
 			}
 		} 

@@ -10,13 +10,10 @@ public class GroundBlock extends Block {
 
 	
     public GroundBlock(BufferedImage img, Vector2f pos, int w, int h) {
-        super(img, pos, w, h);
-        
+        super(img, pos, w, h);  
     }
 
     public boolean update(AABB p) {
-    	
-    	/** ICI SI ON MET L'ARGUMENT A FALSE IL N'Y A PAS DE COLLISIONS */
         return false;
     }
     
