@@ -1,39 +1,27 @@
-
 package game.tiles.blocks;
-
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import game.util.*;
+import game.entity.Affichable;
+import game.util.AABB;
+import game.util.Vector2f;
 
-public abstract class Block {
+public abstract class Block extends Affichable {
    
 	/** Variables */
-	
-	protected int w;
-    protected int h;
     
-    protected BufferedImage img;
-    protected Vector2f pos;
-
     public boolean casse = false;
    
     /** Constructeur */
     
-    public Block(BufferedImage img, Vector2f pos, int w, int h) {
-        this.img = img;
-        this.pos = pos;
-        this.w = w;
-        this.h = h;
+    public Block(BufferedImage img, Vector2f pos) {
+        super(img, pos);
     }
 
-    public abstract boolean update(AABB p);
-    
+    public abstract boolean update(AABB p); 
+
     public void render(Graphics2D g) {
-        g.drawImage(img, (int) pos.x, (int) pos.y, w, h, null);
+    	g.drawImage(this.getImage(), (int) this.getPos().x, (int) this.getPos().y, this.getWidth(), this.getHeight(), null);
     }
-    
-    
-    public Vector2f getPos() {return pos;}
 }

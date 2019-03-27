@@ -25,6 +25,9 @@ public class TileManager {
 	
     public static ArrayList<TileMap> tm;	// Liste de tuiles
 
+    private static int width;
+    private static int height;
+    
     /** Constructeur */
     
     /* Le path est le lien du document a charger */
@@ -59,8 +62,8 @@ public class TileManager {
         
         Sprite sprite; 	// Contient l'image utilisé dans le document xml (map)
         
-        int width = 0; 	// Taille de la map en largeur (16)
-        int height = 0;	// Taille de la map en hauteur (12)
+        width = 0; 	// Taille de la map en largeur (16)
+        height = 0;	// Taille de la map en hauteur (12)
         
         String[] data = new String[10];	// Contient la matrice 
 
@@ -127,4 +130,7 @@ public class TileManager {
             tm.get(i).render(g);
         }
     }
+    
+    public static int getWidth() {return width;}
+    public static int getHeight() {return height;}
 }

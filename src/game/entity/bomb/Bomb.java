@@ -1,16 +1,15 @@
 package game.entity.bomb;
 
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
+import game.entity.Affichable;
 import game.entity.Entity;
-import game.graphics.Animation;
 import game.graphics.Sprite;
-import game.util.AABB;
+import game.states.PlayState;
 import game.util.Collision;
 import game.util.Vector2f;
 
-public class Bomb {
+public class Bomb extends Affichable {
 	
 	/** Variables */
 	
@@ -23,17 +22,8 @@ public class Bomb {
 	protected final int RC = 4;
 	protected final int PIQ = 5;
 	
-	/* Animation */
-	protected Animation ani;
-	protected Sprite sprite;
-	protected int currentAnimation;
 	
-	/* Positionnement */
-	protected Vector2f pos;
-	protected int size;
-	
-	/* Cubes pour les colisions */
-	protected AABB bounds;
+
 	protected Collision collision;
 	
 	/* Explosion */
@@ -48,18 +38,12 @@ public class Bomb {
 	
 	public Bomb(Vector2f origin, int size, int type, int rayonX, int rayonY, Entity e) {
 		
+		super(new Sprite("entity/spriteBombe.png",30,30), origin,size);
+		
 		this.type = type;
 		
-		this.sprite = new Sprite("entity/spriteBombe.png",30,30);
-		ani = new Animation();
 		setAnimation(type, sprite.getSpriteArray(type), 10);
 		
-		
-		this.pos = origin;
-		this.size = size;
-		
-		bounds = new AABB(origin, size, size);
-		this.bounds.setCube(50, 50, 0, 0);
 		this.collision = new Collision(this);
 		
 		this.rayonX = rayonX;
@@ -121,53 +105,44 @@ public class Bomb {
 			}
 		} 
 		/* On enleve la bombe de la liste des bombes du joueur */
-		this.ent.bombList.remove(this);
+		PlayState.bombList.remove(this);
 		this.ent.setBombposee(this.ent.getBombposee() - 1);
 	}
 	
 	public void animate() {
-		if(type == BASIC) { if(currentAnimation != BASIC || ani.getDelay() == -1) { setAnimation(BASIC, sprite.getSpriteArray(BASIC), 5); }} 
-		else if(type == HORIZONTAL) { if(currentAnimation != HORIZONTAL || ani.getDelay() == -1) { setAnimation(HORIZONTAL, sprite.getSpriteArray(HORIZONTAL), 5);}} 
-		else if(type == VERTICAL) { if(currentAnimation != VERTICAL || ani.getDelay() == -1) {setAnimation(VERTICAL, sprite.getSpriteArray(VERTICAL), 5);}}
-		else if(type == MINE) {if(currentAnimation != MINE || ani.getDelay() == -1) {setAnimation(MINE, sprite.getSpriteArray(MINE), 5);}} 
-		else if(type == RC){if(currentAnimation != RC || ani.getDelay() == -1) {setAnimation(RC, sprite.getSpriteArray(RC), 4);}} 
-		else if(type == PIQ){if(currentAnimation != PIQ || ani.getDelay() == -1) {setAnimation(PIQ, sprite.getSpriteArray(PIQ), 4);}}
+		if(type == BASIC) { if(currentAnimation != BASIC || animation.getDelay() == -1) { setAnimation(BASIC, sprite.getSpriteArray(BASIC), 5); }} 
+		else if(type == HORIZONTAL) { if(currentAnimation != HORIZONTAL || animation.getDelay() == -1) { setAnimation(HORIZONTAL, sprite.getSpriteArray(HORIZONTAL), 5);}} 
+		else if(type == VERTICAL) { if(currentAnimation != VERTICAL || animation.getDelay() == -1) {setAnimation(VERTICAL, sprite.getSpriteArray(VERTICAL), 5);}}
+		else if(type == MINE) {if(currentAnimation != MINE || animation.getDelay() == -1) {setAnimation(MINE, sprite.getSpriteArray(MINE), 5);}} 
+		else if(type == RC){if(currentAnimation != RC || animation.getDelay() == -1) {setAnimation(RC, sprite.getSpriteArray(RC), 4);}} 
+		else if(type == PIQ){if(currentAnimation != PIQ || animation.getDelay() == -1) {setAnimation(PIQ, sprite.getSpriteArray(PIQ), 4);}}
 		else {setAnimation(currentAnimation, sprite.getSpriteArray(currentAnimation), -1);}
 	}
 
-	public void setAnimation(int i, BufferedImage[] frames, int delay) {
-		currentAnimation = i;
-		ani.setFrames(frames);
-		ani.setDelay(delay);
-	}
+	
 	
 	public void decouleTemps() {
         if (--tempsAvantExplosion == 0) { explose(); }
 	}
 	
 	public void update(double time) {
+		super.update(time);
 		animate();
-		ani.update();
 		decouleTemps();
 	}
 	
 	public void render(Graphics2D g) {
-		g.drawImage(ani.getImage(), (int) (pos.x), (int) (pos.y), size, size, null);
+		g.drawImage(animation.getImage(), (int) (pos.x), (int) (pos.y), size, size, null);
 	}
 
 	/** Accesseurs */
 
-	public int getSize() {return size;}
-	public Animation getAnimation() {return ani;}
-	public AABB getBounds() {return bounds;}
-	public Vector2f getPos() {return pos;}
 	public int getTempsAvantExplosion() {return tempsAvantExplosion;}
 	public int getRayonX() { return this.rayonX; }
 	public int getRayonY() { return this.rayonY; }
+	public int getCompteur() {return this.tempsAvantExplosion;}
 
 	/** Mutateurs */
 	
-	public void setSprite(Sprite sprite) {this.sprite = sprite;}
-	public void setSize(int i) {size = i;}
 	public void setTempsAvantExplosion(int tempsAvantExplosion) {this.tempsAvantExplosion = tempsAvantExplosion;}
 }

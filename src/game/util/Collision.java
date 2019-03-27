@@ -26,21 +26,33 @@ public class Collision {
 	
 	/* Fonction de collision avec les blocs */
 	
-	public boolean collisionBlock(float ax, float ay) {
-		int ptArriveX = (int) (e.getBounds().getPos().x + ax);
-		int ptArriveY = (int) (e.getBounds().getPos().y + ay);
+	public boolean collision(float ax, float ay) {
+		int ptArriveX = (int) (e.getBoundsCollision().getPos().x + ax);
+		int ptArriveY = (int) (e.getBoundsCollision().getPos().y + ay);
 	
 		for(int c = 0; c < 4; c++) {
 			
-			int xt = (int) (ptArriveX + (c % 2) * e.getBounds().getWidth() + e.getBounds().getXOffset()) / 50;
-			int yt = (int) (ptArriveY + ((int)(c / 2)) * e.getBounds().getHeight() + e.getBounds().getYOffset()) / 50;
+			int xt = (int) (ptArriveX + (c % 2) * e.getBoundsCollision().getWidth() + e.getBoundsCollision().getXOffset()) / 50;
+			int yt = (int) (ptArriveY + ((int)(c / 2)) * e.getBoundsCollision().getHeight() + e.getBoundsCollision().getYOffset()) / 50;
 			
 			if(TileMapBlock.tmo_blocks.containsKey(String.valueOf(xt) + "," + String.valueOf(yt))) {
 				Block block = TileMapBlock.tmo_blocks.get(String.valueOf(xt) + ","+ String.valueOf(yt));
 				if(block instanceof ObstacleBlock || block instanceof BreakableBlock) {
-					return TileMapBlock.tmo_blocks.get(String.valueOf(xt) + "," + String.valueOf(yt)).update(e.getBounds());
+					return TileMapBlock.tmo_blocks.get(String.valueOf(xt) + "," + String.valueOf(yt)).update(e.getBoundsCollision());
 				}	
 			} 
+			
+			for(int i = 0; i < PlayState.bombList.size(); i++) {
+				if(((PlayState.bombList.get(i).getCaseActuelleX() == xt) 
+				 || ((int)(PlayState.bombList.get(i).getCaseActuelle().getPos().x + PlayState.bombList.get(i).getCaseActuelle().getWidth()) / 50 == xt))
+				 && ((((int)(PlayState.bombList.get(i).getCaseActuelleY()) == yt) 
+				 || ((int)(PlayState.bombList.get(i).getCaseActuelleY() + PlayState.bombList.get(i).getCaseActuelle().getHeight()) / 50) == yt))) {
+					
+					if(PlayState.bombList.get(i).getCompteur() <= 50) {
+						return true;
+					}
+				}
+			}
 		} return false;
 	}
 	
@@ -48,8 +60,8 @@ public class Collision {
 	/* Collision du feu */
 	
 	public boolean FireCassable(float ax, float ay) {
-		int xt = (int) (((b.getBounds().getPos().x + (ax*50)) + b.getBounds().getXOffset()) / 50);
-		int yt = (int) (((b.getBounds().getPos().y + (ay*50)) + b.getBounds().getYOffset()) / 50);
+		int xt = (int) (((b.getCaseActuelle().getPos().x + (ax*50)) + b.getCaseActuelle().getXOffset()) / 50);
+		int yt = (int) (((b.getCaseActuelle().getPos().y + (ay*50)) + b.getCaseActuelle().getYOffset()) / 50);
 		
 		if(TileMapBlock.tmo_blocks.containsKey(String.valueOf(xt) + "," + String.valueOf(yt))) {		
 			Block block = TileMapBlock.tmo_blocks.get(String.valueOf(xt) + ","+ String.valueOf(yt));
@@ -61,8 +73,8 @@ public class Collision {
 	}
 	
 	public boolean FireIncassable(float ax, float ay) {
-		int xt = (int) (((b.getBounds().getPos().x + (ax*50)) + b.getBounds().getXOffset()) / 50);
-		int yt = (int) (((b.getBounds().getPos().y + (ay*50)) + b.getBounds().getYOffset()) / 50);
+		int xt = (int) (((b.getCaseActuelle().getPos().x + (ax*50)) + b.getCaseActuelle().getXOffset()) / 50);
+		int yt = (int) (((b.getCaseActuelle().getPos().y + (ay*50)) + b.getCaseActuelle().getYOffset()) / 50);
 		
 		if(TileMapBlock.tmo_blocks.containsKey(String.valueOf(xt) + "," + String.valueOf(yt))) {		
 			Block block = TileMapBlock.tmo_blocks.get(String.valueOf(xt) + ","+ String.valueOf(yt));
@@ -71,21 +83,24 @@ public class Collision {
 	}
 	
 	public void FireJoueur(float ax, float ay) {
-		int xt = (int) (((b.getBounds().getPos().x + (ax*50)) + b.getBounds().getXOffset()) / 50);
-		int yt = (int) (((b.getBounds().getPos().y + (ay*50)) + b.getBounds().getYOffset()) / 50);
+		int xt = (int) (((b.getCaseActuelle().getPos().x + (ax*50)) + b.getCaseActuelle().getXOffset()) / 50);
+		int yt = (int) (((b.getCaseActuelle().getPos().y + (ay*50)) + b.getCaseActuelle().getYOffset()) / 50);
 		
-		if((((int)(PlayState.getPlayer().getBounds().getPos().x + 2)  / 50 == xt) 
-		 || ((int)(PlayState.getPlayer().getBounds().getPos().x + 2 + PlayState.getPlayer().getBounds().getWidth()) / 50 == xt))
-		 && ((((int)(PlayState.getPlayer().getBounds().getPos().y + 40) / 50) == yt) 
-		 || ((int)(PlayState.getPlayer().getBounds().getPos().y + 40+ PlayState.getPlayer().getBounds().getHeight()) / 50) == yt)) {
+
+		
+		
+		if((((int)(PlayState.getPlayer().getBoundsCollision().getPos().x + 2)  / 50 == xt) 
+		 || ((int)(PlayState.getPlayer().getBoundsCollision().getPos().x + 2 + PlayState.getPlayer().getBoundsCollision().getWidth()) / 50 == xt))
+		 && ((((int)(PlayState.getPlayer().getBoundsCollision().getPos().y + 40) / 50) == yt) 
+		 || ((int)(PlayState.getPlayer().getBoundsCollision().getPos().y + 40+ PlayState.getPlayer().getBoundsCollision().getHeight()) / 50) == yt)) {
 			PlayState.getPlayer().setFallen(true);
 		}
 		
 		for(int i = 0; i < 3; i++) {
-			if((((int)(PlayState.getIa(i).getBounds().getPos().x + 2)  / 50 == xt) 
-			 || ((int)(PlayState.getIa(i).getBounds().getPos().x + 2 + PlayState.getIa(i).getBounds().getWidth()) / 50 == xt))
-			 && ((((int)(PlayState.getIa(i).getBounds().getPos().y + 40) / 50) == yt) 
-			 || ((int)(PlayState.getIa(i).getBounds().getPos().y + 40+ PlayState.getIa(i).getBounds().getHeight()) / 50) == yt)) {
+			if((((int)(PlayState.getIa(i).getBoundsCollision().getPos().x + 2)  / 50 == xt) 
+			 || ((int)(PlayState.getIa(i).getBoundsCollision().getPos().x + 2 + PlayState.getIa(i).getBoundsCollision().getWidth()) / 50 == xt))
+			 && ((((int)(PlayState.getIa(i).getBoundsCollision().getPos().y + 40) / 50) == yt) 
+			 || ((int)(PlayState.getIa(i).getBoundsCollision().getPos().y + 40+ PlayState.getIa(i).getBoundsCollision().getHeight()) / 50) == yt)) {
 				PlayState.getIa(i).setFallen(true);
 			}
 		}
