@@ -5,7 +5,11 @@ import game.util.KeyHandler;
 import game.util.MouseHandler;
 import game.util.Vector2f;
 
-
+/**
+ * 
+ * Class du joueur principal
+ * 
+ * */
 public class Player extends Entity {
 	
 	/** Constructeur */
@@ -20,10 +24,10 @@ public class Player extends Entity {
 		
 		if(!fallen) {
 			move();
-			poserBombe();
+			putABomb();
 			
-			if(!collision.collision(dx, 0)) { pos.x += dx; }
-			if(!collision.collision(0, dy)) { pos.y += dy; }
+			if(!tileCollision.collisionTile(dx, 0)) { pos.x += dx; }
+			if(!tileCollision.collisionTile(0, dy)) { pos.y += dy; }
 		
 		} else {
 			if(animation.hasPlayedOnce()) {
@@ -36,6 +40,7 @@ public class Player extends Entity {
  	}
 
     public void input(MouseHandler mouse, KeyHandler key) {
+
         if(mouse.getButton() == 1) {}
         
         if(!fallen) {
@@ -44,8 +49,7 @@ public class Player extends Entity {
 	        if(key.left) { left = true; } else { left = false; }
 	        if(key.right) { right = true; } else { right = false; }
 	        if(key.bomb) { bomb = true; } else { bomb = false; }
-	        if(key.choixBombeAvant) { changeBombe(-1);    key.choixBombeAvant = false;} else {}
-	        if(key.choixBombeApres) { changeBombe(1);    key.choixBombeApres = false;} else {}
+	        if(key.choixBombe) { changeBombe();    key.choixBombe = false;} else {}
 	        if(up && down) {up = false; down = false;}
 	        if(right && left) {right = false; left = false;}
         } else {
@@ -54,6 +58,7 @@ public class Player extends Entity {
         	left = false;
         	right = false;
         	bomb = false;
+        	choixBombe = false;
         }
     }
 }

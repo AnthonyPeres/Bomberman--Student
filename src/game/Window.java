@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
 public class Window extends JFrame {
-	
+
 	public Window() {
 		this.setTitle("Bomberman Remastered");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
