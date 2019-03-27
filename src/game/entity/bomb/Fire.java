@@ -1,19 +1,16 @@
 package game.entity.bomb;
 
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
-import game.graphics.Animation;
+import game.entity.Affichable;
 import game.graphics.Sprite;
 import game.states.PlayState;
-import game.util.AABB;
 import game.util.Vector2f;
 
-public class Fire {
+public class Fire extends Affichable {
 
-	/* Ligne du sprite */
-	protected String direction;
-	protected int ecart;
+	/** Variables */
+	
 	protected final int CENTRE = 0;
 	protected final int BAS = 1;
 	protected final int BAS2 = 2;
@@ -23,45 +20,26 @@ public class Fire {
 	protected final int DROITE2 = 6;
 	protected final int HAUT = 7;
 	protected final int HAUT2 = 8;
-	
-	/* Animation */
-	public Animation animation;
-	protected Sprite sprite;
-	protected int currentAnimation;
-	
-	/* Positionnement */
-	protected Vector2f pos;
-	protected int size;
-	protected AABB bounds;
+	protected String direction;
+	protected int ecart;
 	
 	
 	/** Constructeur */
 	
 	public Fire(Vector2f pos, String direction, int ecart) {
+		super(new Sprite("entity/spriteFlammes.png",16,16), pos, 50);
+		
+		setAnimation(0, sprite.getSpriteArray(0), 5);
 		
 		this.direction = direction;
 		this.ecart = ecart;
 		
-		this.sprite = new Sprite("entity/spriteFlammes.png",16,16);
-		animation = new Animation();
-		setAnimation(0, sprite.getSpriteArray(0), 5);
-		
-		this.pos = pos;
-		this.size = 50;
-		bounds = new AABB(pos, size, size);
-		this.bounds.setWidth(50);
-		this.bounds.setHeight(50);
-		this.bounds.setXOffset(0);
-		this.bounds.setYOffset(0);
-		
 		PlayState.listFlammes.add(this);
-		
 	}
 
 	/** Méthodes */
 	
 	private void animate() {
-		// TODO Auto-generated method stub
 		switch(direction) {
 			case "centre":
 				if(currentAnimation != CENTRE || animation.getDelay() == -1) {setAnimation(CENTRE, sprite.getSpriteArray(CENTRE), 5);}
@@ -89,33 +67,15 @@ public class Fire {
 		}
 	}
 	
-	public void setAnimation(int i, BufferedImage[] frames, int delay) {
-		currentAnimation = i;
-		animation.setFrames(frames);
-		animation.setDelay(delay);
-	}
-	
 	public void update(double time) {
+		super.update(time);
 		animate();
-		animation.update();
 		if(animation.hasPlayedOnce()) {
 			PlayState.listFlammes.remove(this);
 		}
 	}
 	
 	public void render(Graphics2D g) {
-		g.drawImage(animation.getImage(), (int) bounds.getPos().x,(int) bounds.getPos().y, size, size, null);
+		g.drawImage(animation.getImage(), (int) this.getPos().x,(int) this.getPos().y, size, size, null);
 	}
-
-	/** Accesseurs */
-	
-	public AABB getBounds() { return bounds; }
-	public int getSize() {return size;}
-	public Animation getAnimation() {return animation;}
-	public Vector2f getPos() {return pos;}
-	
-	/** Mutateurs */
-	public void setSprite(Sprite sprite) {this.sprite = sprite;}
-	public void setSize(int i) {size = i;}
-	
 }

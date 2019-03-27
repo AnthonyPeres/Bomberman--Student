@@ -73,8 +73,8 @@ public class MenuState extends GameState {
 						gsm.remove(GameStateManager.MENU);
 					} else {
 						gsm.addAndpop(GameStateManager.PLAY, GameStateManager.MENU);
-						
 					}
+					
 				}
 			break;
 				

@@ -1,29 +1,14 @@
 package game.entity;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
-import game.entity.bomb.BasicBomb;
-import game.entity.bomb.Bomb;
-import game.entity.bomb.HorizontalBomb;
-import game.entity.bomb.MineBomb;
-import game.entity.bomb.PiqBomb;
-import game.entity.bomb.RcBomb;
-import game.entity.bomb.VerticalBomb;
-import game.graphics.Animation;
+import game.entity.bomb.*;
 import game.graphics.Sprite;
-import game.util.AABB;
-import game.util.TileCollision;
-import game.util.Vector2f;
+import game.states.PlayState;
+import game.util.*;
 
-/**
- * 
- * Class entity gerant les entités présentes sur le jeu
- * 
- */
-public class Entity {
+
+public class Entity extends Affichable {
 	
 	/** Variables */
 	
@@ -41,68 +26,57 @@ public class Entity {
 	protected boolean left;
 	protected boolean fallen;
 	protected boolean bomb;
-	protected boolean choixBombe;
 	
 	/* Deplacement */
 	protected float dx;
 	protected float dy;
 	protected float maxSpeed = 3.5f;
-	protected float acc = 2.5f;
+	protected float acc = 3f;
 	protected float deacc = 1f;
 	
-	/* Animation */
-	protected Animation animation;
-	protected Sprite sprite;
-	protected int currentAnimation;
-	
 	/* Positionnement */
-	protected Vector2f pos;
-	protected int size;
 	protected int positionInitialeX;
 	protected int positionInitialeY;
 	
 	/* La gestion des collisions */
+	protected Collision collision;
 	protected AABB boundsCollision;
-	protected TileCollision tileCollision;
 	
 	/* Gestion des bombes */
-	public ArrayList<Bomb> bombList = new ArrayList<Bomb>();
 	protected AABB boundsBomb;
 	protected int maxBomb = 4;
 	protected int bombposee = 0;
-	protected int exPosY;
-	protected int exPosX;
 	protected int bombeChoisie = 0;
 	
 			
 	/** Constructeur */
 	
 	public Entity(Sprite sprite, Vector2f origin, int size) {
+		super(sprite, origin, size);
 		
 		/* Animation */
-		animation = new Animation();
 		setAnimation(DOWN, sprite.getSpriteArray(DOWN), 5);
-		this.sprite = sprite;
 		
 		/* Positionnement */
-		this.pos = origin;
-		this.size = size;
-		this.positionInitialeX = (int) this.pos.x;
-		this.positionInitialeY = (int) this.pos.y;
+		this.positionInitialeX = (int) this.getPos().x;
+		this.positionInitialeY = (int) this.getPos().y;
 		
 		/* Collisions */
-		tileCollision = new TileCollision(this);	
-		boundsCollision = new AABB(origin, size, size);
+		collision = new Collision(this);	
+		this.boundsCollision = new AABB(origin, size, size);
 		this.boundsCollision.setCube(45, 29, 2, 40);
 		
-        
         /* Endroit ou l'on pose la bombe */
 		boundsBomb = new AABB(origin, size, size);
 		this.boundsBomb.setCube(5, 5, ((size/2)-2), ((size/2) + 25));
-		
 	}
 	
 	/** Méthodes */
+	
+	public void update(double time) {
+		super.update(time);
+		animate();
+	}
 	
 	public void animate() {
 		if(up) { if(currentAnimation != UP || animation.getDelay() == -1) {setAnimation(UP, sprite.getSpriteArray(UP),5);}} 
@@ -144,89 +118,82 @@ public class Entity {
         }
     }
 	
-	public void setAnimation(int i, BufferedImage[] frames, int delay) {
-		currentAnimation = i;
-		animation.setFrames(frames);
-		animation.setDelay(delay);
-	}
-	
 	protected void resetPosition() {
-    	pos.x = positionInitialeX;
+    	this.setPosX(positionInitialeX);
     	pos.y = positionInitialeY;
     	setAnimation(DOWN, sprite.getSpriteArray(DOWN), 5);
     }
 	
-	protected void changeBombe() {
-		if(this.bombeChoisie == 5) {this.bombeChoisie = 0;} 
-		else { this.bombeChoisie++; }
+	protected void changeBombe(int i) {
+		if(i == -1) {
+			if(this.bombeChoisie == 0) {this.bombeChoisie = 5;} 
+			else { this.bombeChoisie--; }
+		} else if(i == 1) {
+			if(this.bombeChoisie == 5) {this.bombeChoisie = 0;} 
+			else { this.bombeChoisie++; }
+		}
 	}
 	
-	protected void putABomb() {
-    	
+	protected boolean enDanger() {
+		if(this.enDangerX() && this.enDangerY()) {
+			return true;
+		} return false;
+	}
+	
+	protected boolean enDangerX() {
+		for(int i = 0; i < PlayState.bombList.size() ; i++) {
+			if( Math.abs((((int) PlayState.bombList.get(i).getCaseActuelleX()) - this.getCaseActuelleX())) < 3) {
+				return true;
+			}
+		} return false;
+	}
+	
+	protected boolean enDangerY() {
+		for(int i = 0; i < PlayState.bombList.size() ; i++) {
+			if( Math.abs((((int) PlayState.bombList.get(i).getCaseActuelleY()) - this.getCaseActuelleY())) < 3) {
+				return true;
+			}
+		} return false;
+	}
+	
+	protected void poserBombe() {
     	if(bomb) {
-    		int X = (int) (pos.x + boundsBomb.getWidth() + boundsBomb.getXOffset()) / 50;
-    		int Y = (int) (pos.y + boundsBomb.getHeight() + boundsBomb.getYOffset()) / 50;
-    		
-    		for(int i = 0; i < bombList.size(); i++) {
-    			if((bombList.get(i).getPos().x / 50) == X && (bombList.get(i).getPos().y / 50) == Y) {
-    				return;
-    			}
-    		}
-    		
     		if(bombposee < maxBomb) {
+    			int X = (int) (pos.x + boundsBomb.getWidth() + boundsBomb.getXOffset()) / 50;
+        		int Y = (int) (pos.y + boundsBomb.getHeight() + boundsBomb.getYOffset()) / 50;
+        		
+        		for(int i = 0; i < PlayState.bombList.size(); i++) {
+        			if((PlayState.bombList.get(i).getPos().x / 50) == X && (PlayState.bombList.get(i).getPos().y / 50) == Y) { return; }
+        		}
+    			
     			switch(this.bombeChoisie) {
-	    			case 0: bombList.add(new BasicBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
-	    			case 1: bombList.add(new HorizontalBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
-	    			case 2: bombList.add(new VerticalBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
-	    			case 3: bombList.add(new MineBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
-	    			case 4: bombList.add(new RcBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
-	    			case 5: bombList.add(new PiqBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
+	    			case 0: PlayState.bombList.add(new BasicBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
+	    			case 1: PlayState.bombList.add(new HorizontalBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
+	    			case 2: PlayState.bombList.add(new VerticalBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
+	    			case 3: PlayState.bombList.add(new MineBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
+	    			case 4: PlayState.bombList.add(new RcBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
+	    			case 5: PlayState.bombList.add(new PiqBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
 				}
 				bombposee++;
     		}
     	}
 	}
 	
-	public void update(double time) {
-		animate();
-		animation.update();
-	}
-	
 	public void render(Graphics2D g) {
-		/* Rectangle qui sert a placer la bombe sur une tuile */
-		g.setColor(Color.red);
-		g.drawRect((int) (pos.x + boundsBomb.getXOffset()), 
-				   (int) (pos.y + boundsBomb.getYOffset()), 
-				   (int) boundsBomb.getWidth(), 
-				   (int) boundsBomb.getHeight());
-			
-		/* Le rectangle entourant le joueur pour tester les collisions */
-		g.setColor(Color.green);
-		g.drawRect((int) (pos.x + boundsCollision.getXOffset()), 
-				   (int) (pos.y + boundsCollision.getYOffset()), 
-				   (int) boundsCollision.getWidth(), 
-				   (int) boundsCollision.getHeight());
-		
-		/* Affichage de l'animation (+20 en hauteur pour que le perso ne soit pas carré */
 		g.drawImage(animation.getImage(), (int) (pos.x), (int) (pos.y), size, size + 20, null);
 	}
 	
-
 	/** Accesseurs */
-
-	public int getSize() {return size;}
-	public Animation getAnimation() {return animation;}
-	public AABB getBounds() {return boundsCollision;}
-	public Vector2f getPos() {return pos;}
+	
 	public float getDx() {return dx;}
 	public float getDy() {return dy;}
 	public float getMaxSpeed() {return maxSpeed;}
 	public float getAcc() {return acc;}
 	public float getDeacc() {return deacc;}
+	public boolean getFallent() {return fallen;}
+	public AABB getBoundsCollision() {return this.boundsCollision;}
 	public int getMaxBomb() {return maxBomb;}
 	public int getBombposee() {return bombposee;}
-	public int getExPosY() {return exPosY;}
-	public int getExPosX() {return exPosX;}
 	public String getBombeChoisie() {
 		switch(this.bombeChoisie) {
 			case 1: return "Horizontale";
@@ -238,19 +205,14 @@ public class Entity {
 		}
 	}
 
-
 	/** Mutateurs */
 	
-	public void setSprite(Sprite sprite) {this.sprite = sprite;}
-	public void setSize(int i) {size = i;}
+	public void setDx(float dx) {this.dx = dx;}
+	public void setDy(float dy) {this.dy = dy;}
 	public void setMaxSpeed(float f) {maxSpeed = f;}
 	public void setAcc(float f) {acc = f;}
 	public void setDeacc(float f) {deacc = f;}
 	public void setFallen(boolean b) {fallen = b;}
-	public void setDx(float dx) {this.dx = dx;}
-	public void setDy(float dy) {this.dy = dy;}
 	public void setMaxBomb(int maxBomb) {this.maxBomb = maxBomb;}
 	public void setBombposee(int bombposee) {this.bombposee = bombposee;}
-	public void setExPosY(int exPosY) {this.exPosY = exPosY;}
-	public void setExPosX(int exPosX) {this.exPosX = exPosX;}
 }
