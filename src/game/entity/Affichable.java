@@ -15,12 +15,12 @@ public abstract class Affichable {
 	protected Animation animation;
 	protected Sprite sprite;
 	protected BufferedImage image;
-	protected AABB caseActuelle;
 	protected Vector2f pos;
 	protected int currentAnimation;
 	protected int size;
 	protected int width;
 	protected int height;
+	protected AABB caseActuelle;
 	
 	/** Constructeur */
 	
@@ -29,8 +29,6 @@ public abstract class Affichable {
 		this.sprite = sprite;
 		this.pos = pos;
 		this.size = size;
-		caseActuelle = new AABB(pos, size, size);
-		this.caseActuelle.setCube(50, 50, 0, 20);
 	}
 	
 	public Affichable(BufferedImage img, Vector2f pos) {
@@ -59,10 +57,10 @@ public abstract class Affichable {
 	public Sprite getSprite() {return sprite;}
 	public int getCurrentAnimation() {return currentAnimation;}
 	public Vector2f getPos() {return pos;}
-	public int getSize() {return size;}
 	public AABB getCaseActuelle() {return caseActuelle;}
-	public int getCaseActuelleX() {return (int) (this.getCaseActuelle().getPos().x / 50);}
-	public int getCaseActuelleY() {return (int) (this.getCaseActuelle().getPos().y / 50);}
+	public int getCaseActuelleX() {return (int) ((this.getCaseActuelle().getPos().x + this.getCaseActuelle().getXOffset()) / 50);}
+	public int getCaseActuelleY() {return (int) ((this.getCaseActuelle().getPos().y + this.getCaseActuelle().getYOffset()) / 50);}
+	public int getSize() {return size;}
 	public BufferedImage getImage() {return image;}
 	public int getWidth() {return width;}
 	public int getHeight() {return height;}
@@ -76,7 +74,6 @@ public abstract class Affichable {
 	public void setPosX(int x) {this.pos.x = x;}
 	public void setPosY(int y) {this.pos.y = y;}
 	public void setSize(int size) {this.size = size;}
-	public void setCaseActuelle(AABB caseActuelle) {this.caseActuelle = caseActuelle;}
 	public void setImage(BufferedImage image) {this.image = image;}
 	public void setWidth(int width) {this.width = width;}
 	public void setHeight(int height) {this.height = height;}

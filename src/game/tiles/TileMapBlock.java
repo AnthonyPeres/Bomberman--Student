@@ -3,6 +3,9 @@ package game.tiles;
 import java.awt.Graphics2D;
 import java.util.HashMap;
 
+import game.bonus.Bonus;
+import game.bonus.BonusMultiBomb;
+import game.bonus.BonusVitesse;
 import game.graphics.Sprite;
 import game.tiles.blocks.Block;
 import game.tiles.blocks.BreakableBlock;
@@ -14,9 +17,11 @@ public class TileMapBlock extends TileMap {
 
 	/** Variables */
 	public static HashMap<String, Block> tmo_blocks;
+	public static HashMap<String, Bonus> tmo_bonus;
 	public static HashMap<String, Block> ground;
 	
 	public static Sprite sprite;
+	
 	
     /** Constructeur */
     
@@ -26,6 +31,10 @@ public class TileMapBlock extends TileMap {
         tmo_blocks = new HashMap<String, Block>();
         ground = new HashMap<String, Block>();
         String[] block = data.split(",");
+
+        
+        tmo_bonus = new HashMap<String, Bonus>();
+        
         
         for(int i = 0; i < (width * height); i++) {
         	int temp = Integer.parseInt(block[i].replaceAll("\\s+",""));
@@ -38,6 +47,7 @@ public class TileMapBlock extends TileMap {
             	} else if(temp == 1) {
             		tempBlock = new BreakableBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos);
             		tmo_blocks.put(String.valueOf((int) (i % width)) + "," + String.valueOf((int) (i / width)), tempBlock);
+            		
             	} else {
             		tempBlock = new ObstacleBlock(sprite.getSprite((int) ((temp - 1) % tileColumns), (int) ((temp - 1) / tileColumns) ), pos);
             		tmo_blocks.put(String.valueOf((int) (i % width)) + "," + String.valueOf((int) (i / width)), tempBlock);
@@ -58,6 +68,10 @@ public class TileMapBlock extends TileMap {
         }
         for(Block block: ground.values()) {
         	block.render(g);
+        }
+        
+        for(Bonus bonus: tmo_bonus.values()) {
+        	bonus.render(g);
         }
     }
     

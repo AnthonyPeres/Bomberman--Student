@@ -1,6 +1,7 @@
 package game.entity;
 
 import game.graphics.Sprite;
+import game.states.PlayState;
 import game.util.KeyHandler;
 import game.util.MouseHandler;
 import game.util.Vector2f;
@@ -18,21 +19,11 @@ public class Player extends Entity {
     public void update(double time) {
 		super.update(time);
 		
-		if(!fallen) {
 			move();
 			poserBombe();
 			
-			if(!collision.collision(dx, 0)) { pos.x += dx; }
-			if(!collision.collision(0, dy)) { pos.y += dy; }
 		
-		} else {
-			if(animation.hasPlayedOnce()) {
-				/* Quand l'animation du joueur mort est jouée, on a possibilité 
-				 * de remettre le joueur en position initiale si plusieurs vies */
-				resetPosition(); 
-				fallen = false;
-			}
-		}
+		
  	}
 
     public void input(MouseHandler mouse, KeyHandler key) {
@@ -56,4 +47,10 @@ public class Player extends Entity {
         	bomb = false;
         }
     }
+
+	@Override
+	protected void meurt() {
+		// TODO Auto-generated method stub
+		PlayState.player = null;
+	}
 }

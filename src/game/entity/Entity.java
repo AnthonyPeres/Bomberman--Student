@@ -8,7 +8,7 @@ import game.states.PlayState;
 import game.util.*;
 
 
-public class Entity extends Affichable {
+public abstract class Entity extends Affichable {
 	
 	/** Variables */
 	
@@ -43,32 +43,33 @@ public class Entity extends Affichable {
 	protected AABB boundsCollision;
 	
 	/* Gestion des bombes */
-	protected AABB boundsBomb;
 	protected int maxBomb = 4;
 	protected int bombposee = 0;
 	protected int bombeChoisie = 0;
 	
+	/* Vies */
+	protected int nombreDeVies = 2;
+	
 			
 	/** Constructeur */
 	
-	public Entity(Sprite sprite, Vector2f origin, int size) {
-		super(sprite, origin, size);
+	public Entity(Sprite sprite, Vector2f pos, int size) {
+		super(sprite, pos, size);
 		
 		/* Animation */
 		setAnimation(DOWN, sprite.getSpriteArray(DOWN), 5);
 		
 		/* Positionnement */
+		this.caseActuelle = new AABB(pos, size, size);
+		this.caseActuelle.setCube(5, 5, ((size/2)-2), ((size/2) + 25));
 		this.positionInitialeX = (int) this.getPos().x;
 		this.positionInitialeY = (int) this.getPos().y;
 		
 		/* Collisions */
 		collision = new Collision(this);	
-		this.boundsCollision = new AABB(origin, size, size);
+		this.boundsCollision = new AABB(pos, size, size);
 		this.boundsCollision.setCube(45, 29, 2, 40);
 		
-        /* Endroit ou l'on pose la bombe */
-		boundsBomb = new AABB(origin, size, size);
-		this.boundsBomb.setCube(5, 5, ((size/2)-2), ((size/2) + 25));
 	}
 	
 	/** Méthodes */
@@ -76,8 +77,24 @@ public class Entity extends Affichable {
 	public void update(double time) {
 		super.update(time);
 		animate();
+		
+		if(fallen) {
+			if(nombreDeVies != 0) {
+				if(animation.hasPlayedOnce()) {
+					resetPosition(); 
+					fallen = false;
+					nombreDeVies--;
+				}
+			} else { 
+				this.meurt();
+			}
+		}
+		
+		
 	}
 	
+	protected abstract void meurt();
+
 	public void animate() {
 		if(up) { if(currentAnimation != UP || animation.getDelay() == -1) {setAnimation(UP, sprite.getSpriteArray(UP),5);}} 
 		else if(down) { if(currentAnimation != DOWN || animation.getDelay() == -1) {setAnimation(DOWN, sprite.getSpriteArray(DOWN),5);}} 
@@ -116,6 +133,10 @@ public class Entity extends Affichable {
                 if(dx < 0) {dx = 0;}
             }
         }
+        
+        if(!collision.collision(dx, 0)) { pos.x += dx; }
+		if(!collision.collision(0, dy)) { pos.y += dy; }
+        
     }
 	
 	protected void resetPosition() {
@@ -135,23 +156,33 @@ public class Entity extends Affichable {
 	}
 	
 	protected boolean enDanger() {
-		if(this.enDangerX() && this.enDangerY()) {
+		if(this.enDangerX() || this.enDangerY()) {
 			return true;
 		} return false;
 	}
 	
 	protected boolean enDangerX() {
 		for(int i = 0; i < PlayState.bombList.size() ; i++) {
-			if( Math.abs((((int) PlayState.bombList.get(i).getCaseActuelleX()) - this.getCaseActuelleX())) < 3) {
-				return true;
+			Bomb tempB = PlayState.bombList.get(i);
+			
+			
+			
+			if(Math.abs(tempB.getCaseActuelleX() - this.getCaseActuelleX()) < 3) {
+				if(tempB.getCaseActuelleY() == this.getCaseActuelleY()) {
+					return true;
+				}
 			}
 		} return false;
 	}
 	
 	protected boolean enDangerY() {
 		for(int i = 0; i < PlayState.bombList.size() ; i++) {
-			if( Math.abs((((int) PlayState.bombList.get(i).getCaseActuelleY()) - this.getCaseActuelleY())) < 3) {
-				return true;
+			Bomb tempB = PlayState.bombList.get(i);
+			
+			if(Math.abs(tempB.getCaseActuelleY() - this.getCaseActuelleY()) < 3) {
+				if(tempB.getCaseActuelleX() == this.getCaseActuelleX()) {
+					return true;
+				}
 			}
 		} return false;
 	}
@@ -159,8 +190,8 @@ public class Entity extends Affichable {
 	protected void poserBombe() {
     	if(bomb) {
     		if(bombposee < maxBomb) {
-    			int X = (int) (pos.x + boundsBomb.getWidth() + boundsBomb.getXOffset()) / 50;
-        		int Y = (int) (pos.y + boundsBomb.getHeight() + boundsBomb.getYOffset()) / 50;
+    			int X = this.getCaseActuelleX();
+        		int Y = this.getCaseActuelleY();
         		
         		for(int i = 0; i < PlayState.bombList.size(); i++) {
         			if((PlayState.bombList.get(i).getPos().x / 50) == X && (PlayState.bombList.get(i).getPos().y / 50) == Y) { return; }
@@ -204,6 +235,8 @@ public class Entity extends Affichable {
 			default : return "Basique";
 		}
 	}
+	public int getPied() {return (int) (this.getPos().y + this.getSize() + 20);}
+	public int getDroite() {return (int) (this.getPos().x + this.getSize());}
 
 	/** Mutateurs */
 	

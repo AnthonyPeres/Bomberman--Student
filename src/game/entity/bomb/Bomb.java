@@ -6,6 +6,7 @@ import game.entity.Affichable;
 import game.entity.Entity;
 import game.graphics.Sprite;
 import game.states.PlayState;
+import game.util.AABB;
 import game.util.Collision;
 import game.util.Vector2f;
 
@@ -23,7 +24,6 @@ public class Bomb extends Affichable {
 	protected final int PIQ = 5;
 	
 	
-
 	protected Collision collision;
 	
 	/* Explosion */
@@ -46,10 +46,13 @@ public class Bomb extends Affichable {
 		
 		this.collision = new Collision(this);
 		
+		caseActuelle = new AABB(pos, size, size);
+		
+		
 		this.rayonX = rayonX;
 		this.rayonY = rayonY;
 		
-		this.ent = e;
+		this.ent = e;		
 		
 	}
 	

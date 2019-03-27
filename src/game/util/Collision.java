@@ -43,15 +43,16 @@ public class Collision {
 			} 
 			
 			for(int i = 0; i < PlayState.bombList.size(); i++) {
-				if(((PlayState.bombList.get(i).getCaseActuelleX() == xt) 
-				 || ((int)(PlayState.bombList.get(i).getCaseActuelle().getPos().x + PlayState.bombList.get(i).getCaseActuelle().getWidth()) / 50 == xt))
-				 && ((((int)(PlayState.bombList.get(i).getCaseActuelleY()) == yt) 
-				 || ((int)(PlayState.bombList.get(i).getCaseActuelleY() + PlayState.bombList.get(i).getCaseActuelle().getHeight()) / 50) == yt))) {
+				
+				Bomb tempB = PlayState.bombList.get(i);
+				
+				if( !(e.getPos().x + ax <= tempB.getPos().x + 50) || !(e.getDroite() + ax >= tempB.getPos().x ) || !(e.getPos().y + ay <= tempB.getPos().y + 50) || !(e.getPied() + ay >= tempB.getPos().y)) {
 					
-					if(PlayState.bombList.get(i).getCompteur() <= 50) {
+				} else {
+					if(tempB.getTempsAvantExplosion() < 50) {
 						return true;
 					}
-				}
+				}	
 			}
 		} return false;
 	}
