@@ -7,31 +7,32 @@ import javax.swing.JPanel;
 import game.states.*;
 import game.util.*;
 
-/**
- * 	GamePanel est la vue du jeu.
- * 
- * */
-@SuppressWarnings("serial")
 public class GamePanel extends JPanel implements Runnable {
 
+	private static final long serialVersionUID = 1L;
+	
 	/** Variables */
 	
+	/* Dimensions */
 	public static int width;
 	public static int height;
 	
-	// Nombre d'ancienne image, utilisé pour avoir le FPS
+	/* Processus du jeu */
 	public static int oldFrameCount;	
-	
 	private Thread thread;
 	private Boolean running = false;
 	
+	/* L'affichage */
 	private BufferedImage img;
 	private Graphics2D g;
 	
+	/* Les inputs */
 	private MouseHandler mouse;
 	private KeyHandler key;
 	
+	/* Le gestionnaire d'états */
 	private GameStateManager gsm;
+	
 	
 	/** Constructeur */
 	
@@ -44,13 +45,11 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	
-	
 	/** Methodes */
 	
 	@Override
 	public void run() {
 		
-		/* On initialise le jeu */
 		init();
 		
 		/* On veut du 60GHz, TBU est le temps avant l'update */
@@ -113,15 +112,14 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 	
 	public void init() {
+
 		running = true;
 		
 		img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		g = (Graphics2D) img.getGraphics();
 		
-		/* La souris et le clavier sont ecoutes par le GamePanel */
 		mouse = new MouseHandler(this);
 		key = new KeyHandler(this);
-		
 		gsm = new GameStateManager();
 	}
 	
