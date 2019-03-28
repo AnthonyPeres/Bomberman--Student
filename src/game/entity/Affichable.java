@@ -20,7 +20,7 @@ public abstract class Affichable {
 	protected int size;
 	protected int width;
 	protected int height;
-	protected AABB caseActuelle;
+	protected AABB SaCase;
 	
 	/** Constructeur */
 	
@@ -34,6 +34,7 @@ public abstract class Affichable {
 	public Affichable(BufferedImage img, Vector2f pos) {
         this.image = img;	this.pos = pos;
         this.width = 50;	this.height = 50;
+        
     }
 	
 	/** Méthodes */
@@ -57,13 +58,30 @@ public abstract class Affichable {
 	public Sprite getSprite() {return sprite;}
 	public int getCurrentAnimation() {return currentAnimation;}
 	public Vector2f getPos() {return pos;}
-	public AABB getCaseActuelle() {return caseActuelle;}
-	public int getCaseActuelleX() {return (int) ((this.getCaseActuelle().getPos().x + this.getCaseActuelle().getXOffset()) / 50);}
-	public int getCaseActuelleY() {return (int) ((this.getCaseActuelle().getPos().y + this.getCaseActuelle().getYOffset()) / 50);}
 	public int getSize() {return size;}
 	public BufferedImage getImage() {return image;}
 	public int getWidth() {return width;}
 	public int getHeight() {return height;}
+	
+	public AABB getSaPosition() {return SaCase;}
+	public int getXSaPosition() {return (int) (this.getSaPosition().getPos().x + this.getSaPosition().getXOffset());}
+	public int getYSaPosition() {return (int) (this.getSaPosition().getPos().y + this.getSaPosition().getYOffset());}
+	public int getWSaPosition() {return (int) (this.getSaPosition().getWidth());} 
+	public int getHSaPosition() {return (int) (this.getSaPosition().getHeight());}
+	
+	
+	public AABB getSaCase() {
+		int x = ((this.getXSaPosition()/ 50) * 50);
+		int y = ((this.getYSaPosition()/ 50) * 50);
+		int w = 50;
+		int h = 50;
+		
+		return new AABB(new Vector2f(x,y),w,h);
+	} 
+	
+	
+	
+	
 
 	/** Mutateurs */
 	

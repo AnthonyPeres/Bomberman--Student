@@ -17,6 +17,10 @@ public abstract class Block extends Affichable {
     
     public Block(BufferedImage img, Vector2f pos) {
         super(img, pos);
+        
+        /* La case relative a l'objet */
+		this.SaCase = new AABB(pos, 50, 50);
+		this.SaCase.setCube(50, 50, 0, 0);
     }
 
     public abstract boolean update(AABB p); 

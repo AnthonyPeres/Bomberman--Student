@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import game.GamePanel;
 import game.entity.Player;
 import game.entity.IA.IA;
+import game.entity.IA.Matrice;
 import game.entity.bomb.Bomb;
 import game.entity.bomb.Fire;
 import game.graphics.Sprite;
@@ -23,6 +24,8 @@ public class PlayState extends GameState {
 	public static IA[] ia = new IA[3];
 	public static ArrayList<Bomb> bombList = new ArrayList<Bomb>();
 	public static ArrayList<Fire> listFlammes = new ArrayList<Fire>();
+	public static Matrice matrice = new Matrice();
+	 
 	
 	
 	/** Constructeur */
@@ -48,6 +51,8 @@ public class PlayState extends GameState {
 		for(int i = 0; i < ia.length; i++) {if(ia[i] != null) {ia[i].render(g);}}
 		for(int i = 0; i < bombList.size(); i++) { bombList.get(i).render(g);}
 		for(int i = 0; i < listFlammes.size(); i++) {listFlammes.get(i).render(g);}
+	
+		//matrice.render(g);
 	}
 	
 	@Override
@@ -70,10 +75,13 @@ public class PlayState extends GameState {
 		for(int i = 0; i < ia.length; i++) {if(ia[i] != null) {ia[i].update(time);}}
 		for(int i = 0; i < bombList.size(); i++) {bombList.get(i).update(time);}
 		for(int i = 0; i < listFlammes.size(); i++) {listFlammes.get(i).update(time);}
+		
+		matrice.update(time);
 	}
 
 
 	/** Méthodes */	
+	public static Matrice getMatrice() {return matrice;}
 	public static Player getPlayer() {return player;}
 	public static IA getIa(int i) {return ia[i];}
 

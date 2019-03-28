@@ -21,8 +21,9 @@ public class Player extends Entity {
 		
 			move();
 			poserBombe();
-			
 		
+			
+			
 		
  	}
 

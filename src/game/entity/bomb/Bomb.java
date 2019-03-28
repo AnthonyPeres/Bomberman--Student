@@ -46,8 +46,8 @@ public class Bomb extends Affichable {
 		
 		this.collision = new Collision(this);
 		
-		caseActuelle = new AABB(pos, size, size);
-		
+		/* La case relative a l'objet */
+		this.SaCase = new AABB(origin, 50, 50);
 		
 		this.rayonX = rayonX;
 		this.rayonY = rayonY;

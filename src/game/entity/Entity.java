@@ -7,7 +7,6 @@ import game.graphics.Sprite;
 import game.states.PlayState;
 import game.util.*;
 
-
 public abstract class Entity extends Affichable {
 	
 	/** Variables */
@@ -43,12 +42,13 @@ public abstract class Entity extends Affichable {
 	protected AABB boundsCollision;
 	
 	/* Gestion des bombes */
+	protected AABB caseDepotDeBombe;
 	protected int maxBomb = 4;
 	protected int bombposee = 0;
 	protected int bombeChoisie = 0;
 	
 	/* Vies */
-	protected int nombreDeVies = 2;
+	protected int nombreDeVies = 3;
 	
 			
 	/** Constructeur */
@@ -60,8 +60,6 @@ public abstract class Entity extends Affichable {
 		setAnimation(DOWN, sprite.getSpriteArray(DOWN), 5);
 		
 		/* Positionnement */
-		this.caseActuelle = new AABB(pos, size, size);
-		this.caseActuelle.setCube(5, 5, ((size/2)-2), ((size/2) + 25));
 		this.positionInitialeX = (int) this.getPos().x;
 		this.positionInitialeY = (int) this.getPos().y;
 		
@@ -69,6 +67,14 @@ public abstract class Entity extends Affichable {
 		collision = new Collision(this);	
 		this.boundsCollision = new AABB(pos, size, size);
 		this.boundsCollision.setCube(45, 29, 2, 40);
+		
+		/* Bombe */
+		this.caseDepotDeBombe = new AABB(pos, size, size);
+		this.caseDepotDeBombe.setCube(5, 5, ((size/2)-2), ((size/2) + 25));
+		
+		/* La case relative au joueur */
+		this.SaCase = new AABB(pos, 50, 50);
+		this.SaCase.setCube(5, 5, ((size/2)-2), ((size/2) + 25));
 		
 	}
 	
@@ -79,14 +85,16 @@ public abstract class Entity extends Affichable {
 		animate();
 		
 		if(fallen) {
-			if(nombreDeVies != 0) {
-				if(animation.hasPlayedOnce()) {
+			if(animation.hasPlayedOnce()) {
+				if(nombreDeVies != 0) {
 					resetPosition(); 
 					fallen = false;
 					nombreDeVies--;
+					
+				} else { 
+					this.meurt();
 				}
-			} else { 
-				this.meurt();
+			 
 			}
 		}
 		
@@ -155,43 +163,11 @@ public abstract class Entity extends Affichable {
 		}
 	}
 	
-	protected boolean enDanger() {
-		if(this.enDangerX() || this.enDangerY()) {
-			return true;
-		} return false;
-	}
-	
-	protected boolean enDangerX() {
-		for(int i = 0; i < PlayState.bombList.size() ; i++) {
-			Bomb tempB = PlayState.bombList.get(i);
-			
-			
-			
-			if(Math.abs(tempB.getCaseActuelleX() - this.getCaseActuelleX()) < 3) {
-				if(tempB.getCaseActuelleY() == this.getCaseActuelleY()) {
-					return true;
-				}
-			}
-		} return false;
-	}
-	
-	protected boolean enDangerY() {
-		for(int i = 0; i < PlayState.bombList.size() ; i++) {
-			Bomb tempB = PlayState.bombList.get(i);
-			
-			if(Math.abs(tempB.getCaseActuelleY() - this.getCaseActuelleY()) < 3) {
-				if(tempB.getCaseActuelleX() == this.getCaseActuelleX()) {
-					return true;
-				}
-			}
-		} return false;
-	}
-	
 	protected void poserBombe() {
     	if(bomb) {
     		if(bombposee < maxBomb) {
-    			int X = this.getCaseActuelleX();
-        		int Y = this.getCaseActuelleY();
+    			int X = this.getCaseDepotDeBombeX();
+        		int Y = this.getCaseDepotDeBombeY();
         		
         		for(int i = 0; i < PlayState.bombList.size(); i++) {
         			if((PlayState.bombList.get(i).getPos().x / 50) == X && (PlayState.bombList.get(i).getPos().y / 50) == Y) { return; }
@@ -223,6 +199,9 @@ public abstract class Entity extends Affichable {
 	public float getDeacc() {return deacc;}
 	public boolean getFallent() {return fallen;}
 	public AABB getBoundsCollision() {return this.boundsCollision;}
+	public AABB getCaseDepotDeBombe() {return caseDepotDeBombe;}
+	public int getCaseDepotDeBombeX() {return (int) ((this.getCaseDepotDeBombe().getPos().x + this.getCaseDepotDeBombe().getXOffset()) / 50);}
+	public int getCaseDepotDeBombeY() {return (int) ((this.getCaseDepotDeBombe().getPos().y + this.getCaseDepotDeBombe().getYOffset()) / 50);}
 	public int getMaxBomb() {return maxBomb;}
 	public int getBombposee() {return bombposee;}
 	public String getBombeChoisie() {
