@@ -45,7 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	
-	/** Methodes */
+	/** Methodes */	
 	
 	@Override
 	public void run() {

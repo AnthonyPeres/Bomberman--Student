@@ -16,16 +16,17 @@ public class IA extends Entity {
 	/** Variables */
 	
 	private Sommet Source;
-	
 	private Sommet Destination;
+	private Sommet Prochain;
 	
-	private LinkedList<Sommet> SommetsAExplorer;
+	LinkedList<String> DirectionsAccessibles; 
 	
-	private LinkedList<Sommet> SommetsVisites;
+	private LinkedList<Sommet> SommetsAVisiter;
+	
 	
 	private int cheminX, cheminY, nouveauCheminX, nouveauCheminY;
 	
-	LinkedList<String> listeDirectionPossible; 
+	
 	
 	
 	/** Constructeur */
@@ -40,14 +41,11 @@ public class IA extends Entity {
 		this.Destination = null;
 		
 		/* SOMMETS A EXPLORER */
-		this.SommetsAExplorer = new LinkedList<Sommet>();
-		this.SommetsAExplorer.add(this.Source);
-		
-		/* SOMMETS VISITES */
-		this.SommetsVisites = new LinkedList<Sommet>();
+		this.SommetsAVisiter = new LinkedList<Sommet>();
+		this.SommetsAVisiter.add(this.Source);
 		
 		/* DIRECTIONS POSSIBLES */
-		this.listeDirectionPossible = new LinkedList<String>(); 
+		this.DirectionsAccessibles = new LinkedList<String>(); 
 		
 	}
 
@@ -57,56 +55,67 @@ public class IA extends Entity {
 	public void update(double time) {
 		super.update(time);
 		
-		listeDirectionPossible = getDirectionsPossibles();
+		DirectionsAccessibles = getDirectionsPossibles();
 		
 		
 		situation();
-		AlgorithmeAEtoile();
+		
+		if(!enDanger(this.getSaCase())) {
+			AlgorithmeAEtoile();
+		}
+		
+		deplacement();
 		
 		move();
-		// poserBombe();
+		
+		
+		/*if(this.Prochain.getCoutTotal() < 2) {
+			this.bomb = true;
+		}*/
+		
+		poserBombe();
+		
 	}
 	
 	
-	/*********************************************\
-	 * 											 *
-	 * MÉTHODES QUI TESTENT LES CASES ADJACENTES * 
-	 * 											 *
-	 *********************************************/
-	
-	/** Renvoie les directions disponnibles : Une Case ou il n'y a ni bloc cassable ni bloc incassable */
-	private LinkedList<String> getDirectionsPossibles() {
-		LinkedList<String> listeVoisins = new LinkedList<String>();
-		int saCaseX = (int) this.getSaCase().getPos().x /50;
-		int saCaseY = (int) this.getSaCase().getPos().y /50;
-		Matrice matrice = PlayState.getMatrice();
-				
-		if(!(matrice.getCase(saCaseX - 1, saCaseY) == 1 || matrice.getCase(saCaseX - 1, saCaseY) == 2)) {listeVoisins.add("Gauche");}
-		if(!(matrice.getCase(saCaseX + 1, saCaseY) == 1 || matrice.getCase(saCaseX + 1, saCaseY) == 2)) {listeVoisins.add("Droite");}
-		if(!(PlayState.getMatrice().getCase(saCaseX, saCaseY + 1) == 1 || matrice.getCase(saCaseX, saCaseY + 1) == 2)) {listeVoisins.add("Bas");}
-		if(!(matrice.getCase(saCaseX, saCaseY - 1) == 1 || matrice.getCase(saCaseX, saCaseY - 1) == 2)) {listeVoisins.add("Haut");}
+
+
+	public void render(Graphics2D g) {
+		super.render(g);
 		
-		return listeVoisins;
+		
+		g.setColor(Color.RED);
+		if(this.Destination !=null) {
+			g.drawRect(this.getXDestination(), this.getYDestination(), this.getWDestination(), this.getHDestination());
+		}
+		
+		
+		for(int i = 0; i < this.SommetsAVisiter.size(); i++) {
+			
+			Sommet temp = this.SommetsAVisiter.get(i);
+			
+			if(temp.equals(this.Prochain)) {
+				g.setColor(Color.RED);
+				g.drawRect((int)temp.getCase().getPos().x, (int)temp.getCase().getPos().y, (int)temp.getCase().getWidth(),(int) temp.getCase().getHeight());
+			} else {
+				g.setColor(Color.cyan);
+				g.drawRect((int)temp.getCase().getPos().x, (int)temp.getCase().getPos().y, (int)temp.getCase().getWidth(),(int) temp.getCase().getHeight());
+			}
+		}
+	}
+	
+	@Override
+	protected void meurt() {
+		// TODO Auto-generated method stub
+		for(int i = 0; i < PlayState.ia.length; i++) {
+			if(PlayState.ia[i] == this) {
+				PlayState.ia[i] = null;
+			}
+		}
 	}
 	
 	
-	/** Renvoie la liste des voisins cassables : Gauche Droite Haut Bas */
-	private LinkedList<String> getVoisinsCassables(){
-		LinkedList<String> listeVoisinsCassables = new LinkedList<String>();
-		int saCaseX = (int) this.getSaCase().getPos().x /50;
-		int saCaseY = (int) this.getSaCase().getPos().y /50;
-		Matrice matrice = PlayState.getMatrice();
-		
-		if(!(matrice.getCase(saCaseX - 1, saCaseY) == 2)) {listeVoisinsCassables.add("Gauche");}
-		if(!(matrice.getCase(saCaseX + 1, saCaseY) == 2)) {listeVoisinsCassables.add("Droite");}
-		if(!(matrice.getCase(saCaseX, saCaseY + 1) == 2)) {listeVoisinsCassables.add("Bas");}
-		if(!(matrice.getCase(saCaseX, saCaseY - 1) == 2)) {listeVoisinsCassables.add("Haut");}
-		
-		return listeVoisinsCassables;
-	}
-	
-	
-	
+
 	/*********************************************\
 	 * 											 *
 	 *   MÉTHODES QUI VERIFIENT LA SITUATION     * 
@@ -208,7 +217,7 @@ public class IA extends Entity {
 	private void chercherDestinationDefense() {
 		
 		LinkedList<String> listeDirectionPossible = new LinkedList<String>(); 
-		listeDirectionPossible = getDirectionsPossibles();
+		//listeDirectionPossible = getDirectionsPossibles();
 		
 		int lower = 1; int higher = 5; 
 		int randomDirection = (int)(Math.random() * (higher-lower)) + lower;
@@ -238,6 +247,55 @@ public class IA extends Entity {
 	
 	/*********************************************\
 	 * 											 *
+	 * MÉTHODES QUI TESTENT LES CASES ADJACENTES * 
+	 * 											 *
+	 *********************************************/
+	
+	
+	private LinkedList<String> getDirectionsPossibles(){
+		
+		LinkedList<String> casesAccessibles = new LinkedList<String>();
+		int saCaseX = (int) this.getSaCase().getPos().x /50;
+		int saCaseY = (int) this.getSaCase().getPos().y /50;
+		Matrice matrice = PlayState.getMatrice();
+		
+		if(!(matrice.getCase(saCaseX - 1, saCaseY) == 1 || matrice.getCase(saCaseX - 1, saCaseY) == 2)) {casesAccessibles.add("Gauche");}
+		if(!(matrice.getCase(saCaseX + 1, saCaseY) == 1 || matrice.getCase(saCaseX + 1, saCaseY) == 2)) {casesAccessibles.add("Droite");}
+		if(!(matrice.getCase(saCaseX, saCaseY + 1) == 1 || matrice.getCase(saCaseX, saCaseY + 1) == 2)) {casesAccessibles.add("Bas");}
+		if(!(matrice.getCase(saCaseX, saCaseY - 1) == 1 || matrice.getCase(saCaseX, saCaseY - 1) == 2)) {casesAccessibles.add("Haut");}
+		
+		
+		return casesAccessibles;
+	}
+	
+	
+	
+	
+	
+	/** Renvoie la liste des voisins cassables : Gauche Droite Haut Bas */
+	private LinkedList<String> getVoisinsCassables(){
+		LinkedList<String> listeVoisinsCassables = new LinkedList<String>();
+		int saCaseX = (int) this.getSaCase().getPos().x /50;
+		int saCaseY = (int) this.getSaCase().getPos().y /50;
+		Matrice matrice = PlayState.getMatrice();
+		
+		if(!(matrice.getCase(saCaseX - 1, saCaseY) == 2)) {listeVoisinsCassables.add("Gauche");}
+		if(!(matrice.getCase(saCaseX + 1, saCaseY) == 2)) {listeVoisinsCassables.add("Droite");}
+		if(!(matrice.getCase(saCaseX, saCaseY + 1) == 2)) {listeVoisinsCassables.add("Bas");}
+		if(!(matrice.getCase(saCaseX, saCaseY - 1) == 2)) {listeVoisinsCassables.add("Haut");}
+		
+		return listeVoisinsCassables;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	/*********************************************\
+	 * 											 *
 	 *   			ALGORITHME A*    			 * 
 	 * 											 *
 	 *********************************************/
@@ -245,43 +303,131 @@ public class IA extends Entity {
 	
 	private void AlgorithmeAEtoile() {
 		
-		// this.SommetsVisites.clear();
+		this.SommetsAVisiter.clear();
+		this.Prochain = null;
 		
-		this.SommetsVisites.add(recupererSommetXmin());
+		int coutX;
+		int coutY;
 		
-		//while(!this.SommetsAExplorer.isEmpty() && !this.SommetsAExplorer.contains(Destination)) {
+		for(int i = 0; i < this.DirectionsAccessibles.size(); i++) {
 			
-			//this.SommetsVisites.add(recupererSommetXmin());
+			String direction = this.DirectionsAccessibles.get(i);
+			
+			switch(direction) {
+			
+			case "Gauche": 
+				
+				Sommet g = new Sommet(Source, null, new AABB(new Vector2f((int) (this.getSaCase().getPos().x - this.getSaCase().getWidth()),(int) this.getSaCase().getPos().y), (int) this.getSaCase().getWidth(),(int) this.getSaCase().getHeight()));
+				
+				
+				
+				coutX = (int) Math.abs(g.getCase().getPos().x - this.Destination.getCase().getPos().x) / 50;
+				coutY = (int) Math.abs(g.getCase().getPos().y - this.Destination.getCase().getPos().y) / 50;
+				
+				
+				g.setCoutTotal(coutX + coutY);
+				
+				
+				this.SommetsAVisiter.add(g);
+				
+				break;
+				
+			case "Droite":
+				
+				Sommet d = new Sommet(Source, null, new AABB(new Vector2f((int) (this.getSaCase().getPos().x + this.getSaCase().getWidth()),(int) this.getSaCase().getPos().y), (int) this.getSaCase().getWidth(),(int) this.getSaCase().getHeight()));
+				
+				coutX = (int) Math.abs(d.getCase().getPos().x - this.Destination.getCase().getPos().x) / 50;
+				coutY = (int) Math.abs(d.getCase().getPos().y - this.Destination.getCase().getPos().y) / 50;
+				
+				d.setCoutTotal(coutX + coutY);
+				
+				
+				this.SommetsAVisiter.add(d);
+				break;
+				
+				
+			case "Bas":
+				
+				Sommet b = new Sommet(Source, null, new AABB(new Vector2f((int) (this.getSaCase().getPos().x),(int) this.getSaCase().getPos().y + this.getSaCase().getHeight()), (int) this.getSaCase().getWidth(),(int) this.getSaCase().getHeight()));
+				
+				coutX = (int) Math.abs(b.getCase().getPos().x - this.Destination.getCase().getPos().x) / 50;
+				coutY = (int) Math.abs(b.getCase().getPos().y - this.Destination.getCase().getPos().y) / 50;
+				
+				b.setCoutTotal(coutX + coutY);
+				
+				
+				this.SommetsAVisiter.add(b);
+				break;
+				
+			case "Haut":
+				
+				Sommet h = new Sommet(Source, null, new AABB(new Vector2f((int) (this.getSaCase().getPos().x),(int) this.getSaCase().getPos().y - this.getSaCase().getHeight()), (int) this.getSaCase().getWidth(),(int) this.getSaCase().getHeight()));
+				
+				coutX = (int) Math.abs(h.getCase().getPos().x - this.Destination.getCase().getPos().x) / 50;
+				coutY = (int) Math.abs(h.getCase().getPos().y - this.Destination.getCase().getPos().y) / 50;
+				
+				h.setCoutTotal(coutX + coutY);
+				
+				
+				this.SommetsAVisiter.add(h);
+				
+				break;
 			
 			
-		//}
-		
-		
-		
-		
-	}
-
-
-	/** Méthode qui permet de renvoyer le sommet ayant un cout minimum par rapport aux destinations possibles */
-	private Sommet recupererSommetXmin() {
-		
-		int coutG = 0; 
-		Sommet SommetX = null;
-		
-		for(int i = 1; i <= SommetsVisites.size(); i++) {
-			coutG += (i * 10);
+			
+			}
+			
+			
 		}
 		
-		//int coutH = calculerCoutH();
+		
+		
+		int coutLePlusFaible = 100;
+		
+		for(int j = 0; j < this.SommetsAVisiter.size(); j++) {
+			
+			if(this.SommetsAVisiter.get(j).getCoutTotal() <= coutLePlusFaible) {
+				coutLePlusFaible = this.SommetsAVisiter.get(j).getCoutTotal();
+				this.Prochain = this.SommetsAVisiter.get(j);
+			}
+		}
 		
 		
 		
 		
-		return SommetX;
 	}
 
 
-
+	/*********************************************\
+	 * 											 *
+	 *   			DEPLACEMENTS    			 * 
+	 * 											 *
+	 *********************************************/
+	
+	
+	
+	
+	private void deplacement() {
+		
+		int x = (int)(this.getBoundsCollision().getPos().x + this.getBoundsCollision().getXOffset());
+		int y = (int)(this.getBoundsCollision().getPos().y + this.getBoundsCollision().getYOffset());
+		
+		if(x < this.Prochain.getCase().getPos().x) {
+			this.right = true;
+		}
+		
+		if(x > this.Prochain.getCase().getPos().x) {
+			this.left = true;
+		}
+		
+		if(y < this.Prochain.getCase().getPos().y) {
+			this.down = true;
+		}
+		
+		if(y > this.Prochain.getCase().getPos().y) {
+			this.up = true;
+		}
+	}
 
 
 	
@@ -289,52 +435,11 @@ public class IA extends Entity {
 
 
 
-
-
-	public void render(Graphics2D g) {
-		super.render(g);
-		
-		
-		
-		// A enlever par la suite
-		g.setColor(Color.BLACK);
-
-		g.drawRect((int)this.getSaCase().getPos().x,(int) this.getSaCase().getPos().y, (int)this.getSaCase().getWidth(), (int)this.getSaCase().getHeight());
-		
-		
-		if(this.Destination !=null) {
-			g.drawRect(this.getXDestination(), this.getYDestination(), this.getWDestination(), this.getHDestination());
-		
-			if(this.getSaCase().getPos().x < this.getXDestination()) {
-				for(int x = 1; x <= this.cheminX; x++) {
-					g.drawRect((int) this.getSaCase().getPos().x + (x * 50), (int) this.getSaCase().getPos().y, 50, 50);
-				}
-			} else {
-				for(int x = 1; x <= this.cheminX; x++) {
-					g.drawRect((int) this.getSaCase().getPos().x - (x * 50), (int) this.getSaCase().getPos().y, 50, 50);
-				}
-			}
-			if(this.getSaCase().getPos().y < this.getYDestination()) {
-				for(int y = 1; y <= this.cheminY; y++) {
-					g.drawRect((int) this.getSaCase().getPos().x + (this.cheminX * 50) , (int) this.getSaCase().getPos().y + (y * 50), 50, 50);
-				}
-			} else {
-				for(int y = 1; y <= this.cheminY; y++) {
-					g.drawRect((int) this.getSaCase().getPos().x + (this.cheminX * 50), (int) this.getSaCase().getPos().y - (y * 50), 50, 50);
-				}
-			}
-		}
-	}
 	
-	@Override
-	protected void meurt() {
-		// TODO Auto-generated method stub
-		for(int i = 0; i < PlayState.ia.length; i++) {
-			if(PlayState.ia[i] == this) {
-				PlayState.ia[i] = null;
-			}
-		}
-	}
+	
+
+
+	
 
 	
 	/** Accesseurs */

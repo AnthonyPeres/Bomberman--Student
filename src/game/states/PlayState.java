@@ -32,7 +32,7 @@ public class PlayState extends GameState {
 	
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
-		tm = new TileManager("tile/mapBomber.xml"); // On charge la map (.xml)
+		tm = new TileManager("tile/mapDeveloppement.xml"); // On charge la map (.xml)
 		player = new Player(new Sprite("entity/spriteBomber.png", 16, 25), new Vector2f(50,30), 50);	// On charge le sprite du joueur 
 		ia[0] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(Vector2f.getWorldX() - 100, 30), 50);
 		ia[1] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(50, Vector2f.getWorldY() - 120), 50);
