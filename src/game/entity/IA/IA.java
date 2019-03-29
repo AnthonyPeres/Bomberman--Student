@@ -15,17 +15,21 @@ public class IA extends Entity {
 
 	/** Variables */
 	
-	private Sommet Source;
-	private Sommet Destination;
-	private Sommet Prochain;
+	private Sommet Source;									// Le sommet ou est placé l'IA
+	private Sommet Destination;								// Le sommet ou l'IA veut aller
+	private Sommet Prochain;								// Le sommet ou l'IA doit marcher
 	
-	LinkedList<String> DirectionsAccessibles; 
+	private LinkedList<String> DirectionsAccessibles; 		// La liste des directions accessibles : Celle ou il n'y a aucun mur
+	private LinkedList<String> DirectionsCassables;			// La liste des directions cassables 
 	
-	private LinkedList<Sommet> SommetsAVisiter;
+	private LinkedList<Sommet> SommetsAVisiter;				// La liste des sommets a visiter : Les voisins de l'IA
 	
+	private int cheminX, 									// Le nombre de cases en X que l'IA devait parcourir pour aller a la destination
+				cheminY, 									// Le nombre de cases en Y que l'IA devait parcourir pour aller a la destination
+				nouveauCheminX, 							// Le nombre de cases en X que l'IA doit parcourir pour aller a la destination
+				nouveauCheminY;								// Le nombre de cases en Y que l'IA doit parcourir pour aller a la destination
 	
-	private int cheminX, cheminY, nouveauCheminX, nouveauCheminY;
-	
+	private boolean Attaque;								// L'IA est en état d'attaque (ou non : false);
 	
 	
 	
@@ -48,6 +52,7 @@ public class IA extends Entity {
 		this.DirectionsAccessibles = new LinkedList<String>(); 
 		
 	}
+	
 
 	
 	/** Méthodes */
@@ -55,87 +60,39 @@ public class IA extends Entity {
 	public void update(double time) {
 		super.update(time);
 		
-		DirectionsAccessibles = getDirectionsPossibles();
+		// TODO: Si l'IA doit casser un bloc cassable : elle casse.
+
 		
-		
+		// 1. On va regarder si l'IA est menacé ou non. Si l'IA n'est pas menacé il se met en mode attaque sinon en defense
 		situation();
 		
-		if(!enDanger(this.getSaCase())) {
-			AlgorithmeAEtoile();
-		}
+		// 2. L'IA vérifie quelles cases sont accessibles et quelles cases sont cassables 
+		DirectionsAccessibles = getDirectionsPossibles();
+		DirectionsCassables = getDirectionsCassables();
 		
+		// 3. L'IA doit trouver une situation, elle est différente si il est en attaque ou non. Si il est en attaque : joueur le plus proche
+		if(this.Attaque) { this.chercherDestinationAttaque(); } 
+		else { this.chercherDestinationDefense();}
+		
+		// 4. On applique l'algorithme A* pour que l'IA parcour le meilleur chemin pour aller jusqu'a destination
+		AlgorithmeAEtoile();
+		
+		// 5. On a le meilleur chemin ( meilleur case pour l'instant...) On se deplace
 		deplacement();
 		
-		move();
-		
-		
-		/*if(this.Prochain.getCoutTotal() < 2) {
-			this.bomb = true;
-		}*/
-		
-		poserBombe();
-		
+		// 6. Si l'IA est dans une situation ou il peut exploser un adversaire, il pose une bombe 
+		if(peutPoser()) {this.bomb = true; poserBombe();}
 	}
 	
 	
-
-
-	public void render(Graphics2D g) {
-		super.render(g);
-		
-		
-		g.setColor(Color.RED);
-		if(this.Destination !=null) {
-			g.drawRect(this.getXDestination(), this.getYDestination(), this.getWDestination(), this.getHDestination());
-		}
-		
-		
-		for(int i = 0; i < this.SommetsAVisiter.size(); i++) {
-			
-			Sommet temp = this.SommetsAVisiter.get(i);
-			
-			if(temp.equals(this.Prochain)) {
-				g.setColor(Color.RED);
-				g.drawRect((int)temp.getCase().getPos().x, (int)temp.getCase().getPos().y, (int)temp.getCase().getWidth(),(int) temp.getCase().getHeight());
-			} else {
-				g.setColor(Color.cyan);
-				g.drawRect((int)temp.getCase().getPos().x, (int)temp.getCase().getPos().y, (int)temp.getCase().getWidth(),(int) temp.getCase().getHeight());
-			}
-		}
-	}
-	
-	@Override
-	protected void meurt() {
-		// TODO Auto-generated method stub
-		for(int i = 0; i < PlayState.ia.length; i++) {
-			if(PlayState.ia[i] == this) {
-				PlayState.ia[i] = null;
-			}
-		}
-	}
 	
 	
-
-	/*********************************************\
-	 * 											 *
-	 *   MÉTHODES QUI VERIFIENT LA SITUATION     * 
-	 * 											 *
-	 *********************************************/
+	// 1. 
 	
-	
-	/** Se met en position de défense ou d'attaque selon si l'IA est en danger ou non */
+	/** Met l'IA en attaque ou en defense selon le danger */
 	public void situation() {
-		if(this.enDanger(this.getSaCase())) { this.chercherDestinationDefense();} 
-		else {
-			this.chercherDestinationAttaque();
-			
-			/* On repasse les deplacements à faux */
-			this.up = false;
-			this.down = false;
-			this.left = false;
-			this.right = false;
-			
-		}
+		if(this.enDanger(this.getSaCase())) { this.Attaque = false; } 
+		else { this.Attaque = true; }
 	}
 	
 	/** Retourne true si l'IA est en dangée, false sinon */
@@ -155,20 +112,54 @@ public class IA extends Entity {
 				}
 			}  
 			if((tempB.getSaCase().getPos().y == Case.getPos().y) && (tempB.getSaCase().getPos().x == Case.getPos().x)) {
-				System.out.println("danger"); return true;
+				return true;
 			}
 		}
 		return false;
 	}
 
 	
-	/*********************************************\
-	 * 											 *
-	 *   MÉTHODES QUI CHERCHE UNE DESTINATION    *
-	 *   	PAR RAPPORT A LA SITUATION     		 * 
-	 * 											 *
-	 *********************************************/
 	
+	
+	
+	
+	// 2.
+	
+	/** Renvoie la liste des directions possibles : Aucun mur */
+	private LinkedList<String> getDirectionsPossibles(){
+		LinkedList<String> casesAccessibles = new LinkedList<String>();
+		int saCaseX = (int) this.getSaCase().getPos().x /50;
+		int saCaseY = (int) this.getSaCase().getPos().y /50;
+		Matrice matrice = PlayState.getMatrice();
+		
+		if(!(matrice.getCase(saCaseX - 1, saCaseY) == 1 || matrice.getCase(saCaseX - 1, saCaseY) == 2)) {casesAccessibles.add("Gauche");}
+		if(!(matrice.getCase(saCaseX + 1, saCaseY) == 1 || matrice.getCase(saCaseX + 1, saCaseY) == 2)) {casesAccessibles.add("Droite");}
+		if(!(matrice.getCase(saCaseX, saCaseY + 1) == 1 || matrice.getCase(saCaseX, saCaseY + 1) == 2)) {casesAccessibles.add("Bas");}
+		if(!(matrice.getCase(saCaseX, saCaseY - 1) == 1 || matrice.getCase(saCaseX, saCaseY - 1) == 2)) {casesAccessibles.add("Haut");}
+		
+		return casesAccessibles;
+	}
+	
+	/** Renvoie la liste des voisins cassables : Gauche Droite Haut Bas */
+	private LinkedList<String> getDirectionsCassables(){
+		LinkedList<String> listeVoisinsCassables = new LinkedList<String>();
+		int saCaseX = (int) this.getSaCase().getPos().x /50;
+		int saCaseY = (int) this.getSaCase().getPos().y /50;
+		Matrice matrice = PlayState.getMatrice();
+		
+		if(!(matrice.getCase(saCaseX - 1, saCaseY) == 2)) {listeVoisinsCassables.add("Gauche");}
+		if(!(matrice.getCase(saCaseX + 1, saCaseY) == 2)) {listeVoisinsCassables.add("Droite");}
+		if(!(matrice.getCase(saCaseX, saCaseY + 1) == 2)) {listeVoisinsCassables.add("Bas");}
+		if(!(matrice.getCase(saCaseX, saCaseY - 1) == 2)) {listeVoisinsCassables.add("Haut");}
+		
+		return listeVoisinsCassables;
+	}
+	
+	
+	
+	
+	
+	// 3.
 	
 	/** Cherche une destination dans une situation d'attaque */
 	private void chercherDestinationAttaque() {
@@ -216,91 +207,55 @@ public class IA extends Entity {
 	/** Cherche une destination dans une situation de défense */
 	private void chercherDestinationDefense() {
 		
-		LinkedList<String> listeDirectionPossible = new LinkedList<String>(); 
-		//listeDirectionPossible = getDirectionsPossibles();
-		
-		int lower = 1; int higher = 5; 
-		int randomDirection = (int)(Math.random() * (higher-lower)) + lower;
-		
-		for(int i = 0; i< listeDirectionPossible.size(); i++) {
-				if(listeDirectionPossible.get(i) == "Gauche" && randomDirection == 1) {
-					if(!enDanger(new AABB( new Vector2f((int)this.getSaCase().getPos().x - 50, (int)this.getSaCase().getPos().y), 50,50))) {
-						this.left = true;
-					}
-				} else if(listeDirectionPossible.get(i) == "Droite" && randomDirection == 2) {
-					if(!enDanger(new AABB( new Vector2f((int)this.getSaCase().getPos().x + 50, (int)this.getSaCase().getPos().y), 50,50))) {
-						this.right = true;
-					}
-				} else if(listeDirectionPossible.get(i) == "Bas" && randomDirection == 3) {
-					if(!enDanger(new AABB( new Vector2f((int)this.getSaCase().getPos().x, (int)this.getSaCase().getPos().y + 50), 50,50))) {
-						this.down = true;
-					}
-				} else if(listeDirectionPossible.get(i) == "Haut" && randomDirection == 4) {
-					if(!enDanger(new AABB( new Vector2f((int)this.getSaCase().getPos().x, (int)this.getSaCase().getPos().y - 50), 50,50))) {
-						this.up = true;
+		for(int i = 0; i < this.DirectionsAccessibles.size(); i++) {
+			switch(this.DirectionsAccessibles.get(i)) {
+			
+			case "Gauche": 
+				// Si la case de gauche n'est pas dangereuse : ça devient notre destination
+				// Si elle est dangereuse, On cherche ses cases voisine qui ne le sont pas et devienent notre destination
+				
+				if(!enDanger(new AABB(new Vector2f((int)this.getSaCase().getPos().x - 50, (int)this.getSaCase().getPos().y), 50,50))) {
+					this.Destination = new Sommet(null, null, new AABB( new Vector2f((int)this.getSaCase().getPos().x - 50, (int)this.getSaCase().getPos().y), 50,50));
 				}
+				
+				
+				break;
+				
+			case "Droite":
+				
+				if(!enDanger(new AABB( new Vector2f((int)this.getSaCase().getPos().x + 50, (int)this.getSaCase().getPos().y), 50,50))) {
+					this.Destination = new Sommet(null, null, new AABB( new Vector2f((int)this.getSaCase().getPos().x + 50, (int)this.getSaCase().getPos().y), 50,50));
+				}
+				
+				break;
+				
+			case "Bas":
+				
+				if(!enDanger(new AABB( new Vector2f((int)this.getSaCase().getPos().x, (int)this.getSaCase().getPos().y + 50), 50,50))) {
+					this.Destination = new Sommet(null, null, new AABB( new Vector2f((int)this.getSaCase().getPos().x, (int)this.getSaCase().getPos().y + 50), 50,50));
+				}
+				
+				
+				break;
+				
+			case "Haut":
+				
+				if(!enDanger(new AABB( new Vector2f((int)this.getSaCase().getPos().x, (int)this.getSaCase().getPos().y - 50), 50,50))) {
+					this.Destination = new Sommet(null, null, new AABB( new Vector2f((int)this.getSaCase().getPos().x, (int)this.getSaCase().getPos().y - 50), 50,50));
+				}
+				
+				
+				break;
 			}
 		}
-		this.Destination = null; // Le AABB d'une case secure
-	}
-
-	
-	/*********************************************\
-	 * 											 *
-	 * MÉTHODES QUI TESTENT LES CASES ADJACENTES * 
-	 * 											 *
-	 *********************************************/
-	
-	
-	private LinkedList<String> getDirectionsPossibles(){
-		
-		LinkedList<String> casesAccessibles = new LinkedList<String>();
-		int saCaseX = (int) this.getSaCase().getPos().x /50;
-		int saCaseY = (int) this.getSaCase().getPos().y /50;
-		Matrice matrice = PlayState.getMatrice();
-		
-		if(!(matrice.getCase(saCaseX - 1, saCaseY) == 1 || matrice.getCase(saCaseX - 1, saCaseY) == 2)) {casesAccessibles.add("Gauche");}
-		if(!(matrice.getCase(saCaseX + 1, saCaseY) == 1 || matrice.getCase(saCaseX + 1, saCaseY) == 2)) {casesAccessibles.add("Droite");}
-		if(!(matrice.getCase(saCaseX, saCaseY + 1) == 1 || matrice.getCase(saCaseX, saCaseY + 1) == 2)) {casesAccessibles.add("Bas");}
-		if(!(matrice.getCase(saCaseX, saCaseY - 1) == 1 || matrice.getCase(saCaseX, saCaseY - 1) == 2)) {casesAccessibles.add("Haut");}
-		
-		
-		return casesAccessibles;
 	}
 	
 	
 	
 	
+	// 4.
 	
-	/** Renvoie la liste des voisins cassables : Gauche Droite Haut Bas */
-	private LinkedList<String> getVoisinsCassables(){
-		LinkedList<String> listeVoisinsCassables = new LinkedList<String>();
-		int saCaseX = (int) this.getSaCase().getPos().x /50;
-		int saCaseY = (int) this.getSaCase().getPos().y /50;
-		Matrice matrice = PlayState.getMatrice();
-		
-		if(!(matrice.getCase(saCaseX - 1, saCaseY) == 2)) {listeVoisinsCassables.add("Gauche");}
-		if(!(matrice.getCase(saCaseX + 1, saCaseY) == 2)) {listeVoisinsCassables.add("Droite");}
-		if(!(matrice.getCase(saCaseX, saCaseY + 1) == 2)) {listeVoisinsCassables.add("Bas");}
-		if(!(matrice.getCase(saCaseX, saCaseY - 1) == 2)) {listeVoisinsCassables.add("Haut");}
-		
-		return listeVoisinsCassables;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	/*********************************************\
-	 * 											 *
-	 *   			ALGORITHME A*    			 * 
-	 * 											 *
-	 *********************************************/
-	
-	
+	/** Algorithme A* */
 	private void AlgorithmeAEtoile() {
 		
 		this.SommetsAVisiter.clear();
@@ -386,61 +341,112 @@ public class IA extends Entity {
 		
 		for(int j = 0; j < this.SommetsAVisiter.size(); j++) {
 			
-			if(this.SommetsAVisiter.get(j).getCoutTotal() <= coutLePlusFaible) {
+			if(this.SommetsAVisiter.get(j).getCoutTotal() <= coutLePlusFaible && !(enDanger(this.SommetsAVisiter.get(j).getCase()))) {
 				coutLePlusFaible = this.SommetsAVisiter.get(j).getCoutTotal();
+				
 				this.Prochain = this.SommetsAVisiter.get(j);
-			}
+			} 
+		}
+		
+		if(this.Prochain == null) {
+			
+			// Faire casser des blocs
+			
+			
 		}
 		
 		
 		
+		if(this.Prochain == null) {
+			
+			for(int j = 0; j < this.SommetsAVisiter.size(); j++) {
+				
+				if(this.SommetsAVisiter.get(j).getCoutTotal() <= coutLePlusFaible) {
+					coutLePlusFaible = this.SommetsAVisiter.get(j).getCoutTotal();
+					
+					this.Prochain = this.SommetsAVisiter.get(j);
+				} 
+			}
+			
+		}
 		
 	}
-
-
-	/*********************************************\
-	 * 											 *
-	 *   			DEPLACEMENTS    			 * 
-	 * 											 *
-	 *********************************************/
 	
 	
 	
 	
+	// 5.
+	
+	/** Cette méthode sert a faire deplacer le personnage de son sommet au sommet destination */
 	private void deplacement() {
-		
 		int x = (int)(this.getBoundsCollision().getPos().x + this.getBoundsCollision().getXOffset());
 		int y = (int)(this.getBoundsCollision().getPos().y + this.getBoundsCollision().getYOffset());
 		
-		if(x < this.Prochain.getCase().getPos().x) {
-			this.right = true;
-		}
+		if(x < this.Prochain.getCase().getPos().x) {this.right = true; } else { this.right = false;}
+		if(x > this.Prochain.getCase().getPos().x) { this.left = true; } else { this.left = false;}
+		if(y < this.Prochain.getCase().getPos().y) {this.down = true;} else { this.down = false;}
+		if(y > this.Prochain.getCase().getPos().y) {this.up = true;} else { this.up = false;}
 		
-		if(x > this.Prochain.getCase().getPos().x) {
-			this.left = true;
-		}
-		
-		if(y < this.Prochain.getCase().getPos().y) {
-			this.down = true;
-		}
-		
-		if(y > this.Prochain.getCase().getPos().y) {
-			this.up = true;
-		}
+		move();
+	}
+	
+	
+	
+	
+	// 6.
+	
+	/** Dit si l'IA peut poser une bombe */
+	private boolean peutPoser() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 
-	
-	
-
-
 
 	
 	
-
-
+	// Les fonctions abstraites de la class super
 	
-
+	
+	@Override
+	protected void meurt() {
+		// TODO Auto-generated method stub
+		for(int i = 0; i < PlayState.ia.length; i++) {
+			if(PlayState.ia[i] == this) {
+				PlayState.ia[i] = null;
+			}
+		}
+	}
+	
+	
+	public void render(Graphics2D g) {
+		super.render(g);
+		
+		
+		g.setColor(Color.RED);
+		if(this.Destination !=null) {
+			g.drawRect(this.getXDestination(), this.getYDestination(), this.getWDestination(), this.getHDestination());
+		}
+		
+		
+		for(int i = 0; i < this.SommetsAVisiter.size(); i++) {
+			
+			Sommet temp = this.SommetsAVisiter.get(i);
+			
+			if(temp.equals(this.Prochain)) {
+				g.setColor(Color.RED);
+				g.drawRect((int)temp.getCase().getPos().x, (int)temp.getCase().getPos().y, (int)temp.getCase().getWidth(),(int) temp.getCase().getHeight());
+			} else {
+				g.setColor(Color.cyan);
+				g.drawRect((int)temp.getCase().getPos().x, (int)temp.getCase().getPos().y, (int)temp.getCase().getWidth(),(int) temp.getCase().getHeight());
+			}
+		}
+	}
+	
+	
+	
+	
+	
 	
 	/** Accesseurs */
 	
@@ -450,9 +456,4 @@ public class IA extends Entity {
 	public int getWDestination() {return (int) (this.getSaDestination().getCase().getWidth()) ;} 
 	public int getHDestination() {return (int) (this.getSaDestination().getCase().getHeight());}
 	
-	
-	
-	/** Mutateurs */
-	
-
 }
