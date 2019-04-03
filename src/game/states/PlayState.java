@@ -51,8 +51,6 @@ public class PlayState extends GameState {
 		for(int i = 0; i < ia.length; i++) {if(ia[i] != null) {ia[i].render(g);}}
 		for(int i = 0; i < bombList.size(); i++) { bombList.get(i).render(g);}
 		for(int i = 0; i < listFlammes.size(); i++) {listFlammes.get(i).render(g);}
-	
-		//matrice.render(g);
 	}
 	
 	@Override

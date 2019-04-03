@@ -26,59 +26,110 @@ public class IA extends Entity {
 	
 	private Sommet Source;
 	private Sommet Destination;
+	private Sommet coutMinimum;
 	
 	private ArrayList<Sommet> sommetsAExplorer;
 	private ArrayList<Sommet> sommetsVisites;
-	
 	private ArrayList<Sommet> directionsPossibles;
 	private ArrayList<Sommet> directionsCassables;
-	
 	
 	/** CONSTRUCTEUR */
 
 	public IA(Sprite sprite, Vector2f pos, int size) {
 		super(sprite, pos, size);
-		
-		matrice = PlayState.getMatrice().getMatrice();
-		
 		this.attaque = true;
-		
-		this.Source = new Sommet(null, null, this.getSaCase());
-		this.Destination = null;
-		
-		this.sommetsAExplorer = new ArrayList<Sommet>();
-		this.sommetsAExplorer.add(this.Source);
-		
-		this.sommetsVisites = new ArrayList<Sommet>();
-		
-		this.directionsPossibles = new ArrayList<Sommet>();
-		this.directionsCassables = new ArrayList<Sommet>();
-		
 	}
 	
 	
 	/** MÉTHODES */
 	
-	
+	/* Gère les tours de l'IA */
 	public void update(double time) {
 		super.update(time);
 		
+		/* On rafraichit et on recupere la matrice */
 		PlayState.getMatrice().rafraichir();
-		matrice = PlayState.getMatrice().getMatrice(); 			// On rafraichit la matrice
+		matrice = PlayState.getMatrice().getMatrice();
 		
+		/* On recupere la source */
 		this.Source = new Sommet(null, null, this.getSaCase());
 		
+		/* On remet la destination a null en attendant qu'on en ai une */
+		this.Destination = null;
+		
+		/* On reinitialise la liste des sommets a explorer en y ajoutant la source */
+		this.sommetsAExplorer = new ArrayList<Sommet>();
+		this.sommetsAExplorer.add(this.Source);
+		
+		/* On reinitialise la liste des sommets a visiter */
+		this.sommetsVisites = new ArrayList<Sommet>();
+		
+		/* On reinitialise la liste des directions possibles */
+		this.directionsPossibles = new ArrayList<Sommet>();
+		this.directionsCassables = new ArrayList<Sommet>();
+		
+		/* On reinitialise le sommet qui contient le cout minimum a la source */
+		this.coutMinimum = this.Source;
+				
+		/* On appel la méthode qui se charge de regarder la situation dans laquelle est l'IA*/
 		this.regarderSituation();
 		
+		/* On appel la méthode qui se charge de trouver une destination à l'IA */
 		this.chercherDestination();
 		
-		//System.out.println("Source : "+this.Source.getCaseX()+","+this.Source.getCaseY()+" ---> Destination : "+this.Destination.getCaseX()+","+this.Destination.getCaseY());
-		
-		
+		/* On lance l'algorithme A* */
 		this.AlgorithmeA();
 		
+		/* On fait deplacer l'IA */
+		//this.deplacement(Prochain);
 	}
 	
+	
+	
+	/**	Algorithme A* */
+	private void AlgorithmeA() {
+		
+		/* Creation du parcours de l'IA a sa destination tant que le parcours n'est pas terminé */
+		while(!(this.sommetsAExplorer.isEmpty()) && !(this.coutMinimum.getCaseX() == this.Destination.getCaseX() && this.coutMinimum.getCaseY() == this.Destination.getCaseY())) {
+			
+			/* On recherche les directions possibles et les directions cassables du coutMinimum */
+			this.directionsPossibles = getDirectionsPossibles(coutMinimum);
+			this.directionsCassables = getDirectionsCassables(coutMinimum);		
+			
+			/* On ajoute les directions possibles dans la liste des sommets a explorer si ils ne sont pas déjà dans la liste des sommets a visiter */
+			for(int k = 0; k < directionsPossibles.size(); k++) {				
+				if(!(this.sommetsVisites.contains(directionsPossibles.get(k)))) { this.sommetsAExplorer.add(directionsPossibles.get(k)); }
+			}
+			
+			/* On ajoute les directions cassables dans la liste des sommets a explorer si ils ne sont pas déjà dans la liste des sommets a visiter */
+			for(int l = 0; l < directionsCassables.size(); l++) {
+				if(!(this.sommetsVisites.contains(directionsCassables.get(l)))) { this.sommetsAExplorer.add(directionsCassables.get(l)); }
+			}
+			
+			/* Il faut calculer le cout pour tout les sommets a explorer */
+			for(int i = 0; i < sommetsAExplorer.size(); i++) {
+				sommetsAExplorer.get(i).setCoutG(calculerCoutG(sommetsAExplorer.get(i)));
+				sommetsAExplorer.get(i).setCoutH(calculerCoutH(sommetsAExplorer.get(i)));
+				sommetsAExplorer.get(i).setCoutTotal();
+			}
+			
+			/* On fait en sorte que coutminimum prend le sommet avec le cout le plus petit de la liste des sommets a explorer */
+			for(int j = 0; j < sommetsAExplorer.size(); j++) {
+				if(coutMinimum == null) {coutMinimum = sommetsAExplorer.get(j); } 
+				else {
+					if(sommetsAExplorer.get(j).getCoutTotal() == coutMinimum.getCoutTotal()) {
+						if(sommetsAExplorer.get(j).getCoutG() >= coutMinimum.getCoutG()) { coutMinimum = sommetsAExplorer.get(j); }
+					} else if(sommetsAExplorer.get(j).getCoutTotal() < coutMinimum.getCoutTotal()) { coutMinimum = sommetsAExplorer.get(j); } 
+				}
+			}
+			
+			/* On ajoute le sommet coutMinimum dans la liste des sommetsVisites et on le supprime de la liste des sommets a explorer */
+			this.sommetsVisites.add(coutMinimum);
+			this.sommetsAExplorer.remove(coutMinimum);
+		}	
+	}
+
+
 	
 	
 	/** Met l'IA en mode attaque si il n'y a pas de danger, en mode 'non' attaque si il y en a un */
@@ -161,26 +212,26 @@ public class IA extends Entity {
 
 	/** Renvoie la liste des directions possibles : Aucun mur */
 	private ArrayList<Sommet> getDirectionsPossibles(Sommet source){
+		ArrayList<Sommet> listeDesDirectionsPossibles = new ArrayList<Sommet>();
 		int saCaseX = source.getCaseX();
 		int saCaseY = source.getCaseY();
-		ArrayList<Sommet> listeDesDirectionsPossibles = new ArrayList<Sommet>();
-		if(this.matrice[saCaseX - 1][saCaseY] == 3 || this.matrice[saCaseX - 1][saCaseY] == 7) {listeDesDirectionsPossibles.add(new Sommet(source, null, new AABB(new Vector2f(this.getSaCase().getPos().x - 50, this.getSaCase().getPos().y), 50, 50)));}
-		if(this.matrice[saCaseX + 1][saCaseY] == 3 || this.matrice[saCaseX + 1][saCaseY] == 7) {listeDesDirectionsPossibles.add(new Sommet(source, null, new AABB(new Vector2f(this.getSaCase().getPos().x + 50, this.getSaCase().getPos().y), 50, 50)));}
-		if(this.matrice[saCaseX][saCaseY + 1] == 3 || this.matrice[saCaseX][saCaseY + 1] == 7) {listeDesDirectionsPossibles.add(new Sommet(source, null, new AABB(new Vector2f(this.getSaCase().getPos().x, this.getSaCase().getPos().y + 50), 50, 50)));}
-		if(this.matrice[saCaseX][saCaseY - 1] == 3 || this.matrice[saCaseX][saCaseY - 1] == 7) {listeDesDirectionsPossibles.add(new Sommet(source, null, new AABB(new Vector2f(this.getSaCase().getPos().x, this.getSaCase().getPos().y - 50), 50, 50)));}
-		for(int i = 0; i < listeDesDirectionsPossibles.size(); i++) {listeDesDirectionsPossibles.get(i).setPredecesseur(source);}
+		if(!(this.matrice[saCaseX - 1][saCaseY] == 1) && !(this.matrice[saCaseX - 1][saCaseY] == 2)) {listeDesDirectionsPossibles.add(new Sommet(source, null, saCaseX - 1, saCaseY ));}
+		if(!(this.matrice[saCaseX + 1][saCaseY] == 1) && !(this.matrice[saCaseX + 1][saCaseY] == 2)) {listeDesDirectionsPossibles.add(new Sommet(source, null, saCaseX + 1, saCaseY ));}
+		if(!(this.matrice[saCaseX][saCaseY + 1] == 1) && !(this.matrice[saCaseX][saCaseY + 1] == 2)) {listeDesDirectionsPossibles.add(new Sommet(source, null, saCaseX, saCaseY + 1 ));}
+		if(!(this.matrice[saCaseX][saCaseY - 1] == 1) && !(this.matrice[saCaseX][saCaseY - 1] == 2)) {listeDesDirectionsPossibles.add(new Sommet(source, null, saCaseX, saCaseY - 1 ));}		
+		for(int i = 0; i < listeDesDirectionsPossibles.size(); i++) {listeDesDirectionsPossibles.get(i).setPredecesseur(source);}			
 		return listeDesDirectionsPossibles;
 	}
 	
 	/** Renvoie la liste des voisins cassables : Gauche Droite Haut Bas */
 	private ArrayList<Sommet> getDirectionsCassables(Sommet source){
-		int saCaseX = source.getCaseX();
-		int saCaseY = source.getCaseY();
 		ArrayList<Sommet> listeDesDirectionsCassables = new ArrayList<Sommet>();
-		if(this.matrice[saCaseX - 1][saCaseY] == 2) {listeDesDirectionsCassables.add(new Sommet(source, null, new AABB(new Vector2f(this.getSaCase().getPos().x - 50, this.getSaCase().getPos().y), 50, 50)));}
-		if(this.matrice[saCaseX + 1][saCaseY] == 2) {listeDesDirectionsCassables.add(new Sommet(source, null, new AABB(new Vector2f(this.getSaCase().getPos().x + 50, this.getSaCase().getPos().y), 50, 50)));}
-		if(this.matrice[saCaseX][saCaseY + 1] == 2) {listeDesDirectionsCassables.add(new Sommet(source, null, new AABB(new Vector2f(this.getSaCase().getPos().x, this.getSaCase().getPos().y + 50), 50, 50)));}
-		if(this.matrice[saCaseX][saCaseY - 1] == 2) {listeDesDirectionsCassables.add(new Sommet(source, null, new AABB(new Vector2f(this.getSaCase().getPos().x, this.getSaCase().getPos().y - 50), 50, 50)));}
+		int saCaseX = source.getCaseX();
+		int saCaseY = source.getCaseY();		
+		if(this.matrice[saCaseX - 1][saCaseY] == 2) {listeDesDirectionsCassables.add(new Sommet(source, null, saCaseX - 1, saCaseY ));}
+		if(this.matrice[saCaseX + 1][saCaseY] == 2) {listeDesDirectionsCassables.add(new Sommet(source, null, saCaseX + 1, saCaseY ));}
+		if(this.matrice[saCaseX][saCaseY + 1] == 2) {listeDesDirectionsCassables.add(new Sommet(source, null, saCaseX, saCaseY + 1 ));}
+		if(this.matrice[saCaseX][saCaseY - 1] == 2) {listeDesDirectionsCassables.add(new Sommet(source, null, saCaseX, saCaseY - 1 ));}
 		for(int i = 0; i < listeDesDirectionsCassables.size(); i++) {listeDesDirectionsCassables.get(i).setPredecesseur(source);}
 		return listeDesDirectionsCassables;
 	}
@@ -198,96 +249,10 @@ public class IA extends Entity {
 		int caseY = Math.abs(temp.getCaseY() - this.Source.getCaseY());
 		return (caseX + caseY);
 	}
-
-
 	
-	
-	/**
-	 * 
-	 * 	ATTENTION ! IL FAIT DES ALLERS RETOURS ENTRE LA SOURCE ET LA CASE DU DESSUS CAR LE COUT TOTAL EST LE MEM 
-	 * 
-	 * */
-	
-	
-	
-	private void AlgorithmeA() {
-		
-		/* Tant que la liste des sommets a explorer n'est pas vide : Tant que l'on peut aller quelque part */
-		while(!(this.sommetsAExplorer.isEmpty()) && !(this.sommetsAExplorer.contains(Destination))) {
-			
-			// Il faut calculer le cout pour tout les sommets a explorer
-			for(int i = 0; i < sommetsAExplorer.size(); i++) {
-				sommetsAExplorer.get(i).setCoutG(calculerCoutG(sommetsAExplorer.get(i)));
-				sommetsAExplorer.get(i).setCoutH(calculerCoutH(sommetsAExplorer.get(i)));
-				sommetsAExplorer.get(i).setCoutTotal();
-			}
-			
-			
-			// On creer un sommet temporaire qui va recuperer le sommet avec le plus petit cout : on le place dans sommets visités 
-			Sommet coutMinimum = null;
-			
-			// On recherche ce sommet
-			for(int j = 0; j < sommetsAExplorer.size(); j++) {
-				if(j == 0) {
-					coutMinimum = sommetsAExplorer.get(j);
-				} else {
-					
-					if(sommetsAExplorer.get(j).getCoutTotal() == coutMinimum.getCoutTotal()) {
-						if(sommetsAExplorer.get(j).getCoutG() > coutMinimum.getCoutG()) {
-							coutMinimum = sommetsAExplorer.get(j);
-						}
-					}
-					
-					else if(sommetsAExplorer.get(j).getCoutTotal() < coutMinimum.getCoutTotal()) {
-						coutMinimum = sommetsAExplorer.get(j);
-					} 
-				}
-			}
-			
-			this.sommetsVisites.add(coutMinimum);
-			this.sommetsAExplorer.remove(coutMinimum);
-			
-			this.directionsPossibles = getDirectionsPossibles(coutMinimum);
-			this.directionsCassables = getDirectionsCassables(coutMinimum);		
-			
-			for(int k = 0; k < directionsPossibles.size(); k++) {
-				if(!(this.sommetsVisites.contains(directionsPossibles.get(k)))) {
-					this.sommetsAExplorer.add(directionsPossibles.get(k));
-				}
-			}
-			
-			for(int k = 0; k < directionsCassables.size(); k++) {
-				if(!(this.sommetsVisites.contains(directionsCassables.get(k)))) {
-					this.sommetsAExplorer.add(directionsCassables.get(k));
-				}
-			}
-			
-		
-			System.out.println("ooooooooo");
-			System.out.println(this.sommetsAExplorer.size());
-			
-		}
-		
-		// VIDER LES LISTES 
-		
-		
-		//deplacer le bomber VVV
-		
-		
-	}
-
-
-	
-	
-	
-	
-
-
-
 	/** Cette méthode sert a faire deplacer le personnage de son sommet au sommet destination */
 	private void deplacement(Sommet p) {
-		
-		/* TANT QUE LE BOUNDSCOLLISION EST ENTRE LE P.GET CASE* 50 ET LE P.GET CASE * 50 + 50 ON FAIT RIEN NANANANA */
+		/* Revoir les conditions */
 		
 		int x = (int)(this.getBoundsCollision().getPos().x + this.getBoundsCollision().getXOffset());
 		int y = (int)(this.getBoundsCollision().getPos().y + this.getBoundsCollision().getYOffset());
@@ -300,22 +265,26 @@ public class IA extends Entity {
 		move();
 	}
 
-
-	
+	/** Affiche les composants désirés */
 	public void render(Graphics2D g) {
 		super.render(g);
 		
+		/* La destination */
 		g.setColor(Color.CYAN);
-		g.drawRect(this.Destination.getCaseX() * 50, this.Destination.getCaseY() * 50, 50, 50);
+		if(this.Destination != null) { g.drawRect(this.Destination.getCaseX() * 50, this.Destination.getCaseY() * 50, 50, 50); }
 		
-		g.setColor(Color.RED);
-		for(int i = 0; i < this.sommetsVisites.size() ; i++) {
-			g.drawRect(this.sommetsVisites.get(i).getCaseX() * 50, this.sommetsVisites.get(i).getCaseY() * 50, 50, 50);
+		/* Les sommets a explorer */
+		g.setColor(Color.yellow);
+		if(this.sommetsAExplorer.isEmpty() == false) {
+			for(int i = 0; i < this.sommetsAExplorer.size(); i++) { g.drawRect(this.sommetsAExplorer.get(i).getCaseX() * 50, this.sommetsAExplorer.get(i).getCaseY() * 50, 50, 50); }
 		}
 		
-		
+		/* Les sommets visités */
+		g.setColor(Color.RED);
+		if(this.sommetsVisites.isEmpty() == false) {
+			for(int i = 0; i < this.sommetsVisites.size(); i++) { g.drawRect(this.sommetsVisites.get(i).getCaseX() * 50, this.sommetsVisites.get(i).getCaseY() * 50, 50, 50); }
+		}
 	}
-
 	
 	/** Fonction qui permet de supprimer l'IA du PlayState */
 	@Override

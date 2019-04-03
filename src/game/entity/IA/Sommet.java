@@ -3,6 +3,7 @@ package game.entity.IA;
 import java.util.ArrayList;
 
 import game.util.AABB;
+import game.util.Vector2f;
 
 public class Sommet {
 
@@ -11,7 +12,7 @@ public class Sommet {
 	
 	private Sommet Predecesseur;
 	private ArrayList<Sommet> Successeur;
-	
+	private AABB saCase;
 	private int coutG = 0;
 	private int coutH = 0;
 	private int coutTotal;
@@ -19,6 +20,7 @@ public class Sommet {
 	public Sommet(Sommet Predecesseur, Sommet Successeur, AABB Case) {
 		this.Predecesseur = Predecesseur;
 		this.Successeur = new ArrayList<Sommet>();
+		this.saCase = Case;
 		
 		this.setCaseX((int) Case.getPos().x / 50);
 		this.setCaseY((int) Case.getPos().y / 50);
@@ -31,11 +33,14 @@ public class Sommet {
 		this.Predecesseur = Predecesseur;
 		this.Successeur = new ArrayList<Sommet>();
 		
+		this.saCase = new AABB(new Vector2f(x*50, y*50), 50, 50);
+		
 		this.setCaseX(x);
 		this.setCaseY(y);
 	}
 	
 	
+	public AABB getSaCase() {return this.saCase;}
 	
 	public void AjouterSuccesseur(Sommet successeur) {Successeur.add(successeur);}
 	
