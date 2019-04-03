@@ -37,6 +37,11 @@ public class IA extends Entity {
 
 	public IA(Sprite sprite, Vector2f pos, int size) {
 		super(sprite, pos, size);
+		
+		this.maxSpeed = (float) 2;
+		this.acc = 2;
+		this.deacc = 1;
+		
 		this.attaque = true;
 	}
 	
@@ -51,7 +56,7 @@ public class IA extends Entity {
 		PlayState.getMatrice().rafraichir();
 		matrice = PlayState.getMatrice().getMatrice();
 		
-		/* On recupere la source */
+		/* On reinitialise la source : la position du joueur */
 		this.Source = new Sommet(null, null, this.getSaCase());
 		
 		/* On remet la destination a null en attendant qu'on en ai une */
@@ -81,14 +86,14 @@ public class IA extends Entity {
 		this.AlgorithmeA();
 		
 		/* On fait deplacer l'IA */
-		//this.deplacement(Prochain);
+		this.deplacement();
 	}
 	
 	
 	
 	/**	Algorithme A* */
 	private void AlgorithmeA() {
-		
+				
 		/* Creation du parcours de l'IA a sa destination tant que le parcours n'est pas terminé */
 		while(!(this.sommetsAExplorer.isEmpty()) && !(this.coutMinimum.getCaseX() == this.Destination.getCaseX() && this.coutMinimum.getCaseY() == this.Destination.getCaseY())) {
 			
@@ -113,24 +118,38 @@ public class IA extends Entity {
 				sommetsAExplorer.get(i).setCoutTotal();
 			}
 			
+			/* On remet le cout minimum a null pour en recuperer un */
+			this.coutMinimum = null;
+			
 			/* On fait en sorte que coutminimum prend le sommet avec le cout le plus petit de la liste des sommets a explorer */
 			for(int j = 0; j < sommetsAExplorer.size(); j++) {
-				if(coutMinimum == null) {coutMinimum = sommetsAExplorer.get(j); } 
-				else {
-					if(sommetsAExplorer.get(j).getCoutTotal() == coutMinimum.getCoutTotal()) {
-						if(sommetsAExplorer.get(j).getCoutG() >= coutMinimum.getCoutG()) { coutMinimum = sommetsAExplorer.get(j); }
-					} else if(sommetsAExplorer.get(j).getCoutTotal() < coutMinimum.getCoutTotal()) { coutMinimum = sommetsAExplorer.get(j); } 
+				Sommet s = sommetsAExplorer.get(j);
+				AABB temp = new AABB(new Vector2f(s.getCaseX(), s.getCaseY()), 50, 50);
+				
+				if(!danger(temp)) {
+				
+					if(coutMinimum == null) {
+						if(!(this.directionsCassables.contains(sommetsAExplorer.get(j)))) { coutMinimum = sommetsAExplorer.get(j); }
+					} 
+					else {
+						if(sommetsAExplorer.get(j).getCoutTotal() == coutMinimum.getCoutTotal()) {
+							if(sommetsAExplorer.get(j).getCoutG() >= coutMinimum.getCoutG()) { 
+								if(!(this.directionsCassables.contains(sommetsAExplorer.get(j)))) { coutMinimum = sommetsAExplorer.get(j); } 
+							}
+						} else if(sommetsAExplorer.get(j).getCoutTotal() < coutMinimum.getCoutTotal()) { 
+							if(!(this.directionsCassables.contains(sommetsAExplorer.get(j)))) {coutMinimum = sommetsAExplorer.get(j); } 
+						} 
+					}
 				}
 			}
 			
 			/* On ajoute le sommet coutMinimum dans la liste des sommetsVisites et on le supprime de la liste des sommets a explorer */
-			this.sommetsVisites.add(coutMinimum);
-			this.sommetsAExplorer.remove(coutMinimum);
+			if(coutMinimum != null) {
+				this.sommetsVisites.add(coutMinimum);
+				this.sommetsAExplorer.remove(coutMinimum);
+			}
 		}	
 	}
-
-
-	
 	
 	/** Met l'IA en mode attaque si il n'y a pas de danger, en mode 'non' attaque si il y en a un */
 	private void regarderSituation() {
@@ -167,9 +186,16 @@ public class IA extends Entity {
 	/** Méthode qui permet de trouver une destination pour l'IA : Un joueur si elle est en mode attaque, une case sécure si elle est en mode défense */
 	private void chercherDestination() {
 		if(this.attaque) {
+			
+			
+			
+			
+			
+			
 			Sommet temp = null;
 			
-			// IA VS IA
+			
+			
 			for(int i = 0; i < PlayState.ia.length; i++) {
 				if(PlayState.ia[i] != this) {
 					if(PlayState.ia[i] != null) {
@@ -189,7 +215,9 @@ public class IA extends Entity {
 				}
 			}
 			
-			// IA VS JOUEUR
+			
+			
+			
 			if(PlayState.player != null) {
 				int positionX = (int) PlayState.player.getSaCase().getPos().x;
 				int positionY = (int) PlayState.player.getSaCase().getPos().y;
@@ -203,10 +231,53 @@ public class IA extends Entity {
 					if(temp.getCoutG() < this.Destination.getCoutG()) {this.Destination = temp;}
 				}
 			}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		} else if(this.attaque == false){	
 			
-			/** FAIRE LA SITUATION DE DEFENSE */
+			this.directionsPossibles = getDirectionsPossibles(this.Source);
 			
+			for(int i = 0; i < directionsPossibles.size(); i++) {
+				
+				Sommet temp = directionsPossibles.get(i);
+				AABB Case = new AABB(new Vector2f(temp.getCaseX()*50, temp.getCaseY()*50),50,50);
+				
+				if(!danger(Case)) {
+					Sommet s = new Sommet(null, null, new AABB(new Vector2f(temp.getCaseX()*50, temp.getCaseY()*50),50,50));
+					this.Destination = s;
+				}
+				
+				if(this.Destination == null) {
+					
+					this.directionsPossibles.addAll(getDirectionsPossibles(this.directionsPossibles.get(i)));
+					
+					Sommet temp2 = directionsPossibles.get(i);
+					AABB Case2 = new AABB(new Vector2f(temp2.getCaseX()*50, temp2.getCaseY()*50),50,50);
+					
+					if(!danger(Case2)) {
+						Sommet s = new Sommet(null, null, new AABB(new Vector2f(temp2.getCaseX()*50, temp2.getCaseY()*50),50,50));
+						this.Destination = s;
+					}
+					
+					
+					
+				}
+				
+			}
+			
+			
+			this.directionsPossibles.clear();
 		}
 	}
 
@@ -251,18 +322,34 @@ public class IA extends Entity {
 	}
 	
 	/** Cette méthode sert a faire deplacer le personnage de son sommet au sommet destination */
-	private void deplacement(Sommet p) {
-		/* Revoir les conditions */
-		
-		int x = (int)(this.getBoundsCollision().getPos().x + this.getBoundsCollision().getXOffset());
-		int y = (int)(this.getBoundsCollision().getPos().y + this.getBoundsCollision().getYOffset());
-		
-		if(x < p.getCaseX() * 50) {this.right = true; } else { this.right = false;}
-		if(x > p.getCaseX() * 50) { this.left = true; } else { this.left = false;}
-		if(y < p.getCaseY() * 50) {this.down = true;} else { this.down = false;}
-		if(y > p.getCaseY() * 50) {this.up = true;} else { this.up = false;}
-		
-		move();
+	private void deplacement() {
+		if(this.sommetsVisites.size() != 0) {
+			Sommet temp = this.sommetsVisites.get(0);
+			
+			int CaseGauche = temp.getCaseX() * 50;
+			int CaseDroite = ((temp.getCaseX() * 50) +50);
+			int CaseHaut = temp.getCaseY() * 50;
+			int CaseBas = ((temp.getCaseY() * 50) +50);
+			
+			int saCaseGauche = (int) this.getBoundsCollision().getPos().x + (int) this.getBoundsCollision().getXOffset();
+			int saCaseHaut = (int) this.getBoundsCollision().getPos().y + (int) this.getBoundsCollision().getYOffset();
+			int saCaseDroite = (int) this.getBoundsCollision().getPos().x + (int) this.getBoundsCollision().getXOffset() + (int) this.getBoundsCollision().getWidth();
+			int saCaseBas = (int) this.getBoundsCollision().getPos().y + (int) this.getBoundsCollision().getYOffset() + (int) this.getBoundsCollision().getHeight();
+			
+			if(saCaseGauche < CaseGauche) {this.right = true;} 
+			else {this.right = false;}
+			
+			if(saCaseDroite > CaseDroite) {this.left = true;} 
+			else {this.left = false;}
+			
+			if(saCaseHaut < CaseHaut) {this.down = true;} 
+			else {this.down = false;}
+			
+			if(saCaseBas > CaseBas) {this.up = true;} 
+			else {this.up = false;}
+			
+			move();
+		}
 	}
 
 	/** Affiche les composants désirés */
@@ -275,15 +362,22 @@ public class IA extends Entity {
 		
 		/* Les sommets a explorer */
 		g.setColor(Color.yellow);
-		if(this.sommetsAExplorer.isEmpty() == false) {
-			for(int i = 0; i < this.sommetsAExplorer.size(); i++) { g.drawRect(this.sommetsAExplorer.get(i).getCaseX() * 50, this.sommetsAExplorer.get(i).getCaseY() * 50, 50, 50); }
+		if(this.sommetsAExplorer != null) {
+			if(this.sommetsAExplorer.isEmpty() == false) {
+				for(int i = 0; i < this.sommetsAExplorer.size(); i++) { g.drawRect(this.sommetsAExplorer.get(i).getCaseX() * 50, this.sommetsAExplorer.get(i).getCaseY() * 50, 50, 50); }
+			}
 		}
 		
 		/* Les sommets visités */
 		g.setColor(Color.RED);
-		if(this.sommetsVisites.isEmpty() == false) {
-			for(int i = 0; i < this.sommetsVisites.size(); i++) { g.drawRect(this.sommetsVisites.get(i).getCaseX() * 50, this.sommetsVisites.get(i).getCaseY() * 50, 50, 50); }
+		if(this.sommetsVisites != null) {
+			if(this.sommetsVisites.isEmpty() == false) {
+				for(int i = 0; i < this.sommetsVisites.size(); i++) { g.drawRect(this.sommetsVisites.get(i).getCaseX() * 50, this.sommetsVisites.get(i).getCaseY() * 50, 50, 50); }
+			}
 		}
+		
+		g.setColor(Color.white);
+		g.drawRect((int)this.getBoundsCollision().getPos().x + (int)this.getBoundsCollision().getXOffset(), (int)this.getBoundsCollision().getPos().y + (int)this.getBoundsCollision().getYOffset(), (int)this.getBoundsCollision().getWidth(), (int)this.getBoundsCollision().getHeight());
 	}
 	
 	/** Fonction qui permet de supprimer l'IA du PlayState */

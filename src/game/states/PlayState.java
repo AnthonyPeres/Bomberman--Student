@@ -3,7 +3,6 @@ package game.states;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import game.GamePanel;
 import game.entity.Player;
 import game.entity.IA.IA;
 import game.entity.IA.Matrice;
@@ -45,7 +44,6 @@ public class PlayState extends GameState {
 	@Override
 	public void render(Graphics2D g) {	
 		tm.render(g);				
-		Sprite.drawArray(g, GamePanel.oldFrameCount + "FPS", new Vector2f(GamePanel.width - 110 ,15), 20, 20, 20);
 		if(player != null) {Sprite.drawArray(g, "Bombe "+player.getBombeChoisie(), new Vector2f(50 ,15), 20, 20, 20);}
 		if(player != null) {player.render(g);}
 		for(int i = 0; i < ia.length; i++) {if(ia[i] != null) {ia[i].render(g);}}
