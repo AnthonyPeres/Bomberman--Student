@@ -28,7 +28,6 @@ public class Matrice {
     	
     	for(int i = 0; i < matrice.length ; i++) {
     		for(int j = 0; j < matrice[i].length; j++) {
-    		
     			
     			if(TileMap.tmo_blocks.containsKey(String.valueOf(i)+","+String.valueOf(j))) {
     				
@@ -47,7 +46,7 @@ public class Matrice {
     			if(TileMap.tmo_bonus.containsKey(String.valueOf(i)+","+String.valueOf(j))) {
     				matrice[i][j] = 7;
     			}
-    		}
+    		
     		
     		for(int k = 0; k < PlayState.bombList.size(); k++) {
 				
@@ -72,11 +71,11 @@ public class Matrice {
         		int Y = (int)(PlayState.player.getSaCase().getPos().y / 50);
         		matrice[X][Y] = 6;
     		}
+    	
+    		
+    		
+    		}
     	}
-    
-    	
-    	
-    	
     }
 	
 	public void update(double time) {

@@ -29,9 +29,9 @@ public abstract class Entity extends Affichable {
 	/* Deplacement */
 	protected float dx;
 	protected float dy;
-	protected float maxSpeed = 3.5f;
+	protected float maxSpeed = 3f;
 	protected float acc = 3f;
-	protected float deacc = 1f;
+	protected float deacc = 0.6f;
 	
 	/* Positionnement */
 	protected int positionInitialeX;
@@ -83,22 +83,15 @@ public abstract class Entity extends Affichable {
 	public void update(double time) {
 		super.update(time);
 		animate();
-		
 		if(fallen) {
 			if(animation.hasPlayedOnce()) {
 				if(nombreDeVies != 0) {
 					resetPosition(); 
 					fallen = false;
 					nombreDeVies--;
-					
-				} else { 
-					this.meurt();
-				}
-			 
+				} else {this.meurt();}
 			}
 		}
-		
-		
 	}
 	
 	protected abstract void meurt();

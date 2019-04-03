@@ -3,7 +3,6 @@ package game.states;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import game.GamePanel;
 import game.entity.Player;
 import game.entity.IA.IA;
 import game.entity.IA.Matrice;
@@ -32,7 +31,7 @@ public class PlayState extends GameState {
 	
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
-		tm = new TileManager("tile/mapBomber.xml"); // On charge la map (.xml)
+		tm = new TileManager("tile/mapDeveloppement.xml"); // On charge la map (.xml)
 		player = new Player(new Sprite("entity/spriteBomber.png", 16, 25), new Vector2f(50,30), 50);	// On charge le sprite du joueur 
 		ia[0] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(Vector2f.getWorldX() - 100, 30), 50);
 		ia[1] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(50, Vector2f.getWorldY() - 120), 50);
@@ -45,14 +44,11 @@ public class PlayState extends GameState {
 	@Override
 	public void render(Graphics2D g) {	
 		tm.render(g);				
-		Sprite.drawArray(g, GamePanel.oldFrameCount + "FPS", new Vector2f(GamePanel.width - 110 ,15), 20, 20, 20);
 		if(player != null) {Sprite.drawArray(g, "Bombe "+player.getBombeChoisie(), new Vector2f(50 ,15), 20, 20, 20);}
 		if(player != null) {player.render(g);}
 		for(int i = 0; i < ia.length; i++) {if(ia[i] != null) {ia[i].render(g);}}
 		for(int i = 0; i < bombList.size(); i++) { bombList.get(i).render(g);}
 		for(int i = 0; i < listFlammes.size(); i++) {listFlammes.get(i).render(g);}
-	
-		//matrice.render(g);
 	}
 	
 	@Override

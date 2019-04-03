@@ -18,9 +18,10 @@ public class GamePanel extends JPanel implements Runnable {
 	public static int height;
 	
 	/* Processus du jeu */
-	public static int oldFrameCount;	
+	public static int ticks = 0;	
 	private Thread thread;
 	private Boolean running = false;
+	public int tickCount = 0;
 	
 	/* L'affichage */
 	private BufferedImage img;
@@ -43,76 +44,56 @@ public class GamePanel extends JPanel implements Runnable {
 		this.setFocusable(true);
 		this.requestFocus();
 	}
-
+	
 	
 	/** Methodes */
 	
 	@Override
 	public void run() {
+		init();	
 		
-		init();
-		
-		/* On veut du 60GHz, TBU est le temps avant l'update */
-		final double GAME_HERTZ = 60.0;
-        final double TBU = 1000000000 / GAME_HERTZ;
-        final double TARGET_FPS = 60.0;
-        final double TTBR = 1000000000 / TARGET_FPS; // Total time before render
-        final int MUBR = 5; // Must Update before render
-
-        double lastUpdateTime = System.nanoTime();
-        double lastRenderTime;
-        
-		int frameCount = 0;
-		int lastSecondTime = (int) (lastUpdateTime / 1000000000);
-		
-		oldFrameCount = 0;
-		
+		long lastTime = System.nanoTime();
+		double nsPerTick = 1000000000 / 60;
+		long lastTimer = System.currentTimeMillis();
+		double delta = 0;
 		
 		/** Boucle du jeu */
 		while(running) {
 			
-			double now = System.nanoTime();
-			int updateCount = 0;
+			long now = System.nanoTime();
+			delta += (now - lastTime) / nsPerTick;
+			lastTime = now;
+			boolean shouldRender = true;
 			
-			while(((now - lastUpdateTime) > TBU) && (updateCount < MUBR)) {
+			while(delta >= 1) {
+				ticks++;
+				tick();
 				update(now);
 				input(mouse, key);
-				lastUpdateTime += TBU;
-				updateCount ++;
+				delta -= 1;
+				shouldRender = true;
 			}
 			
-			if(now - lastUpdateTime > TBU) {
-				lastUpdateTime = now - TBU;
+			try {Thread.sleep(100); } 
+			catch (InterruptedException ex) { ex.printStackTrace(); }
+			
+			if(shouldRender) {
+				input(mouse, key);
+				render();
+				draw();
 			}
 			
-			input(mouse, key);
-			render();
-			draw();
-			lastRenderTime = now;
-			frameCount++;
-			
-			int thisSecond = (int) (lastUpdateTime / 1000000000);
-			if(thisSecond > lastSecondTime) {
-				if(frameCount != oldFrameCount) {
-					oldFrameCount = frameCount;
-				}
-				frameCount = 0;
-				lastSecondTime = thisSecond;
-			}
-			
-			while(now - lastRenderTime < TTBR && now - lastUpdateTime < TBU) {
-				Thread.yield();
-				
-				try { Thread.sleep(100); } catch(Exception e) {
-					System.out.println("ERROR : yielding thread");
-				}
-				now = System.nanoTime();
+			if(System.currentTimeMillis() - lastTimer >= 1000) {
+				lastTimer += 1000;
+				// Pour voir le nombre d'FPS : System.out.println(ticks + " FPS");
+				ticks = 0;
 			}
 		}
 	}
 	
+	public void tick() {tickCount++;}
+	
 	public void init() {
-
 		running = true;
 		
 		img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -123,13 +104,9 @@ public class GamePanel extends JPanel implements Runnable {
 		gsm = new GameStateManager();
 	}
 	
-	public void update(double time) {
-        gsm.update(time);
-    }
+	public void update(double time) {gsm.update(time);}
 	
-	public void input(MouseHandler mouse, KeyHandler key) {
-		gsm.input(mouse, key);
-	}
+	public void input(MouseHandler mouse, KeyHandler key) {gsm.input(mouse, key);}
 	
 	public void render() {
 		if(g != null) {

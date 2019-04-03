@@ -63,6 +63,7 @@ public class Bomb extends Affichable {
 	public void explose() {		
 		
 		new Fire(new Vector2f((int) this.pos.x, (int) this.pos.y), "centre", 0);
+		collision.FireJoueur(0, 0);
 		
 		if(rayonX != 0) {
 			/* Gauche */
