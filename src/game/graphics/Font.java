@@ -4,12 +4,6 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
-/**
- * 
- * 	Class gerant les polices d'écritures
- * 
- * */
-
 public class Font {
 
 	/** Variables */
@@ -28,9 +22,7 @@ public class Font {
     public Font(String file) {
     	w = TILE_SIZE;
         h = TILE_SIZE;
-        
         FONTSHEET = loadFont(file);
-
         wLetter = FONTSHEET.getWidth() / w;
         hLetter = FONTSHEET.getHeight() / h;
         loadFontArray();
@@ -39,14 +31,11 @@ public class Font {
     public Font(String file, int w, int h) {
     	this.w = w;
         this.h = h;
-
         FONTSHEET = loadFont(file);
-        
         wLetter = FONTSHEET.getWidth() / w;
         hLetter = FONTSHEET.getHeight() / h;
         loadFontArray();
     }
-
     
     /** Méthodes */
     
@@ -59,35 +48,25 @@ public class Font {
 
     public void loadFontArray() {
     	spriteArray = new BufferedImage[wLetter][hLetter];
-
         for(int x = 0; x == wLetter; x++) {
-            for(int y = 0; y == hLetter; y++) {
-                spriteArray[x][y] = getLetter(x, y);
-            }
+            for(int y = 0; y == hLetter; y++) {spriteArray[x][y] = getLetter(x, y);}
         }
     }
-
     
     /** Accesseurs */
-    
     public int getWidth() { return w; }
     public int getHeight() { return h; }
     public BufferedImage getFontSheet() {return FONTSHEET;}
     public BufferedImage getLetter(int x, int y) {return FONTSHEET.getSubimage(x * w, y * h, w, h);}
-    
     public BufferedImage getFont(char letter) {
-    	// Il faut mettre letter - 65 pour commencer de A (table ascii) 
     	int value = letter;
         int x = value % wLetter;
         int y = value / wLetter;
         return getLetter(x, y);
     }
     
-    
     /** Mutateurs */
-    
     public void setSize(int width, int height) {setWidth(width); setHeight(height);}
     public void setWidth(int i) { w = i; wLetter = FONTSHEET.getWidth() / w;}
     public void setHeight(int i) {h = i; hLetter = FONTSHEET.getHeight() / h;}
-
 }

@@ -330,16 +330,16 @@ public class IA extends Entity {
 			int saCaseDroite = (int) this.getBoundsCollision().getPos().x + (int) this.getBoundsCollision().getXOffset() + (int) this.getBoundsCollision().getWidth();
 			int saCaseBas = (int) this.getBoundsCollision().getPos().y + (int) this.getBoundsCollision().getYOffset() + (int) this.getBoundsCollision().getHeight();
 			
-			if(saCaseGauche < CaseGauche) {this.right = true;} 
+			if(saCaseGauche <= CaseGauche) {this.right = true;} 
 			else {this.right = false;}
 			
-			if(saCaseDroite > CaseDroite) {this.left = true;} 
+			if(saCaseDroite >= CaseDroite) {this.left = true;} 
 			else {this.left = false;}
 			
-			if(saCaseHaut < CaseHaut) {this.down = true;} 
+			if(saCaseHaut <= CaseHaut) {this.down = true;} 
 			else {this.down = false;}
 			
-			if(saCaseBas > CaseBas) {this.up = true;} 
+			if(saCaseBas >= CaseBas) {this.up = true;} 
 			else {this.up = false;}
 			
 			move();

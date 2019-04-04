@@ -29,7 +29,7 @@ public class ScoreState extends GameState {
 		
 		/* Lecture de l'image de fond */
 		try {
-			img = ImageIO.read(new File("res/background/scores.jpg"));
+			img = ImageIO.read(new File("res/background/scores.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

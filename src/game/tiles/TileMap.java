@@ -20,8 +20,6 @@ public class TileMap {
 	public static HashMap<String, Block> ground;
 	
 	
-	
-	
     /** Constructeur */
     
     public TileMap(String data, Sprite sprite, int width, int height, int tileWidth, int tileHeight, int tileColumns) {

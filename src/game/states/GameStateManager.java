@@ -26,6 +26,7 @@ public class GameStateManager {
 	public static final int GAMEOVER = 3; 
 	public static final int SCORE = 4; 
 	public static final int AIDE = 5; 
+	public static final int DIFFICULTE = 6;
 	
 	private static Vector2f map;
 	
@@ -44,11 +45,9 @@ public class GameStateManager {
 		
 		Sprite.currentFont = font;
 		
-		states = new GameState[6];
+		states = new GameState[7];
 		
 		states[MENU] = new MenuState(this);
-		//states[PLAY] = new PlayState(this);
-		//states[AIDE] = new AideState(this);
 	}
 	
 	
@@ -78,8 +77,9 @@ public class GameStateManager {
 		if (state == MENU){states[MENU] = (new MenuState(this));}			// On ajoute un menu
 		if (state == PAUSE){states[PAUSE] = (new PauseState(this));}			// On ajoute une pause
 		if (state == GAMEOVER){states[GAMEOVER] = (new GameOverState(this));}	// On ajoute une fin de jeu 
-		if (state == SCORE){states[SCORE] = (new ScoreState(this));}	// On ajoute une fin de jeu 
-		if (state == AIDE){states[AIDE] = (new AideState(this));}	// On ajoute une fin de jeu 
+		if (state == SCORE){states[SCORE] = (new ScoreState(this));}	// On ajoute un score
+		if (state == AIDE){states[AIDE] = (new AideState(this));}	// On ajoute une fenetre d'aide 
+		if (state == DIFFICULTE){states[DIFFICULTE] = (new DifficulteState(this));}	// On ajoute une fin de jeu 
 	}
 	
 	

@@ -3,9 +3,7 @@ package game.entity;
 import java.awt.Graphics2D;
 
 import game.bonus.Bonus;
-import game.bonus.BonusBombPique;
-import game.bonus.BonusBombUp;
-import game.bonus.BonusSpeedUp;
+import game.bonus.BonusInvincible;
 import game.entity.bomb.BasicBomb;
 import game.entity.bomb.HorizontalBomb;
 import game.entity.bomb.MineBomb;
@@ -15,7 +13,6 @@ import game.entity.bomb.VerticalBomb;
 import game.graphics.Sprite;
 import game.states.PlayState;
 import game.tiles.TileMap;
-import game.tiles.blocks.GroundBlock;
 import game.util.AABB;
 import game.util.Collision;
 import game.util.Vector2f;
@@ -46,7 +43,7 @@ public abstract class Entity extends Affichable {
 	protected float acc = 2f;
 	protected float deacc = 0.6f;
 	
-	/* Positionnement */
+	/* Positionnement initialement (utilisé pour la réanimation) */
 	protected int positionInitialeX;
 	protected int positionInitialeY;
 	
@@ -59,10 +56,16 @@ public abstract class Entity extends Affichable {
 	protected int maxBomb = 4;
 	protected int bombposee = 0;
 	protected int bombeChoisie = 0;
+	protected boolean MineBomb = false;
+	protected boolean TrackingBomb = false;
+	protected boolean PiqBomb = false;
 	
 	/* Vies */
-	protected int nombreDeVies = 2;
+	protected int nombreDeVies = 1;
+	protected int dureeDeLinvincibilite = 600; 
+	protected boolean invincible = false;
 	
+	/* Matrice utilisée pour detecter les bonus et les blocs */
 	protected int[][] matrice;
 	
 			
@@ -103,6 +106,15 @@ public abstract class Entity extends Affichable {
 		
 		
 		utiliserBonus();
+		
+		if(this.invincible) {
+			if(dureeDeLinvincibilite == 0) {
+				dureeDeLinvincibilite = 1200;
+				this.invincible = false;
+			}
+			dureeDeLinvincibilite--;
+		}
+		
 		animate();
 		if(fallen) {
 			if(animation.hasPlayedOnce()) {
@@ -119,36 +131,25 @@ public abstract class Entity extends Affichable {
 
 	
 	protected void utiliserBonus() {
-				
 		int saCaseX = (int)((this.getSaCase().getPos().x) / 50);
 		int saCaseY = (int)((this.getSaCase().getPos().y) / 50);
 		
+		Bonus b = null;
+		
 		if(matrice[saCaseX][saCaseY] == 7) {
-
-			Bonus b = TileMap.tmo_bonus.get(String.valueOf(saCaseX) + "," + String.valueOf(saCaseY));
-			
-			// Les effets doivent etre dans les bombes respectives 
-			
-			if(b instanceof BonusSpeedUp) {
-				this.acc += 1;
-				this.maxSpeed += 1;
-				this.deacc += 5;
-			} else if(b instanceof BonusBombUp) {
-				this.maxBomb++;
-			} else if(b instanceof BonusBombPique) {
-				System.out.println("Bonus bombe pique");
-			}
-			
-			
-
-			// On remplace le bonus par un sol
-			TileMap.tmo_bonus.remove(String.valueOf(saCaseX) + "," + String.valueOf(saCaseY));
-			
-			Vector2f position = new Vector2f(saCaseX * 50, saCaseY * 50);
-			TileMap.tmo_blocks.put(String.valueOf(saCaseX) + "," + String.valueOf(saCaseY), new GroundBlock(TileMap.getSprite().getSprite(3,1), position));
+			b = TileMap.tmo_bonus.get(String.valueOf(saCaseX) + "," + String.valueOf(saCaseY));
 		} 
 		
 		
+		
+		
+		
+		if(b != null) {
+			b.setEntity(this);
+			b.effet();
+			b.disparait();
+			b = null;
+		}
 	}
 	
 	
@@ -204,12 +205,71 @@ public abstract class Entity extends Affichable {
     }
 	
 	protected void changeBombe(int i) {
+		
 		if(i == -1) {
-			if(this.bombeChoisie == 0) {this.bombeChoisie = 5;} 
-			else { this.bombeChoisie--; }
+			switch(bombeChoisie) {
+				case 0:
+					if(PiqBomb) { this.bombeChoisie = 5;} 
+					else if(TrackingBomb) {this.bombeChoisie = 4;} 
+					else if(MineBomb) {this.bombeChoisie = 3;} 
+					else {this.bombeChoisie = 2;}
+					break;
+				
+				case 1:
+					this.bombeChoisie = 0;
+					break;
+				
+				case 2:
+					this.bombeChoisie = 1;
+					break;
+					
+				case 3:
+					this.bombeChoisie = 2;
+					break;
+				
+				case 4:
+					if(MineBomb) {this.bombeChoisie = 3;} 
+					else {this.bombeChoisie = 2;}
+					break;
+
+				case 5:
+					if(this.TrackingBomb) {this.bombeChoisie = 4;} 
+					else if(this.MineBomb) {this.bombeChoisie = 3;} 
+					else {this.bombeChoisie = 2;}
+					break;
+			}
 		} else if(i == 1) {
-			if(this.bombeChoisie == 5) {this.bombeChoisie = 0;} 
-			else { this.bombeChoisie++; }
+			switch(bombeChoisie) {
+				case 0:
+					this.bombeChoisie = 1;
+					break;
+					
+				case 1:
+					this.bombeChoisie = 2;
+					break;
+				
+				case 2:
+					if(MineBomb) {this.bombeChoisie = 3;} 
+					else if(TrackingBomb) {this.bombeChoisie += 2;} 
+					else if(PiqBomb) {this.bombeChoisie += 3;} 
+					else {this.bombeChoisie = 0;}
+					break;
+					
+				case 3:
+					if(TrackingBomb) {this.bombeChoisie = 4 ;}
+					else if(PiqBomb) {this.bombeChoisie = 5;}
+					else {this.bombeChoisie = 0;}
+					break;
+				
+				case 4:
+					if(PiqBomb) {this.bombeChoisie = 5 ;}
+					else {this.bombeChoisie = 0;}
+					break;
+
+				case 5:
+					this.bombeChoisie = 0;
+					break;
+			}
 		}
 	}
 	
@@ -267,6 +327,12 @@ public abstract class Entity extends Affichable {
 	public int getPied() {return (int) (this.getPos().y + this.getSize() + 20);}
 	public int getDroite() {return (int) (this.getPos().x + this.getSize());}
 	public int getNombreDeVies() {return nombreDeVies;}
+	public boolean getMineBomb() {return MineBomb;}
+	public boolean getTrackingBomb() {return TrackingBomb;}
+	public boolean getPiqBomb() {return PiqBomb;}
+	public boolean getInvincible() {return this.invincible;}
+	public int getDureeDeLinvincibilite() {return this.dureeDeLinvincibilite;}
+
 
 	/** Mutateurs */
 	
@@ -280,4 +346,8 @@ public abstract class Entity extends Affichable {
 	public void setBombposee(int bombposee) {this.bombposee = bombposee;}
 	public void setBombeChoisie(int bombeChoisie) {this.bombeChoisie = bombeChoisie;}
 	public void setNombreDeVies(int nombreDeVies) {this.nombreDeVies = nombreDeVies;}
+	public void setMineBomb(boolean mineBomb) {MineBomb = mineBomb;}
+	public void setTrackingBomb(boolean trackingBomb) {TrackingBomb = trackingBomb;}
+	public void setPiqBomb(boolean piqBomb) {PiqBomb = piqBomb;}
+	public void setInvincible(boolean i) {this.invincible = i;}
 }

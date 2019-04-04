@@ -2,7 +2,6 @@ package game.graphics;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -22,12 +21,10 @@ public class Sprite {
     public static Font currentFont;
     
     
-    
     /** Constructeurs */
     
     public Sprite(String file) {
     	SPRITESHEET = loadSprite(file);
-    	
     	/* w et h prennent la taille du carré (en l'occurence ici : 20)*/
     	w = TILE_SIZE;
         h = TILE_SIZE;
@@ -41,17 +38,12 @@ public class Sprite {
 
     public Sprite(String file, int w, int h) {
     	SPRITESHEET = loadSprite(file);
-    	
     	this.w = w;
         this.h = h;
-        
         wSprite = SPRITESHEET.getWidth() / w;
         hSprite = SPRITESHEET.getHeight() / h;
-        
         loadSpriteArray();
     }
-
-
     
     /** Méthodes */
 
@@ -75,56 +67,22 @@ public class Sprite {
             }
         }
     }
-
-    
-    
-    
-    public static void drawArray(Graphics2D g, ArrayList<BufferedImage> img, Vector2f pos, int width, int height, int xOffset, int yOffset) {
-        float x = pos.x;
-        float y = pos.y;
-
-        for(int i = 0; i < img.size(); i++) {
-            if(img.get(i) != null) {
-                g.drawImage(img.get(i), (int) x, (int) y, width, height, null);
-            }
-
-            x += xOffset;
-            y += yOffset;
-        }
-    }
-
-    public static void drawArray(Graphics2D g, String word, Vector2f pos, int size) {
-        drawArray(g, currentFont, word, pos, size, size, size, 0);
-    }
-    public static void drawArray(Graphics2D g, String word, Vector2f pos, int size, int xOffset) {
-        drawArray(g, currentFont, word, pos, size, size, xOffset, 0);
-    }
+   
     public static void drawArray(Graphics2D g, String word, Vector2f pos, int width, int height, int xOffset) {
         drawArray(g, currentFont, word, pos, width, height, xOffset, 0);
-    }
-
-    public static void drawArray(Graphics2D g, Font f, String word, Vector2f pos, int size, int xOffset) {
-        drawArray(g, f, word, pos, size, size, xOffset, 0);
     }
 
     public static void drawArray(Graphics2D g, Font f, String word, Vector2f pos, int width, int height, int xOffset, int yOffset) {
         float x = pos.x;
         float y = pos.y;
-
         currentFont = f;
-
         for(int i = 0; i < word.length(); i++) {
             if(word.charAt(i) != 32)
                 g.drawImage(f.getFont(word.charAt(i)), (int) x, (int) y, width, height, null);
-
             x += xOffset;
             y += yOffset;
         }
-
-
     }
-
-    
     
     /** Accesseurs */
     
@@ -135,8 +93,6 @@ public class Sprite {
     public BufferedImage[] getSpriteArray(int i) {return spriteArray[i];}
     public BufferedImage[][] getSpriteArray2(int i) {return spriteArray;}
 
-    
-    
     /** Mutateurs */
     
     public void setSize(int width, int height) {

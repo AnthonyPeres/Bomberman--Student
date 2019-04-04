@@ -18,3 +18,6 @@ public class GameLauncher {
 //TODO: Faire en sorte que la bombe chercheuse suit le bomber le plus proche ( sauf celui qui la posé )
 
 //TODO: Il faut update tout les bonus et quand l'un deux a effectuer son effet il passe un boolean effectuer a true et dans le update si effectuer = true il sefface de la map, pour cela il faut que le bonus est une entite qui est set par rapport a celle qui marche dessus 
+//TODO: Faire le bonus fireUp
+//TODO: Remettre le nombre de fps visible dans le gamepanel
+//TODO: Modifier l'animation selon le type de la bombe (fonction explose de bombe)

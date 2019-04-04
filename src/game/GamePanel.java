@@ -48,6 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	/** Methodes */
 	
+	/* Méthode qui fait tournée le jeu */
 	@Override
 	public void run() {
 		init();	
@@ -95,10 +96,8 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public void init() {
 		running = true;
-		
 		img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		g = (Graphics2D) img.getGraphics();
-		
 		mouse = new MouseHandler(this);
 		key = new KeyHandler(this);
 		gsm = new GameStateManager();

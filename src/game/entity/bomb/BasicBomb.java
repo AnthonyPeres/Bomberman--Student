@@ -15,5 +15,4 @@ public class BasicBomb extends Bomb {
 		super.update(time);
 		decouleTemps();
 	}
-	
 }

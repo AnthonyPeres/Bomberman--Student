@@ -19,7 +19,7 @@ public class AideState extends GameState {
 	/* Image d'aide */
 	
 	Image img;
-	
+	static String arrivee = "";
 	
 	/** Constructeur */
 	
@@ -46,12 +46,22 @@ public class AideState extends GameState {
 	
 	public void RetourMenu(boolean selection) {
 		if(selection) {
-			if(gsm.isStateActive(GameStateManager.MENU)) {
-				gsm.pop(GameStateManager.MENU);
-				gsm.remove(GameStateManager.AIDE);
+			if(arrivee == "Pause") {
+				if(gsm.isStateActive(GameStateManager.PAUSE)) {
+					gsm.pop(GameStateManager.PAUSE);
+					gsm.remove(GameStateManager.AIDE);
+				} else {
+					gsm.addAndpop(GameStateManager.PAUSE, GameStateManager.AIDE);
+					
+				}
 			} else {
-				gsm.addAndpop(GameStateManager.MENU, GameStateManager.AIDE);
-				
+				if(gsm.isStateActive(GameStateManager.MENU)) {
+					gsm.pop(GameStateManager.MENU);
+					gsm.remove(GameStateManager.AIDE);
+				} else {
+					gsm.addAndpop(GameStateManager.MENU, GameStateManager.AIDE);
+					
+				}
 			}
 		}
 	}
@@ -80,4 +90,6 @@ public class AideState extends GameState {
 	public void update(double time) {
 		// TODO Auto-generated method stub
 	}
+
+	public static void setArrivee(String string) {arrivee = string;}
 }

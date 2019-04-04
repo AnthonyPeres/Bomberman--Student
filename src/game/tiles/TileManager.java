@@ -27,7 +27,6 @@ public class TileManager {
         addTileMap(fichier, 50, 50);  				
     }
 
-    
     /** Méthodes */
     
     /* La fonction addTileMap ajoute une map de tuiles */
@@ -56,7 +55,6 @@ public class TileManager {
             // On recupere les informations du document 
             Element eElement = (Element) node;
             imagePath = eElement.getAttribute("name");		// On recupere l'image utilisée dans le doc 
-            
             tileColumns =  Integer.parseInt(eElement.getAttribute("columns"));	// On recupere le nombre de colonnes (ici 6)
             
             // On charge l'image utilisée dans le document xml ("tile/img.png"), avec 50 et 50 en largeur et hauteur des tuiles 
@@ -64,16 +62,12 @@ public class TileManager {
             
             // La list contient maintenant les elements layer du document xml
             list = doc.getElementsByTagName("layer");
-            
             node = list.item(0);
             eElement = (Element) node;
-                
             width = Integer.parseInt(eElement.getAttribute("width"));
             height = Integer.parseInt(eElement.getAttribute("height"));
-               
             data[0] = eElement.getElementsByTagName("data").item(0).getTextContent();
             tm = new TileMap(data[0], sprite, width, height, blockWidth, blockHeight, tileColumns);
-            
         } catch(Exception e) {
             System.out.println("Erreur lecture Tilemap");
         }

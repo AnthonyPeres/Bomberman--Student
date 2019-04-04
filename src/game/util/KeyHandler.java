@@ -5,12 +5,6 @@ import java.awt.event.KeyListener;
 
 import game.GamePanel;
 
-/**
- * 
- * 	Class définissant le clavier, une classe key est crée 
- * 
- * */
-
 public class KeyHandler implements KeyListener {	
 	
 	public boolean up;
@@ -27,7 +21,7 @@ public class KeyHandler implements KeyListener {
 	public boolean choixHaut;
 	public boolean choixBas;
 	public boolean choix;
-	
+	public boolean tab;
 	
 	/** Constructeur */
 	
@@ -72,6 +66,6 @@ public class KeyHandler implements KeyListener {
 		if(e.getKeyCode() == KeyEvent.VK_X) choixBombeAvant = true;
 		if(e.getKeyCode() == KeyEvent.VK_C) choixBombeApres = true;
 		if(e.getKeyCode() == KeyEvent.VK_ENTER) choix = true;
-			
+		if(e.getKeyCode() == KeyEvent.VK_TAB) tab = true;
 	}
 }

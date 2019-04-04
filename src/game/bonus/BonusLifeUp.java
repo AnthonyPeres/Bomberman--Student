@@ -1,26 +1,16 @@
 package game.bonus;
 
-import game.entity.Entity;
 import game.tiles.TileMap;
-import game.util.AABB;
 import game.util.Vector2f;
 
 public class BonusLifeUp extends Bonus {
 
 	public BonusLifeUp(Vector2f pos) {
 		super(TileMap.getSprite().getSprite(1,2), pos);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public boolean update(AABB p) {
-		return false;
+	public void effet() {
+		this.getEntity().setNombreDeVies(this.getEntity().getNombreDeVies()+1);
 	}
-
-	@Override
-	public void effet(Entity e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

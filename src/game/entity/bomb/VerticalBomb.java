@@ -9,10 +9,8 @@ public class VerticalBomb extends Bomb {
 		super(pos, size, 2, 0, 3, entity);
 	}
 
-
 	public void update(double time) {
 		super.update(time);
 		decouleTemps();
 	}
-
 }
