@@ -9,10 +9,9 @@ import game.util.AABB;
 import game.util.Vector2f;
 
 public abstract class Bonus extends Affichable {
-
-/** Constructeur */
     
 	protected boolean active = false;
+	
 	protected Entity entiteActive;
 	
     public Bonus(BufferedImage img, Vector2f pos) {
@@ -22,7 +21,7 @@ public abstract class Bonus extends Affichable {
 
     public abstract boolean update(AABB p);
 
-    public abstract void effet();
+    public abstract void effet(Entity e);
     
     public void render(Graphics2D g) {
         g.drawImage(this.getImage(), (int) this.getPos().x, (int) this.getPos().y, this.getWidth(), this.getHeight(), null);

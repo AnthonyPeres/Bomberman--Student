@@ -132,7 +132,6 @@ public class Bomb extends Affichable {
 	public void update(double time) {
 		super.update(time);
 		animate();
-		decouleTemps();
 	}
 	
 	public void render(Graphics2D g) {

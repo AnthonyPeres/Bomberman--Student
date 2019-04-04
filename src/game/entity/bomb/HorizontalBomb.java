@@ -8,4 +8,9 @@ public class HorizontalBomb extends Bomb {
 	public HorizontalBomb(Vector2f pos, int size, Entity entity) {
 		super(pos, size, 1, 3, 0, entity);
 	}
+	
+	public void update(double time) {
+		super.update(time);
+		decouleTemps();
+	}
 }

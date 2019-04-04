@@ -23,7 +23,7 @@ public class PlayState extends GameState {
 	public static IA[] ia = new IA[3];
 	public static ArrayList<Bomb> bombList = new ArrayList<Bomb>();
 	public static ArrayList<Fire> listFlammes = new ArrayList<Fire>();
-	public static Matrice matrice = new Matrice();
+	public static Matrice matrice;
 	 
 	
 	
@@ -36,6 +36,7 @@ public class PlayState extends GameState {
 		ia[0] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(Vector2f.getWorldX() - 100, 30), 50);
 		ia[1] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(50, Vector2f.getWorldY() - 120), 50);
 		ia[2] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f((Vector2f.getWorldX()-100),(Vector2f.getWorldY()-120)), 50);
+		matrice = new Matrice();
 	}
 
 	
@@ -44,7 +45,7 @@ public class PlayState extends GameState {
 	@Override
 	public void render(Graphics2D g) {	
 		tm.render(g);				
-		if(player != null) {Sprite.drawArray(g, "Bombe "+player.getBombeChoisie(), new Vector2f(50 ,15), 20, 20, 20);}
+		if(player != null) {Sprite.drawArray(g, "Vies : "+player.getNombreDeVies()+" / Bombes : "+player.getMaxBomb()+" "+player.getBombeChoisie(), new Vector2f(100 ,15), 20, 20, 20);}
 		if(player != null) {player.render(g);}
 		for(int i = 0; i < ia.length; i++) {if(ia[i] != null) {ia[i].render(g);}}
 		for(int i = 0; i < bombList.size(); i++) { bombList.get(i).render(g);}

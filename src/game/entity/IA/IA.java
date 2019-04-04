@@ -20,8 +20,6 @@ public class IA extends Entity {
 	
 	/** VARIABLES */
 	
-	private int[][] matrice;
-	
 	private boolean attaque;
 	
 	private Sommet Source;
@@ -51,10 +49,6 @@ public class IA extends Entity {
 	/* Gère les tours de l'IA */
 	public void update(double time) {
 		super.update(time);
-		
-		/* On rafraichit et on recupere la matrice */
-		PlayState.getMatrice().rafraichir();
-		matrice = PlayState.getMatrice().getMatrice();
 		
 		/* On reinitialise la source : la position du joueur */
 		this.Source = new Sommet(null, null, this.getSaCase());

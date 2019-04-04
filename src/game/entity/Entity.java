@@ -2,10 +2,23 @@ package game.entity;
 
 import java.awt.Graphics2D;
 
-import game.entity.bomb.*;
+import game.bonus.Bonus;
+import game.bonus.BonusBombPique;
+import game.bonus.BonusBombUp;
+import game.bonus.BonusSpeedUp;
+import game.entity.bomb.BasicBomb;
+import game.entity.bomb.HorizontalBomb;
+import game.entity.bomb.MineBomb;
+import game.entity.bomb.PiqBomb;
+import game.entity.bomb.TrackingBomb;
+import game.entity.bomb.VerticalBomb;
 import game.graphics.Sprite;
 import game.states.PlayState;
-import game.util.*;
+import game.tiles.TileMap;
+import game.tiles.blocks.GroundBlock;
+import game.util.AABB;
+import game.util.Collision;
+import game.util.Vector2f;
 
 public abstract class Entity extends Affichable {
 	
@@ -29,8 +42,8 @@ public abstract class Entity extends Affichable {
 	/* Deplacement */
 	protected float dx;
 	protected float dy;
-	protected float maxSpeed = 3f;
-	protected float acc = 3f;
+	protected float maxSpeed = 2f;
+	protected float acc = 2f;
 	protected float deacc = 0.6f;
 	
 	/* Positionnement */
@@ -48,7 +61,9 @@ public abstract class Entity extends Affichable {
 	protected int bombeChoisie = 0;
 	
 	/* Vies */
-	protected int nombreDeVies = 3;
+	protected int nombreDeVies = 2;
+	
+	protected int[][] matrice;
 	
 			
 	/** Constructeur */
@@ -82,10 +97,16 @@ public abstract class Entity extends Affichable {
 	
 	public void update(double time) {
 		super.update(time);
+		
+		/* On rafraichit et on recupere la matrice */
+		this.matrice = PlayState.getMatrice().getMatrice();
+		
+		
+		utiliserBonus();
 		animate();
 		if(fallen) {
 			if(animation.hasPlayedOnce()) {
-				if(nombreDeVies != 0) {
+				if(nombreDeVies > 1) {
 					resetPosition(); 
 					fallen = false;
 					nombreDeVies--;
@@ -96,6 +117,42 @@ public abstract class Entity extends Affichable {
 	
 	protected abstract void meurt();
 
+	
+	protected void utiliserBonus() {
+				
+		int saCaseX = (int)((this.getSaCase().getPos().x) / 50);
+		int saCaseY = (int)((this.getSaCase().getPos().y) / 50);
+		
+		if(matrice[saCaseX][saCaseY] == 7) {
+
+			Bonus b = TileMap.tmo_bonus.get(String.valueOf(saCaseX) + "," + String.valueOf(saCaseY));
+			
+			// Les effets doivent etre dans les bombes respectives 
+			
+			if(b instanceof BonusSpeedUp) {
+				this.acc += 1;
+				this.maxSpeed += 1;
+				this.deacc += 5;
+			} else if(b instanceof BonusBombUp) {
+				this.maxBomb++;
+			} else if(b instanceof BonusBombPique) {
+				System.out.println("Bonus bombe pique");
+			}
+			
+			
+
+			// On remplace le bonus par un sol
+			TileMap.tmo_bonus.remove(String.valueOf(saCaseX) + "," + String.valueOf(saCaseY));
+			
+			Vector2f position = new Vector2f(saCaseX * 50, saCaseY * 50);
+			TileMap.tmo_blocks.put(String.valueOf(saCaseX) + "," + String.valueOf(saCaseY), new GroundBlock(TileMap.getSprite().getSprite(3,1), position));
+		} 
+		
+		
+	}
+	
+	
+	
 	public void animate() {
 		if(up) { if(currentAnimation != UP || animation.getDelay() == -1) {setAnimation(UP, sprite.getSpriteArray(UP),5);}} 
 		else if(down) { if(currentAnimation != DOWN || animation.getDelay() == -1) {setAnimation(DOWN, sprite.getSpriteArray(DOWN),5);}} 
@@ -137,7 +194,7 @@ public abstract class Entity extends Affichable {
         
         if(!collision.collision(dx, 0)) { pos.x += dx; }
 		if(!collision.collision(0, dy)) { pos.y += dy; }
-        
+		
     }
 	
 	protected void resetPosition() {
@@ -171,7 +228,7 @@ public abstract class Entity extends Affichable {
 	    			case 1: PlayState.bombList.add(new HorizontalBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
 	    			case 2: PlayState.bombList.add(new VerticalBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
 	    			case 3: PlayState.bombList.add(new MineBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
-	    			case 4: PlayState.bombList.add(new RcBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
+	    			case 4: PlayState.bombList.add(new TrackingBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
 	    			case 5: PlayState.bombList.add(new PiqBomb(new Vector2f((X*50), (Y*50)) ,50, this)); break;
 				}
 				bombposee++;
@@ -209,6 +266,7 @@ public abstract class Entity extends Affichable {
 	}
 	public int getPied() {return (int) (this.getPos().y + this.getSize() + 20);}
 	public int getDroite() {return (int) (this.getPos().x + this.getSize());}
+	public int getNombreDeVies() {return nombreDeVies;}
 
 	/** Mutateurs */
 	
@@ -220,4 +278,6 @@ public abstract class Entity extends Affichable {
 	public void setFallen(boolean b) {fallen = b;}
 	public void setMaxBomb(int maxBomb) {this.maxBomb = maxBomb;}
 	public void setBombposee(int bombposee) {this.bombposee = bombposee;}
+	public void setBombeChoisie(int bombeChoisie) {this.bombeChoisie = bombeChoisie;}
+	public void setNombreDeVies(int nombreDeVies) {this.nombreDeVies = nombreDeVies;}
 }
