@@ -27,20 +27,73 @@ public class PlayState extends GameState {
 	
 	private static boolean pause = false;
 	 
+	public static int score;
+	public static int compteur;
+	
 	private static int difficulte = -1;
 	
+	private String imageUtilisee = "img1";
+    private String fichier = "tile/mapDev.xml";
+	
+
+    private static int numeroJoueur = 0;
+    private static int numeroStyle = 0;
+    private static int numeroMap = 0;
+    
+    
 	/** Constructeur */
 	
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
-		tm = new TileManager("tile/mapDeveloppement.xml"); // On charge la map (.xml)
-		player = new Player(new Sprite("entity/spriteBomber.png", 16, 25), new Vector2f(50,30), 50);	// On charge le sprite du joueur 
+		
+		int j = getNumeroJoueur();
+		int s = getNumeroStyle();
+		int m = getNumeroMap();
+		
+		
+		switch(j) {
+			case 0: player = new Player(new Sprite("entity/spriteBomberBleu.png", 16, 25), new Vector2f(50,30), 50); break;
+			case 1:	player = new Player(new Sprite("entity/spriteBomber.png", 16, 25), new Vector2f(50,30), 50); break;
+			case 2:	player = new Player(new Sprite("entity/spriteBomberVert.png", 16, 25), new Vector2f(50,30), 50); break;
+			case 3:	player = new Player(new Sprite("entity/spriteBomberRouge.png", 16, 25), new Vector2f(50,30), 50); break;
+			case 4:	player = new Player(new Sprite("entity/spriteBomberRose.png", 16, 25), new Vector2f(50,30), 50); break;
+			case 5:	player = new Player(new Sprite("entity/spriteBomberOr.png", 16, 25), new Vector2f(50,30), 50); break;
+		}
+		
+		switch(s) {
+			case 0: this.imageUtilisee = "img1"; break;
+			case 1:	this.imageUtilisee = "img2"; break;
+		}
+		
+		switch(m) {
+			case 0: this.fichier = "tile/map1.xml"; break;
+			case 1:	this.fichier = "tile/map2.xml"; break;
+			case 2:	this.fichier = "tile/mapDev.xml"; break;
+		}
+		
+		
+		
+		tm = new TileManager(this.imageUtilisee, this.fichier);
+		
+		
 		ia[0] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(Vector2f.getWorldX() - 100, 30), 50);
 		ia[1] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(50, Vector2f.getWorldY() - 120), 50);
 		ia[2] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f((Vector2f.getWorldX()-100),(Vector2f.getWorldY()-120)), 50);
 		matrice = new Matrice();
+		
+		score = 0;
+		compteur = 0;
 	}
 
+	
+	public static void setNumeroJoueur(int j) {numeroJoueur =j;}
+	public static void setNumeroStyle(int s) {numeroStyle = s;}
+	public static void setNumeroMap(int m) {numeroMap = m;}
+	
+	public static int getNumeroJoueur() {return numeroJoueur;}
+	public static int getNumeroStyle() {return numeroStyle;}
+	public static int getNumeroMap() {return numeroMap;}
+	
 	
 	/** Méthodes */
 	
@@ -51,11 +104,13 @@ public class PlayState extends GameState {
 			
 			if(player != null) {
 				if(player.getInvincible()) {
-					Sprite.drawArray(g, "Invincible "+ player.getDureeDeLinvincibilite()/60+" / Bombes : "+player.getMaxBomb()+" "+player.getBombeChoisie(), new Vector2f(75 ,15), 20, 20, 20);
+					Sprite.drawArray(g, "Invincible "+ player.getDureeDeLinvincibilite()/60+" / "+player.getMaxBomb()+" "+player.getBombeChoisie(), new Vector2f(10 ,15), 20, 20, 20);
 				} else {
-					Sprite.drawArray(g, "Vies : "+player.getNombreDeVies()+" / Bombes : "+player.getMaxBomb()+" "+player.getBombeChoisie(), new Vector2f(100 ,15), 20, 20, 20);
+					Sprite.drawArray(g, "Vies : "+player.getNombreDeVies()+" / "+player.getBombeChoisie()+" : "+player.getMaxBomb(), new Vector2f(10 ,15), 20, 20, 20);
 				}
 			}
+			
+			Sprite.drawArray(g, "Score : "+ score, new Vector2f(Vector2f.getWorldX()-240 ,15), 20, 20, 20);
 				
 				
 			if(difficulte != -1) {
@@ -106,8 +161,26 @@ public class PlayState extends GameState {
 			for(int i = 0; i < listFlammes.size(); i++) {listFlammes.get(i).update(time);}
 			
 			matrice.update(time);
+			
+			
+			/* Score */
+			compteur++;
+			if(compteur % 60 == 0) {
+				score += 1;
+			}
+			
+			
+			
+			if(player == null) {
+				gsm.addAndpop(GameStateManager.GAMEOVER, GameStateManager.PLAY);
+			}
+			
+			if(ia[0] == null && ia[1] == null && ia[2] == null) {
+				gsm.addAndpop(GameStateManager.VICTORY, GameStateManager.PLAY);
+			}
+			
+			
 		}
-		
 	}
 
 

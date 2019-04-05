@@ -31,6 +31,8 @@ public class MenuState extends GameState {
 		super(gsm);
 		// TODO Auto-generated constructor stub
 		
+		gsm.remove(GameStateManager.PLAY);
+		
 		/* Lecture de l'image de fond */
 		try {
 			img = ImageIO.read(new File("res/background/Menu_Vide.png"));
@@ -66,7 +68,6 @@ public class MenuState extends GameState {
 				posX_T = new int[]{435, 460, 435};
 				posY_T = new int[]{295, 310, 325};
 					
-				// Nouveau jeu 
 				if(selection) {
 					if(gsm.isStateActive(GameStateManager.DIFFICULTE)) {
 						gsm.pop(GameStateManager.DIFFICULTE);
@@ -74,7 +75,6 @@ public class MenuState extends GameState {
 					} else {
 						gsm.addAndpop(GameStateManager.DIFFICULTE, GameStateManager.MENU);
 					}
-					
 				}
 			break;
 				

@@ -47,8 +47,10 @@ public class PauseState extends GameState {
 				key.choix = false;
 				if(gsm.isStateActive(GameStateManager.MENU)) {
 					gsm.pop(GameStateManager.MENU);
+					gsm.remove(GameStateManager.PLAY);
 					gsm.remove(GameStateManager.PAUSE);
 				} else {
+					gsm.remove(GameStateManager.PLAY);
 					gsm.addAndpop(GameStateManager.MENU, GameStateManager.PAUSE);
 					
 				}

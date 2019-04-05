@@ -1,5 +1,6 @@
 package game.bonus;
 
+import game.states.PlayState;
 import game.tiles.TileMap;
 import game.util.Vector2f;
 
@@ -11,6 +12,7 @@ public class BonusFallen extends Bonus {
 
 	@Override
 	public void effet() {
+		PlayState.score -= 2000;
 		this.getEntity().setFallen(true);
 	}	
 }

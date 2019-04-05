@@ -11,16 +11,15 @@ import game.GamePanel;
 import game.util.KeyHandler;
 import game.util.MouseHandler;
 
-public class GameOverState extends GameState {
+public class VictoryState extends GameState{
 
 	Image img;
 	
-	public GameOverState(GameStateManager gsm) {
+	public VictoryState(GameStateManager gsm) {
 		super(gsm);
 		// TODO Auto-generated constructor stub
-		
 		try {
-			img = ImageIO.read(new File("res/background/gameOver.png"));
+			img = ImageIO.read(new File("res/background/Victory.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -29,9 +28,11 @@ public class GameOverState extends GameState {
 
 	@Override
 	public void input(MouseHandler mouse, KeyHandler key) {
+		// TODO Auto-generated method stub
+
 		if(key.escape) {
 			key.escape = false;
-				gsm.addAndpop(GameStateManager.MENU, GameStateManager.GAMEOVER);
+				gsm.addAndpop(GameStateManager.MENU, GameStateManager.VICTORY);
 		}
 		
 	}
@@ -47,5 +48,6 @@ public class GameOverState extends GameState {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	
 }

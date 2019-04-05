@@ -20,7 +20,6 @@ public class DifficulteState extends GameState {
 	
 	public DifficulteState(GameStateManager gsm) {
 		super(gsm);
-		
 		try { img = ImageIO.read(new File("res/background/difficulte.png"));} 
 		catch (IOException e) {e.printStackTrace();}
 	}
@@ -28,7 +27,6 @@ public class DifficulteState extends GameState {
 	/** Méthodes */
 
 	public void gestionChoix(int direction, boolean selection) {
-		
 		if(direction == -1) {
 			if(position != 0) {position--;} 
 			else {position = 2;}
@@ -37,17 +35,12 @@ public class DifficulteState extends GameState {
 			else {position = 0;}
 		}
 		
-		// VARIER LE GAME SELON LA POSITION : 0 : FACILE // 1 : INTERMEDIAIRE // 2 : DIFFICILE
 		if(selection) {
-			
 			PlayState.setNiveauDifficulte(position);
-			
-			if(gsm.isStateActive(GameStateManager.PLAY)) {
-				gsm.pop(GameStateManager.PLAY);
+			if(gsm.isStateActive(GameStateManager.CHOICE)) {
+				gsm.pop(GameStateManager.CHOICE);
 				gsm.remove(GameStateManager.DIFFICULTE);
-			} else {
-				gsm.addAndpop(GameStateManager.PLAY, GameStateManager.DIFFICULTE);
-			}
+			} else {gsm.addAndpop(GameStateManager.CHOICE, GameStateManager.DIFFICULTE);}
 		}
 		
 		switch(position) {

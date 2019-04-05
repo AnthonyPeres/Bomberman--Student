@@ -9,6 +9,7 @@ import game.util.Vector2f;
 
 public class Player extends Entity {
 	
+	
 	/** Constructeur */
     public Player(Sprite sprite, Vector2f origin, int size) {
         super(sprite, origin, size);

@@ -3,7 +3,6 @@ package game.entity;
 import java.awt.Graphics2D;
 
 import game.bonus.Bonus;
-import game.bonus.BonusInvincible;
 import game.entity.bomb.BasicBomb;
 import game.entity.bomb.HorizontalBomb;
 import game.entity.bomb.MineBomb;

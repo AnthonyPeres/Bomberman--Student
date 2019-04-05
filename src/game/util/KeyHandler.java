@@ -20,6 +20,8 @@ public class KeyHandler implements KeyListener {
 	public boolean choixBombeApres;
 	public boolean choixHaut;
 	public boolean choixBas;
+	public boolean choixDroite;
+	public boolean choixGauche;
 	public boolean choix;
 	public boolean tab;
 	
@@ -63,6 +65,8 @@ public class KeyHandler implements KeyListener {
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) escape = true;
 		if(e.getKeyCode() == KeyEvent.VK_DOWN) choixBas = true;
 		if(e.getKeyCode() == KeyEvent.VK_UP) choixHaut = true;
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT) choixDroite = true;
+		if(e.getKeyCode() == KeyEvent.VK_LEFT) choixGauche = true;
 		if(e.getKeyCode() == KeyEvent.VK_X) choixBombeAvant = true;
 		if(e.getKeyCode() == KeyEvent.VK_C) choixBombeApres = true;
 		if(e.getKeyCode() == KeyEvent.VK_ENTER) choix = true;
