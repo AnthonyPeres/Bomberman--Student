@@ -34,6 +34,7 @@ public class PlayState extends GameState {
     private static int numeroMap = 0;
 	public static int score;
 	public static int compteur;
+	private String nomSprite;
 	
 	
 	/** Constructeur */
@@ -46,13 +47,15 @@ public class PlayState extends GameState {
 		int m = getNumeroMap();
 		
 		switch(j) {
-			case 0: player = new Player(new Sprite("entity/spriteBomberBleu.png", 16, 25), new Vector2f(50,30), 50); break;
-			case 1:	player = new Player(new Sprite("entity/spriteBomber.png", 16, 25), new Vector2f(50,30), 50); break;
-			case 2:	player = new Player(new Sprite("entity/spriteBomberVert.png", 16, 25), new Vector2f(50,30), 50); break;
-			case 3:	player = new Player(new Sprite("entity/spriteBomberRouge.png", 16, 25), new Vector2f(50,30), 50); break;
-			case 4:	player = new Player(new Sprite("entity/spriteBomberRose.png", 16, 25), new Vector2f(50,30), 50); break;
-			case 5:	player = new Player(new Sprite("entity/spriteBomberOr.png", 16, 25), new Vector2f(50,30), 50); break;
+			case 0: this.nomSprite = "spriteBomberBleu"; break;
+			case 1: this.nomSprite = "spriteBomber"; break;
+			case 2: this.nomSprite = "spriteBomberVert"; break;
+			case 3: this.nomSprite = "spriteBomberRouge"; break;
+			case 4: this.nomSprite = "spriteBomberRose"; break;
+			case 5: this.nomSprite = "spriteBomberOr"; break;
 		}
+		
+		player = new Player(new Sprite("entity/"+nomSprite+".png", 16, 25), new Vector2f(50,30), 50);
 		
 		switch(s) {
 			case 0: this.imageUtilisee = "img1"; break;
@@ -146,10 +149,12 @@ public class PlayState extends GameState {
 			}
 			
 			if(player == null) {
+				gsm.remove(GameStateManager.PLAY);
 				gsm.addAndpop(GameStateManager.GAMEOVER, GameStateManager.PLAY);
 			}
 			
 			if(ia[0] == null && ia[1] == null && ia[2] == null) {
+				gsm.remove(GameStateManager.PLAY);
 				gsm.addAndpop(GameStateManager.VICTORY, GameStateManager.PLAY);
 			}
 		}

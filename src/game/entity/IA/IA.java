@@ -79,7 +79,7 @@ public class IA extends Entity {
 		this.AlgorithmeA();
 		
 		/* On fait deplacer l'IA */
-		this.deplacement();
+		this.action();
 	}
 	
 	
@@ -179,16 +179,7 @@ public class IA extends Entity {
 	/** Méthode qui permet de trouver une destination pour l'IA : Un joueur si elle est en mode attaque, une case sécure si elle est en mode défense */
 	private void chercherDestination() {
 		if(this.attaque) {
-			
-			
-			
-			
-			
-			
 			Sommet temp = null;
-			
-			
-			
 			for(int i = 0; i < PlayState.ia.length; i++) {
 				if(PlayState.ia[i] != this) {
 					if(PlayState.ia[i] != null) {
@@ -208,9 +199,6 @@ public class IA extends Entity {
 				}
 			}
 			
-			
-			
-			
 			if(PlayState.player != null) {
 				int positionX = (int) PlayState.player.getSaCase().getPos().x;
 				int positionY = (int) PlayState.player.getSaCase().getPos().y;
@@ -224,25 +212,10 @@ public class IA extends Entity {
 					if(temp.getCoutG() < this.Destination.getCoutG()) {this.Destination = temp;}
 				}
 			}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		} else if(this.attaque == false){	
 			
 			this.directionsPossibles = getDirectionsPossibles(this.Source);
-			
 			for(int i = 0; i < directionsPossibles.size(); i++) {
-				
 				Sommet temp = directionsPossibles.get(i);
 				AABB Case = new AABB(new Vector2f(temp.getCaseX()*50, temp.getCaseY()*50),50,50);
 				
@@ -252,24 +225,25 @@ public class IA extends Entity {
 				}
 				
 				if(this.Destination == null) {
-					
 					this.directionsPossibles.addAll(getDirectionsPossibles(this.directionsPossibles.get(i)));
-					
 					Sommet temp2 = directionsPossibles.get(i);
-					AABB Case2 = new AABB(new Vector2f(temp2.getCaseX()*50, temp2.getCaseY()*50),50,50);
-					
+					AABB Case2 = new AABB(new Vector2f(temp2.getCaseX()*50, temp2.getCaseY()*50),50,50);		
 					if(!danger(Case2)) {
 						Sommet s = new Sommet(null, null, new AABB(new Vector2f(temp2.getCaseX()*50, temp2.getCaseY()*50),50,50));
 						this.Destination = s;
 					}
-					
-					
-					
 				}
 				
+				if(this.Destination == null) {
+					this.directionsPossibles.addAll(getDirectionsPossibles(this.directionsPossibles.get(i)));
+					Sommet temp3 = directionsPossibles.get(i);
+					AABB Case3 = new AABB(new Vector2f(temp3.getCaseX()*50, temp3.getCaseY()*50),50,50);
+					if(!danger(Case3)) {
+						Sommet s = new Sommet(null, null, new AABB(new Vector2f(temp3.getCaseX()*50, temp3.getCaseY()*50),50,50));
+						this.Destination = s;
+					}
+				}
 			}
-			
-			
 			this.directionsPossibles.clear();
 		}
 	}
@@ -315,33 +289,44 @@ public class IA extends Entity {
 	}
 	
 	/** Cette méthode sert a faire deplacer le personnage de son sommet au sommet destination */
-	private void deplacement() {
+	private void action() {
 		if(this.sommetsVisites.size() != 0) {
 			Sommet temp = this.sommetsVisites.get(0);
 			
-			int CaseGauche = temp.getCaseX() * 50;
-			int CaseDroite = ((temp.getCaseX() * 50) +50);
-			int CaseHaut = temp.getCaseY() * 50;
-			int CaseBas = ((temp.getCaseY() * 50) +50);
+			if(temp.getCoutH() < 2) {
+				this.bomb = true;
+			} else {
+				this.bomb = false;
+			}
 			
-			int saCaseGauche = (int) this.getBoundsCollision().getPos().x + (int) this.getBoundsCollision().getXOffset();
-			int saCaseHaut = (int) this.getBoundsCollision().getPos().y + (int) this.getBoundsCollision().getYOffset();
-			int saCaseDroite = (int) this.getBoundsCollision().getPos().x + (int) this.getBoundsCollision().getXOffset() + (int) this.getBoundsCollision().getWidth();
-			int saCaseBas = (int) this.getBoundsCollision().getPos().y + (int) this.getBoundsCollision().getYOffset() + (int) this.getBoundsCollision().getHeight();
+			AABB tmp = new AABB(new Vector2f(temp.getCaseX()*50, temp.getCaseY()*50),50,50);
 			
-			if(saCaseGauche <= CaseGauche) {this.right = true;} 
-			else {this.right = false;}
-			
-			if(saCaseDroite >= CaseDroite) {this.left = true;} 
-			else {this.left = false;}
-			
-			if(saCaseHaut <= CaseHaut) {this.down = true;} 
-			else {this.down = false;}
-			
-			if(saCaseBas >= CaseBas) {this.up = true;} 
-			else {this.up = false;}
-			
-			move();
+			if(!danger(tmp)) {
+				int CaseGauche = temp.getCaseX() * 50;
+				int CaseDroite = ((temp.getCaseX() * 50) +50);
+				int CaseHaut = temp.getCaseY() * 50;
+				int CaseBas = ((temp.getCaseY() * 50) +50);
+				
+				int saCaseGauche = (int) this.getBoundsCollision().getPos().x + (int) this.getBoundsCollision().getXOffset();
+				int saCaseHaut = (int) this.getBoundsCollision().getPos().y + (int) this.getBoundsCollision().getYOffset();
+				int saCaseDroite = (int) this.getBoundsCollision().getPos().x + (int) this.getBoundsCollision().getXOffset() + (int) this.getBoundsCollision().getWidth();
+				int saCaseBas = (int) this.getBoundsCollision().getPos().y + (int) this.getBoundsCollision().getYOffset() + (int) this.getBoundsCollision().getHeight();
+				
+				if(saCaseGauche <= CaseGauche) {this.right = true;} 
+				else {this.right = false;}
+				
+				if(saCaseDroite >= CaseDroite) {this.left = true;} 
+				else {this.left = false;}
+				
+				if(saCaseHaut <= CaseHaut) {this.down = true;} 
+				else {this.down = false;}
+				
+				if(saCaseBas >= CaseBas) {this.up = true;} 
+				else {this.up = false;}
+				
+				move();
+				poserBombe();
+			} 
 		}
 	}
 
