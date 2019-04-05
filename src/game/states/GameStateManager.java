@@ -9,11 +9,6 @@ import game.util.KeyHandler;
 import game.util.MouseHandler;
 import game.util.Vector2f;
 
-/**
- * 
- * 	Class gerant la transition entre les différents états du jeu.
- * 
- * */
 public class GameStateManager {
 
 	/** Variables */

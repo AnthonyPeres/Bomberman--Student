@@ -1,6 +1,5 @@
 package game.util;
 
-
 public class Vector2f {
 
 	/** Variables */

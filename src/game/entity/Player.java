@@ -19,13 +19,8 @@ public class Player extends Entity {
     
     public void update(double time) {
 		super.update(time);
-		
 			move();
 			poserBombe();
-		
-			
-			
-		
  	}
 
     public void input(MouseHandler mouse, KeyHandler key) {
@@ -52,7 +47,6 @@ public class Player extends Entity {
 
 	@Override
 	protected void meurt() {
-		// TODO Auto-generated method stub
 		PlayState.player = null;
 	}
 }

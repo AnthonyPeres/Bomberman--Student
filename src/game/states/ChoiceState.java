@@ -17,8 +17,6 @@ public class ChoiceState extends GameState {
 
 	/** Variables */
 	
-	/* Position du triangle selon la sélection */
-	
 	Image img;
 	protected int [] posX_T = {110, 130, 150};
 	protected int [] posY_T = {80, 110, 80};
@@ -139,8 +137,6 @@ public class ChoiceState extends GameState {
 
 	@Override
 	public void input(MouseHandler mouse, KeyHandler key) {
-		// TODO Auto-generated method stub
-		
 		if(key.choixHaut) {
 			key.choixHaut = false;
 			gestionChoix(-1, false);
@@ -175,14 +171,11 @@ public class ChoiceState extends GameState {
 
 	@Override
 	public void render(Graphics2D g) {
-		// TODO Auto-generated method stub
-    	g.drawImage(img, 0, 0, GamePanel.width, GamePanel.height, null); 	// Le background
-		g.setColor(Color.red);												// Le triangle
+    	g.drawImage(img, 0, 0, GamePanel.width, GamePanel.height, null); 	
+		g.setColor(Color.red);												
 		g.fillPolygon(posX_T, posY_T, 3);
 	}
 
 	@Override
-	public void update(double time) {
-		// TODO Auto-generated method stub
-	}
+	public void update(double time) {}
 }

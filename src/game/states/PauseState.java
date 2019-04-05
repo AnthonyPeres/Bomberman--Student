@@ -17,21 +17,14 @@ public class PauseState extends GameState {
 	
 	public PauseState(GameStateManager gsm) {
 		super(gsm);
-		// TODO Auto-generated constructor stub
 		
-		/* Lecture de l'image de fond */
-		try {
-			img = ImageIO.read(new File("res/background/pause.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		try {img = ImageIO.read(new File("res/background/pause.png"));} 
+		catch (IOException e) {e.printStackTrace();}
 	}
 	
 
 	@Override
 	public void input(MouseHandler mouse, KeyHandler key) {
-		// TODO Auto-generated method stub 
 		if(key.escape) {
 			key.escape = false;
 			PlayState.setPause(false);
@@ -69,21 +62,10 @@ public class PauseState extends GameState {
 			}
 		}
 	}
-
 	
 	@Override
-	public void update(double time) {
-		// TODO Auto-generated method stub
-	
-	}
-	
+	public void update(double time) {}
 
-
-		@Override
-		public void render(Graphics2D g) {
-			// TODO Auto-generated method stub
-	    	g.drawImage(img, 0, 0, GamePanel.width, GamePanel.height, null); 	// Le background
-		}
-
-		
+	@Override
+	public void render(Graphics2D g) {g.drawImage(img, 0, 0, GamePanel.width, GamePanel.height, null);}
 }

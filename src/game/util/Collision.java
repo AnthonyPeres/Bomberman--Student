@@ -1,6 +1,6 @@
 package game.util;
 
-import game.entity.Entity;
+import game.entity.*;
 import game.entity.Player;
 import game.entity.IA.IA;
 import game.entity.bomb.Bomb;
@@ -39,7 +39,6 @@ public class Collision {
 					return TileMap.tmo_blocks.get(String.valueOf(xt) + "," + String.valueOf(yt)).update(e.getBoundsCollision());
 				}	
 			} 
-			
 			for(int i = 0; i < PlayState.bombList.size(); i++) {
 				Bomb tempB = PlayState.bombList.get(i);
 				if( !(e.getPos().x + ax <= tempB.getPos().x + 50) || !(e.getDroite() + ax >= tempB.getPos().x ) || !(e.getPos().y + ay <= tempB.getPos().y + 50) || !(e.getPied() + ay >= tempB.getPos().y)) {}

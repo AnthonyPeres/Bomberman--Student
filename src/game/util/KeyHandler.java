@@ -1,7 +1,6 @@
 package game.util;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 import game.GamePanel;
 
@@ -35,9 +34,7 @@ public class KeyHandler implements KeyListener {
 	/** Méthodes */
 	
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
