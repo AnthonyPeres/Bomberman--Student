@@ -67,10 +67,10 @@ public class ChoiceState extends GameState {
 					if(joueur != 0) {
 						joueur--;
 					} else {
-						joueur = 5;
+						joueur = 6;
 					}
 				} else if(direction == 2) {
-					if(joueur != 5) {
+					if(joueur != 6) {
 						joueur++;
 					} else {
 						joueur = 0;
@@ -84,6 +84,7 @@ public class ChoiceState extends GameState {
 					case 3: posX_T = new int[]{410, 430, 450}; posY_T = new int[]{80, 110, 80}; break;
 					case 4: posX_T = new int[]{510, 530, 550}; posY_T = new int[]{80, 110, 80}; break;
 					case 5: posX_T = new int[]{610, 630, 650}; posY_T = new int[]{80, 110, 80}; break;
+					case 6: posX_T = new int[]{0, 0,0}; posY_T = new int[]{0, 0, 0}; break;
 				}
 			break;
 			

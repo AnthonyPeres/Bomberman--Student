@@ -55,6 +55,7 @@ public class PlayState extends GameState {
 			case 3: this.nomSprite = "spriteBomberRouge"; break;
 			case 4: this.nomSprite = "spriteBomberRose"; break;
 			case 5: this.nomSprite = "spriteBomberOr"; break;
+			case 6: this.nomSprite = "spriteBomberAT"; break;
 		}
 		
 		player = new Player(new Sprite("entity/"+nomSprite+".png", 16, 25), new Vector2f(50,30), 50);
