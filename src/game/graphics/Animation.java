@@ -2,18 +2,11 @@ package game.graphics;
 
 import java.awt.image.BufferedImage;
 
-/**
- * 
- * Class qui gere les animations
- *
- */
-
 public class Animation {
 
 	/** Variables */
 	
-    private BufferedImage[] frames;
-    
+    private BufferedImage[] frames;    
     private int currentFrame;
     private int numFrames;
     private int count;

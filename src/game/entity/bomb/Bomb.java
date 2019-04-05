@@ -23,10 +23,8 @@ public class Bomb extends Affichable {
 	protected final int RC = 4;
 	protected final int PIQ = 5;
 	
-	
-	protected Collision collision;
-	
 	/* Explosion */
+	protected Collision collision;
 	protected int tempsAvantExplosion = 120;
 	protected int rayonX;
 	protected int rayonY;
@@ -37,25 +35,19 @@ public class Bomb extends Affichable {
 	/** Constructeur */
 	
 	public Bomb(Vector2f origin, int size, int type, int rayonX, int rayonY, Entity e) {
-		
 		super(new Sprite("entity/spriteBombe.png",30,30), origin,size);
 		
 		this.type = type;
 		
 		setAnimation(type, sprite.getSpriteArray(type), 10);
-		
-		this.collision = new Collision(this);
-		
-		/* La case relative a l'objet */
 		this.SaCase = new AABB(origin, 50, 50);
-		
+
+		this.collision = new Collision(this);
 		this.rayonX = rayonX;
 		this.rayonY = rayonY;
 		
 		this.ent = e;		
-		
 	}
-	
 	
 	/** Méthodes */
 	
@@ -113,6 +105,7 @@ public class Bomb extends Affichable {
 		this.ent.setBombposee(this.ent.getBombposee() - 1);
 	}
 	
+	
 	public void animate() {
 		if(type == BASIC) { if(currentAnimation != BASIC || animation.getDelay() == -1) { setAnimation(BASIC, sprite.getSpriteArray(BASIC), 5); }} 
 		else if(type == HORIZONTAL) { if(currentAnimation != HORIZONTAL || animation.getDelay() == -1) { setAnimation(HORIZONTAL, sprite.getSpriteArray(HORIZONTAL), 5);}} 
@@ -122,8 +115,6 @@ public class Bomb extends Affichable {
 		else if(type == PIQ){if(currentAnimation != PIQ || animation.getDelay() == -1) {setAnimation(PIQ, sprite.getSpriteArray(PIQ), 4);}}
 		else {setAnimation(currentAnimation, sprite.getSpriteArray(currentAnimation), -1);}
 	}
-
-	
 	
 	public void decouleTemps() {
         if (--tempsAvantExplosion == 0) { explose(); }
@@ -132,7 +123,6 @@ public class Bomb extends Affichable {
 	public void update(double time) {
 		super.update(time);
 		animate();
-		decouleTemps();
 	}
 	
 	public void render(Graphics2D g) {

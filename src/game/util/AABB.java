@@ -11,13 +11,9 @@ public class AABB {
 	private float r;
 	private float xOffset = 0;
 	private float yOffset = 0;
-	
 	private int size;
-	
 	private Vector2f pos;
-	
 	private Bomb b;
-	
 	
 	/** Constructeurs */
 	
@@ -35,7 +31,6 @@ public class AABB {
 		size = r;
 	}
 	
-	
 	/** Méthodes */
 	
 	public void setCube(int w, int h, int xoffset, int yoffset) {
@@ -44,7 +39,6 @@ public class AABB {
 		this.xOffset = xoffset;
 		this.yOffset = yoffset;
 	}
-	
 	
 	/** Accesseurs */
 

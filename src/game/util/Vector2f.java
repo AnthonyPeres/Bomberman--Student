@@ -1,10 +1,5 @@
 package game.util;
 
-/**
- * 
- * Cette class sert à creer des positions
- * 
- * */
 
 public class Vector2f {
 
@@ -15,14 +10,13 @@ public class Vector2f {
 	public static float worldX;
 	public static float worldY;
 	
-	
 	/** Constructeur */
 	
 	public Vector2f() {
 		x = 0;
 		y = 0;
 	}
-	
+
 	public Vector2f(Vector2f vec) {
 		new Vector2f(vec.x, vec.y);
 	}
@@ -38,15 +32,12 @@ public class Vector2f {
 	public void addX(float f) { x += f; }
 	public void addY(float f) { y += f; }
 	public String toString() {return x + ", " + y;}
-
 	
 	/** Accesseurs */
-	
 	
 	public static float getWorldX() {return worldX;}
 	public static float getWorldY() {return worldY;}
 	public Vector2f getWorldVar() {return new Vector2f(x - getWorldX(), y - worldY);}
-	
 	
 	/** Mutateurs */
 	

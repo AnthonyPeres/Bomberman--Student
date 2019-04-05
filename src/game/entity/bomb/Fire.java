@@ -11,6 +11,7 @@ public class Fire extends Affichable {
 
 	/** Variables */
 	
+	/* Animation */
 	protected final int CENTRE = 0;
 	protected final int BAS = 1;
 	protected final int BAS2 = 2;
@@ -30,7 +31,6 @@ public class Fire extends Affichable {
 		super(new Sprite("entity/spriteFlammes.png",16,16), pos, 50);
 		
 		setAnimation(0, sprite.getSpriteArray(0), 5);
-		
 		this.direction = direction;
 		this.ecart = ecart;
 		

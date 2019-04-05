@@ -26,50 +26,33 @@ public class GameStateManager {
 	public static final int GAMEOVER = 3; 
 	public static final int SCORE = 4; 
 	public static final int AIDE = 5; 
+	public static final int DIFFICULTE = 6;
+	public static final int VICTORY = 7; 
+	public static final int CHOICE = 8;
 	
 	private static Vector2f map;
-	
 	public static Font font;
-	
 	
 	/** Constructeur */
 	
 	public GameStateManager() {
-		
 		map = (new Vector2f(GamePanel.width, GamePanel.height));
-		
 		Vector2f.setWorldVar(map.x, map.y);
-		
 		font = new Font("font/font.png", 10,10);
-		
 		Sprite.currentFont = font;
-		
-		states = new GameState[6];
-		
+		states = new GameState[9];
 		states[MENU] = new MenuState(this);
-		//states[PLAY] = new PlayState(this);
-		//states[AIDE] = new AideState(this);
 	}
 	
 	
 	/** Méthodes */
 	
-	
 	public boolean isStateActive(int state) { return states[state] != null; }
-	
 	public void remove(int state) { this.states[state] = null; }
-	
-	
 	public GameState getState(int state) { return states[state]; }
-	
-	
-	
-	
 	
 	public void pop(int state) { states[state] = null; }
 	
-	
-	/* Fonction ajoutant les menus */
 	public void add(int state) {
 		if(states[state] != null) 
 			return;
@@ -78,13 +61,12 @@ public class GameStateManager {
 		if (state == MENU){states[MENU] = (new MenuState(this));}			// On ajoute un menu
 		if (state == PAUSE){states[PAUSE] = (new PauseState(this));}			// On ajoute une pause
 		if (state == GAMEOVER){states[GAMEOVER] = (new GameOverState(this));}	// On ajoute une fin de jeu 
-		if (state == SCORE){states[SCORE] = (new ScoreState(this));}	// On ajoute une fin de jeu 
-		if (state == AIDE){states[AIDE] = (new AideState(this));}	// On ajoute une fin de jeu 
+		if (state == SCORE){states[SCORE] = (new ScoreState(this));}	// On ajoute un score
+		if (state == AIDE){states[AIDE] = (new AideState(this));}	// On ajoute une fenetre d'aide 
+		if (state == DIFFICULTE){states[DIFFICULTE] = (new DifficulteState(this));}	// On ajoute une fin de jeu 
+		if (state == VICTORY){states[VICTORY] = (new VictoryState(this));}	// On ajoute un ecran de victoire
+		if (state == CHOICE) {states[CHOICE] = (new ChoiceState(this));}
 	}
-	
-	
-	
-	
 	
 	public void addAndpop(int state) { addAndpop(state, 0); }
 
@@ -94,12 +76,7 @@ public class GameStateManager {
         remove(remove);
     }
 	
-	
-	
-	/** Les 3 prochaines fonctions sont abstraites dans la classe GameState 
-	 * 	Elles sont différentes pour chaque classes héritant de GameState.
-	 * */
-	
+    
 	/* Appel la fonction update de chaque état */
 	public void update(double time) {
         for (int i = 0; i < states.length; i++) {

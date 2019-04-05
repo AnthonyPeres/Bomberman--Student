@@ -21,56 +21,35 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 	}
 	
 	/** Méthodes */
-	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 		mouseB = e.getButton();
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 		mouseB = -1;
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
 		mouseX = e.getX();
 		mouseY = e.getY();
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
 		mouseX = e.getX();
 		mouseY = e.getY();
 	}
-
+	
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
 	
 	/** Mutateurs */
-	
 	public int getX() {return mouseX;}
 	public int getY() {return mouseY;}
 	public int getButton() {return mouseB;}
-	
 }

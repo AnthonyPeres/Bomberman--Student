@@ -1,6 +1,5 @@
 package game.entity.IA;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
@@ -19,8 +18,6 @@ import game.util.Vector2f;
 public class IA extends Entity {
 	
 	/** VARIABLES */
-	
-	private int[][] matrice;
 	
 	private boolean attaque;
 	
@@ -51,10 +48,6 @@ public class IA extends Entity {
 	/* Gère les tours de l'IA */
 	public void update(double time) {
 		super.update(time);
-		
-		/* On rafraichit et on recupere la matrice */
-		PlayState.getMatrice().rafraichir();
-		matrice = PlayState.getMatrice().getMatrice();
 		
 		/* On reinitialise la source : la position du joueur */
 		this.Source = new Sommet(null, null, this.getSaCase());
@@ -336,16 +329,16 @@ public class IA extends Entity {
 			int saCaseDroite = (int) this.getBoundsCollision().getPos().x + (int) this.getBoundsCollision().getXOffset() + (int) this.getBoundsCollision().getWidth();
 			int saCaseBas = (int) this.getBoundsCollision().getPos().y + (int) this.getBoundsCollision().getYOffset() + (int) this.getBoundsCollision().getHeight();
 			
-			if(saCaseGauche < CaseGauche) {this.right = true;} 
+			if(saCaseGauche <= CaseGauche) {this.right = true;} 
 			else {this.right = false;}
 			
-			if(saCaseDroite > CaseDroite) {this.left = true;} 
+			if(saCaseDroite >= CaseDroite) {this.left = true;} 
 			else {this.left = false;}
 			
-			if(saCaseHaut < CaseHaut) {this.down = true;} 
+			if(saCaseHaut <= CaseHaut) {this.down = true;} 
 			else {this.down = false;}
 			
-			if(saCaseBas > CaseBas) {this.up = true;} 
+			if(saCaseBas >= CaseBas) {this.up = true;} 
 			else {this.up = false;}
 			
 			move();
@@ -357,27 +350,28 @@ public class IA extends Entity {
 		super.render(g);
 		
 		/* La destination */
-		g.setColor(Color.CYAN);
+		/*g.setColor(Color.CYAN);
 		if(this.Destination != null) { g.drawRect(this.Destination.getCaseX() * 50, this.Destination.getCaseY() * 50, 50, 50); }
-		
+		*/
 		/* Les sommets a explorer */
-		g.setColor(Color.yellow);
+		/*g.setColor(Color.yellow);
 		if(this.sommetsAExplorer != null) {
 			if(this.sommetsAExplorer.isEmpty() == false) {
 				for(int i = 0; i < this.sommetsAExplorer.size(); i++) { g.drawRect(this.sommetsAExplorer.get(i).getCaseX() * 50, this.sommetsAExplorer.get(i).getCaseY() * 50, 50, 50); }
 			}
 		}
-		
+		*/
 		/* Les sommets visités */
-		g.setColor(Color.RED);
+		/*g.setColor(Color.RED);
 		if(this.sommetsVisites != null) {
 			if(this.sommetsVisites.isEmpty() == false) {
 				for(int i = 0; i < this.sommetsVisites.size(); i++) { g.drawRect(this.sommetsVisites.get(i).getCaseX() * 50, this.sommetsVisites.get(i).getCaseY() * 50, 50, 50); }
 			}
 		}
-		
-		g.setColor(Color.white);
+		*/
+		/*g.setColor(Color.white);
 		g.drawRect((int)this.getBoundsCollision().getPos().x + (int)this.getBoundsCollision().getXOffset(), (int)this.getBoundsCollision().getPos().y + (int)this.getBoundsCollision().getYOffset(), (int)this.getBoundsCollision().getWidth(), (int)this.getBoundsCollision().getHeight());
+		*/
 	}
 	
 	/** Fonction qui permet de supprimer l'IA du PlayState */

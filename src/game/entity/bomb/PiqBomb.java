@@ -8,4 +8,9 @@ public class PiqBomb extends Bomb {
 	public PiqBomb(Vector2f pos, int size, Entity entity) {
 		super(pos, size, 5, 2, 2, entity);
 	}
+	
+	public void update(double time) {
+		super.update(time);
+		decouleTemps();
+	}
 }
