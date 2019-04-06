@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import game.entity.Player;
 import game.entity.IA.IA;
+import game.entity.IA.IAFacile;
 import game.entity.IA.Matrice;
 import game.entity.bomb.Bomb;
 import game.entity.bomb.Fire;
@@ -21,6 +22,7 @@ public class PlayState extends GameState {
 	private TileManager tm;
 	public static Player player;
 	public static IA[] ia = new IA[3];
+	public static IAFacile[] iaFacile = new IAFacile[3];
 	public static ArrayList<Bomb> bombList = new ArrayList<Bomb>();
 	public static ArrayList<Fire> listFlammes = new ArrayList<Fire>();
 	public static Matrice matrice;
@@ -53,6 +55,7 @@ public class PlayState extends GameState {
 			case 3: this.nomSprite = "spriteBomberRouge"; break;
 			case 4: this.nomSprite = "spriteBomberRose"; break;
 			case 5: this.nomSprite = "spriteBomberOr"; break;
+			case 6: this.nomSprite = "spriteBomberAT"; break;
 		}
 		
 		player = new Player(new Sprite("entity/"+nomSprite+".png", 16, 25), new Vector2f(50,30), 50);
@@ -70,9 +73,17 @@ public class PlayState extends GameState {
 		
 		tm = new TileManager(this.imageUtilisee, this.fichier);
 		
-		ia[0] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(Vector2f.getWorldX() - 100, 30), 50);
-		ia[1] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(50, Vector2f.getWorldY() - 120), 50);
-		ia[2] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f((Vector2f.getWorldX()-100),(Vector2f.getWorldY()-120)), 50);
+		if(PlayState.difficulte == 0 || PlayState.difficulte == 1) {
+			iaFacile[0] = new IAFacile(new Sprite("entity/spriteBomberRose.png", 16,25), new Vector2f(Vector2f.getWorldX() - 100, 30), 50);
+			iaFacile[1] = new IAFacile(new Sprite("entity/spriteBomberRose.png", 16,25), new Vector2f(50, Vector2f.getWorldY() - 120), 50);
+			iaFacile[2] = new IAFacile(new Sprite("entity/spriteBomberRose.png", 16,25), new Vector2f((Vector2f.getWorldX()-100),(Vector2f.getWorldY()-120)), 50);
+		} else {
+			ia[0] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(Vector2f.getWorldX() - 100, 30), 50);
+			ia[1] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f(50, Vector2f.getWorldY() - 120), 50);
+			ia[2] = new IA(new Sprite("entity/spriteLink.png", 16,25), new Vector2f((Vector2f.getWorldX()-100),(Vector2f.getWorldY()-120)), 50);
+		}
+		
+		
 		matrice = new Matrice();
 		
 		score = 0;
@@ -106,6 +117,9 @@ public class PlayState extends GameState {
 			
 			if(player != null) {player.render(g);}
 			for(int i = 0; i < ia.length; i++) {if(ia[i] != null) {ia[i].render(g);}}
+			
+			for(int i = 0; i < iaFacile.length; i++) {if(iaFacile[i] != null) {iaFacile[i].render(g);}}
+			
 			for(int i = 0; i < bombList.size(); i++) { bombList.get(i).render(g);}
 			for(int i = 0; i < listFlammes.size(); i++) {listFlammes.get(i).render(g);}
 		}
@@ -153,9 +167,16 @@ public class PlayState extends GameState {
 				gsm.addAndpop(GameStateManager.GAMEOVER, GameStateManager.PLAY);
 			}
 			
-			if(ia[0] == null && ia[1] == null && ia[2] == null) {
-				gsm.remove(GameStateManager.PLAY);
-				gsm.addAndpop(GameStateManager.VICTORY, GameStateManager.PLAY);
+			if(difficulte == 0) {
+				if(iaFacile[0] == null && iaFacile[1] == null && iaFacile[2] == null) {
+					gsm.remove(GameStateManager.PLAY);
+					gsm.addAndpop(GameStateManager.VICTORY, GameStateManager.PLAY);
+				}
+			} else {
+				if(ia[0] == null && ia[1] == null && ia[2] == null) {
+					gsm.remove(GameStateManager.PLAY);
+					gsm.addAndpop(GameStateManager.VICTORY, GameStateManager.PLAY);
+				}
 			}
 		}
 	}
