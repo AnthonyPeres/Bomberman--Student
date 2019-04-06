@@ -139,10 +139,6 @@ public abstract class Entity extends Affichable {
 			b = TileMap.tmo_bonus.get(String.valueOf(saCaseX) + "," + String.valueOf(saCaseY));
 		} 
 		
-		
-		
-		
-		
 		if(b != null) {
 			b.setEntity(this);
 			b.effet();

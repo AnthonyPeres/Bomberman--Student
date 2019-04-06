@@ -16,24 +16,15 @@ public class ScoreState extends GameState {
 
 	/** Variables */
 	
-	/* Image d'aide */
-	
 	Image img;
-	
 	
 	/** Constructeur */
 	
 	public ScoreState(GameStateManager gsm) {
 		super(gsm);
-		// TODO Auto-generated constructor stub
 		
-		/* Lecture de l'image de fond */
-		try {
-			img = ImageIO.read(new File("res/background/scores.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		try {img = ImageIO.read(new File("res/background/scores.png"));} 
+		catch (IOException e) {e.printStackTrace();}
 	}
 	
 	
@@ -46,14 +37,11 @@ public class ScoreState extends GameState {
 				gsm.remove(GameStateManager.SCORE);
 			} else {
 				gsm.addAndpop(GameStateManager.MENU, GameStateManager.SCORE);
-				
 			}
 		}
 	}
 	
-	public void Quitter(boolean quitter) {
-		System.exit(0);
-	}
+	public void Quitter(boolean quitter) {System.exit(0);}
 
 	@Override
 	public void input(MouseHandler mouse, KeyHandler key) {
@@ -70,13 +58,8 @@ public class ScoreState extends GameState {
 	}
 
 	@Override
-	public void render(Graphics2D g) {
-		// TODO Auto-generated method stub
-    	g.drawImage(img, 0, 0, GamePanel.width, GamePanel.height, null); 	// Le background
-	}
+	public void render(Graphics2D g) {g.drawImage(img, 0, 0, GamePanel.width, GamePanel.height, null);}
 
 	@Override
-	public void update(double time) {
-		// TODO Auto-generated method stub
-	}
+	public void update(double time) {}
 }

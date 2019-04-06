@@ -39,38 +39,22 @@ public class Sommet {
 		this.setCaseY(y);
 	}
 	
-	
-	public AABB getSaCase() {return this.saCase;}
-	
 	public void AjouterSuccesseur(Sommet successeur) {Successeur.add(successeur);}
 	
-	
+	public AABB getSaCase() {return this.saCase;}
 	public Sommet getPredecesseur() {return Predecesseur;}
 	public ArrayList<Sommet> getSuccesseur() {return Successeur;}
 	public int getCoutG() {return coutG;}
 	public int getCoutH() {return coutH;}
 	public int getCoutTotal() {return coutTotal;}
-
-
-	public int getCaseX() {
-		return caseX;
-	}
-
-	public int getCaseY() {
-		return caseY;
-	}
-
-	public void setCaseY(int caseY) {
-		this.caseY = caseY;
-	}
-
-	public void setCaseX(int caseX) {
-		this.caseX = caseX;
-	}
+	public int getCaseX() {return caseX;}
+	public int getCaseY() {return caseY;}
 
 	public void setPredecesseur(Sommet predecesseur) {Predecesseur = predecesseur;}
 	public void setSuccesseur(ArrayList<Sommet> successeur) {Successeur = successeur;}
 	public void setCoutG(int coutG) {this.coutG = coutG;}
 	public void setCoutH(int coutH) {this.coutH = coutH;}
 	public void setCoutTotal() {this.coutTotal = getCoutG() + getCoutH();}
+	public void setCaseY(int caseY) {this.caseY = caseY;}
+	public void setCaseX(int caseX) {this.caseX = caseX;}
 }

@@ -23,14 +23,13 @@ public class BreakableBlock extends Block {
 		super(img, pos);
 	}
 	
-	/* Fait apparaitre un bonus ou non */
 	public void disparait() {
 		this.casse = true;
 		TileMap.tmo_blocks.remove(String.valueOf((int) (this.pos.x / 50)) + "," + String.valueOf((int) (this.pos.y / 50)), this);
 		Bonus tempBonus;
 		
 		int lower = 1; int higher = 10; int random = (int)(Math.random() * (higher-lower)) + lower;
-		if(random % 2 == 0) { 		// IL FAUT REMETTRE 5	
+		if(random % 4 == 0) { 
 			int TypeBonus = (int)(Math.random() * (11-1)) + 1;
 			switch(TypeBonus) {
     			case 1 : tempBonus = new BonusBombPique(pos); break;

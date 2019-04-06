@@ -17,8 +17,6 @@ public class MenuState extends GameState {
 
 	/** Variables */
 	
-	/* Position du triangle selon la sélection */
-	
 	Image img;
 	protected int [] posX_T = {435, 460, 435};
 	protected int [] posY_T = { 295, 310, 325 };
@@ -29,25 +27,16 @@ public class MenuState extends GameState {
 	
 	public MenuState(GameStateManager gsm) {
 		super(gsm);
-		// TODO Auto-generated constructor stub
 		
 		gsm.remove(GameStateManager.PLAY);
-		
-		/* Lecture de l'image de fond */
-		try {
-			img = ImageIO.read(new File("res/background/Menu_Vide.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		try {img = ImageIO.read(new File("res/background/Menu_Vide.png"));} 
+		catch (IOException e) {e.printStackTrace();}
 	}
 	
 	
 	/** Méthodes */
 	
 	public void gestionChoix(int direction, boolean selection) {
-		
-		
 		if(direction == -1) {
 			if(position != 0) {
 				position--;
@@ -82,7 +71,6 @@ public class MenuState extends GameState {
 				posX_T = new int[]{437, 462, 437};
 				posY_T = new int[]{365, 380, 395};
 				
-				// Score
 				if(selection) {
 					if(gsm.isStateActive(GameStateManager.SCORE)) {
 						gsm.pop(GameStateManager.SCORE);
@@ -98,7 +86,6 @@ public class MenuState extends GameState {
 				posX_T = new int[]{450, 475, 450};
 				posY_T = new int[]{435, 450, 465};
 				
-				// Aide 
 				if(selection) {
 					AideState.setArrivee("Menu");
 					if(gsm.isStateActive(GameStateManager.AIDE)) {
@@ -115,18 +102,13 @@ public class MenuState extends GameState {
 				posX_T = new int[]{405, 430, 405};
 				posY_T = new int[]{505, 520, 535};
 				
-				// Quitter
-				if(selection) {
-					System.exit(0);
-				}
+				if(selection) {System.exit(0);}
 			break;
 		}
 	}
 
 	@Override
 	public void input(MouseHandler mouse, KeyHandler key) {
-		// TODO Auto-generated method stub
-		
 		if(key.choixHaut) {
 			key.choixHaut = false;
 			gestionChoix(-1, false);
@@ -145,14 +127,11 @@ public class MenuState extends GameState {
 
 	@Override
 	public void render(Graphics2D g) {
-		// TODO Auto-generated method stub
-    	g.drawImage(img, 0, 0, GamePanel.width, GamePanel.height, null); 	// Le background
-		g.setColor(Color.red);												// Le triangle
+    	g.drawImage(img, 0, 0, GamePanel.width, GamePanel.height, null); 	
+		g.setColor(Color.red);												
 		g.fillPolygon(posX_T, posY_T, 3);
 	}
 
 	@Override
-	public void update(double time) {
-		// TODO Auto-generated method stub
-	}
+	public void update(double time) {}
 }
